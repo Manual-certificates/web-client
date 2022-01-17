@@ -7,6 +7,7 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 test/unit/coverage
+test/e2e/reports
 selenium-debug.log
 .eslintcache
 package-lock.json
@@ -16,11 +17,8 @@ deprecated
 # Editor directories and files
 .idea
 .vscode
-.fleet
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
 *.local
-stats.html
-.env

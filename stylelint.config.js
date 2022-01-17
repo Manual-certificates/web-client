@@ -11,7 +11,9 @@ module.exports = {
   ],
   plugins: ['stylelint-scss', 'stylelint-declaration-strict-value'],
   // css also is a valid scss so we don't need to use both - scss is enough
-  extends: ['stylelint-config-standard-scss'],
+  extends: [
+    'stylelint-config-standard-scss',
+  ],
   rules: {
     'color-no-invalid-hex': [true, { severity: 'warning' }],
     'font-family-no-duplicate-names': [true, { severity: 'warning' }],
@@ -19,7 +21,8 @@ module.exports = {
       true,
       { severity: 'warning' },
     ],
-    'function-calc-no-unspaced-operator': [true, { severity: 'warning' }],
+    'function-calc-no-unspaced-operator': [
+      true, { severity: 'warning' }],
     'function-linear-gradient-no-nonstandard-direction': [
       true,
       { severity: 'warning' },
@@ -250,6 +253,11 @@ module.exports = {
       'always',
       {
         severity: 'warning',
+        except: [
+          'after-same-name',
+          'blockless-after-same-name-blockless',
+          'first-nested',
+        ],
         ignore: ['after-comment', 'first-nested'],
       },
     ],
@@ -301,23 +309,5 @@ module.exports = {
     'selector-pseudo-element-no-unknown': [true, { severity: 'warning' }],
     'no-duplicate-selectors': [true, { severity: 'warning' }],
     'no-descending-specificity': [true, { severity: 'warning' }],
-    'color-function-notation': 'legacy',
-    'scss/at-mixin-parentheses-space-before': 'always',
-    'alpha-value-notation': 'number',
-    /* TEMP. disable */
-    'no-empty-first-line': null,
-    'selector-class-pattern': null,
-    'function-name-case': null,
-    'selector-no-vendor-prefix': null,
-    'custom-property-empty-line-before': null,
-    'no-empty-source': null,
-    'scss/at-else-empty-line-before': null,
-    'scss/at-if-closing-brace-space-after': null,
-    'scss/at-if-closing-brace-newline-after': null,
-    'scss/at-else-closing-brace-newline-after': null,
-    'scss/at-else-closing-brace-space-after': null,
-    'declaration-colon-newline-after': null,
-    'scss/at-function-pattern': null,
-    'selector-not-notation': 'simple',
   },
 }

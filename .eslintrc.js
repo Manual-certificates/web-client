@@ -1,7 +1,9 @@
+const tsEslintParser = require('@typescript-eslint/parser')
+const programs = tsEslintParser.createProgram('tsconfig.json')
+
 module.exports = {
   root: true,
   env: {
-    browser: true,
     es2021: true,
     node: true,
   },
@@ -10,22 +12,21 @@ module.exports = {
       localeDir: 'src/localization/**/*.(json|json5)',
     },
   },
-  parser: 'vue-eslint-parser',
   parserOptions: {
-    parser: '@typescript-eslint/parser',
     ecmaVersion: 'latest',
-    sourceType: 'module',
+    programs,
   },
   extends: [
-    'eslint:recommended',
-    'plugin:vue/vue3-recommended',
-    '@vue/typescript/recommended',
-    '@vue/eslint-config-typescript/recommended',
-    'plugin:vue-i18n/recommended',
-    '@vue/prettier',
-    '@vue/eslint-config-prettier',
+    'eslint:recommended', // eslint
+    'plugin:vue/vue3-essential', // @vue/eslint-config-typescript
+    'plugin:vue/vue3-recommended', // eslint-plugin-vue
+    'plugin:@typescript-eslint/recommended', // @typescript-eslint/eslint-plugin
+    '@vue/typescript/recommended', // @vue/eslint-config-typescript
+    'plugin:vue-i18n/recommended', // eslint-plugin-vue-i18n
   ],
-  plugins: ['promise'],
+  plugins: [
+    'promise',
+  ],
   globals: {
     defineProps: 'readonly',
     defineEmits: 'readonly',
@@ -33,21 +34,6 @@ module.exports = {
     withDefaults: 'readonly',
   },
   rules: {
-    'prettier/prettier': [
-      'warn',
-      {
-        vueIndentScriptAndStyle: false,
-        printWidth: 80,
-        trailingComma: 'all',
-        endOfLine: 'auto',
-        tabWidth: 2,
-        semi: false,
-        singleQuote: true,
-        bracketSpacing: true,
-        bracketSameLine: false,
-        arrowParens: 'avoid',
-      },
-    ],
     'vue-i18n/no-v-html': 'off',
     'vue-i18n/no-dynamic-keys': 'warn',
     'vue-i18n/no-missing-keys': 'warn',
@@ -96,11 +82,27 @@ module.exports = {
         allow: ['warn', 'error'],
       },
     ],
+    indent: [2, 2],
     quotes: [2, 'single', { avoidEscape: false }],
     'no-multiple-empty-lines': [2, { max: 1, maxEOF: 0, maxBOF: 0 }],
     semi: [2, 'never'],
+    '@typescript-eslint/no-non-null-assertion': 'off',
+
+    // Vue
     'vue/multi-word-component-names': 0,
     'vue/component-definition-name-casing': ['error', 'kebab-case'],
+    'vue/name-property-casing': [2, 'kebab-case'],
+    'vue/max-attributes-per-line': [
+      1,
+      {
+        singleline: {
+          max: 1,
+        },
+        multiline: {
+          max: 1,
+        },
+      },
+    ],
     'vue/valid-v-for': 2,
     'vue/attributes-order': 0,
     'vue/order-in-components': 1,
@@ -108,7 +110,9 @@ module.exports = {
     'vue/attribute-hyphenation': 1,
     'vue/component-name-in-template-casing': [2, 'kebab-case'],
     'vue/html-end-tags': 2,
+    'vue/html-indent': 1,
     'vue/html-quotes': 1,
+    'vue/html-self-closing': 1,
     'vue/multiline-html-element-content-newline': 1,
     'vue/mustache-interpolation-spacing': 1,
     'vue/no-async-in-computed-properties': 2,
@@ -146,13 +150,15 @@ module.exports = {
         ignores: ['pre', 'textarea', 'span'],
       },
     ],
+
+    // Promise
     'promise/always-return': 'error',
     'promise/no-return-wrap': 'error',
     'promise/param-names': 'error',
     'promise/catch-or-return': 'error',
     'promise/no-nesting': 'warn',
+    'promise/avoid-new': 'warn',
     'promise/no-callback-in-promise': 'warn',
     'promise/prefer-await-to-then': 'warn',
-    '@typescript-eslint/no-non-null-assertion': 'off',
   },
 }

@@ -16,14 +16,12 @@
     "types": [
       "node",
       "vite/client",
-      "@types/lodash-es",
-      "jsona",
-      "vitest/globals"
+      "@types/jest",
+      "cypress"
     ],
     "paths": {
       "@/*": ["src/*"],
       "@config": ["src/config.ts"],
-      "@static": ["static"],
     },
     "lib": [
       "esnext",
