@@ -1,46 +1,43 @@
 import mitt, { Emitter, EventType } from 'mitt'
-import { NotificationObjectPayload } from '@/types'
-
-enum EVENTS {
-  error = 'error',
-  warning = 'warning',
-  success = 'success',
-  info = 'info',
-  default = 'default',
-}
 
 export class EventBus {
   private emitter: Emitter<Record<EventType, unknown>>
+  public events = {
+    error: 'error',
+    warning: 'warning',
+    success: 'success',
+    info: 'info',
+  }
 
   constructor() {
     this.emitter = mitt<Record<EventType, unknown>>()
   }
 
-  public get eventList(): Readonly<typeof EVENTS> {
-    return EVENTS
+  public get eventList (): Readonly<Record<EventType, string>> {
+    return this.events
   }
 
-  on(eventName: EventType, handlerFn: (payload: unknown) => void): void {
+  on (eventName: EventType, handlerFn: ( payload: unknown ) => void): void {
     this.emitter.on(eventName, handlerFn)
   }
 
-  emit(eventName: EventType, payload?: unknown): void {
+  emit (eventName: EventType, payload?: unknown): void {
     this.emitter.emit(eventName, payload)
   }
 
-  success(payload: string | NotificationObjectPayload): void {
+  success (payload: unknown): void {
     this.emit(this.eventList.success, payload)
   }
 
-  error(payload: string | NotificationObjectPayload): void {
+  error (payload: unknown): void {
     this.emit(this.eventList.error, payload)
   }
 
-  warning(payload: string | NotificationObjectPayload): void {
+  warning (payload: unknown): void {
     this.emit(this.eventList.warning, payload)
   }
 
-  info(payload: string | NotificationObjectPayload): void {
+  info (payload: unknown): void {
     this.emit(this.eventList.info, payload)
   }
 }
