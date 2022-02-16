@@ -1,16 +1,27 @@
-import { ref } from 'vue'
+import { ref, Ref } from 'vue'
 
-export function useForm() {
-  const isFormDisabled = ref(false)
-  const isFormPending = ref(false)
+interface IFormController {
+  isDisabled: Ref<boolean>,
+  isPending: Ref<boolean>,
+  isConfirmationShown: Ref<boolean>,
+  disableForm: () => void,
+  enableForm: () => void,
+  showConfirmation: () => void,
+  hideConfirmation: () => void,
+  hideConfirmationAfterSubmit: (submitFn: () => void) => Promise<void>,
+}
+
+export function useForm (): IFormController {
+  const isDisabled = ref(false)
+  const isPending = ref(false)
   const isConfirmationShown = ref(false)
 
   const disableForm = () => {
-    isFormDisabled.value = true
+    isDisabled.value = true
   }
 
   const enableForm = () => {
-    isFormDisabled.value = false
+    isDisabled.value = false
   }
 
   const showConfirmation = () => {
@@ -24,15 +35,20 @@ export function useForm() {
   }
 
   const hideConfirmationAfterSubmit = async (submitFn: () => void) => {
-    isFormPending.value = true
+    isPending.value = true
     await submitFn()
     hideConfirmation()
-    isFormPending.value = false
+    isPending.value = false
   }
 
+  /**
+   * FIXME:
+   * isDisabled and etc... is Ref and in template it
+   * can be used only as like as formController.isDisabled.value
+   */
   return {
-    isFormDisabled,
-    isFormPending,
+    isDisabled,
+    isPending,
     isConfirmationShown,
     disableForm,
     enableForm,

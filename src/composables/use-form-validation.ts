@@ -1,40 +1,42 @@
-import { computed, UnwrapNestedRefs } from 'vue'
-import useVuelidate, { ChildStateLeafs, ValidationArgs } from '@vuelidate/core'
+import { computed, ComputedRef, ref, Ref, ToRefs } from 'vue'
+import useVuelidate, { ValidationArgs } from '@vuelidate/core'
 import { get } from 'lodash-es'
 
+interface IFormValidation {
+  isFieldsValid: ComputedRef<boolean>,
+  getFieldErrorMessage: (fieldPath: string) => Ref<string>,
+  touchField: (fieldPath: string) => void,
+  isFormValid: () => boolean,
+}
+
 export const useFormValidation = (
-  state: UnwrapNestedRefs<ChildStateLeafs>,
   rules: ValidationArgs,
-) => {
-  const validationRules = computed(() => rules)
+  state: ToRefs,
+): IFormValidation => {
+  const validationRules = computed(() => ({
+    ...rules,
+  }))
 
   const validationController = useVuelidate(validationRules, state)
 
   const isFieldsValid = computed(() => !validationController.value.$invalid)
 
-  const isFormValid = (): boolean => {
-    validationController.value.$touch()
-    return !validationController.value.$invalid
-  }
-
-  const getFieldErrorMessage = (fieldPath: string): string => {
-    let errorMessage = ''
+  const getFieldErrorMessage = (fieldPath: string): Ref<string> => {
+    const errorMessage = ref('')
     if (!validationController.value || !validationController.value.$invalid) {
-      errorMessage = ''
+      errorMessage.value = ''
     }
 
     const field = get(validationController.value, fieldPath)
 
     if (!field || !Object.keys(field).length) {
-      throw new Error(
-        `getFieldErrorMessage: Cannot find vuelidate field by '${fieldPath}'`,
-      )
+      throw new Error(`getFieldErrorMessage: Cannot find vuelidate field by '${fieldPath}'`)
     }
 
-    if (!field.$dirty) errorMessage = ''
+    if (!field.$dirty) errorMessage.value = ''
 
-    errorMessage = field.$errors.length
-      ? (field.$errors[0].$message as string)
+    errorMessage.value = field.$errors.length
+      ? field.$errors[0].$message as string
       : ''
 
     return errorMessage
@@ -45,6 +47,11 @@ export const useFormValidation = (
     if (field) {
       field.$touch()
     }
+  }
+
+  const isFormValid = (): boolean => {
+    validationController.value.$touch()
+    return !validationController.value.$invalid
   }
 
   return {
