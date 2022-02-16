@@ -1,7 +1,8 @@
 import { ICON_NAMES } from '@/enums'
 
 export type NotificationObjectPayload = {
-  title?: string
-  message: string
-  iconName?: typeof ICON_NAMES | unknown
+  titleId?: string,
+  messageId: string,
+  messageArgs: unknown,
+  iconName?: typeof ICON_NAMES | unknown,
 }
