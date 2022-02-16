@@ -1,6 +1,9 @@
 <template>
   <div class="no-data-message">
-    <icon class="no-data-message__icon" :name="iconName" />
+    <icon
+      class="no-data-message__icon"
+      :name="$icons.faFolderOpen"
+    />
     <span class="no-data-message__message">
       {{ message }}
     </span>
@@ -8,19 +11,14 @@
 </template>
 
 <script lang="ts">
-import { Icon } from '@/common'
+import Icon from '@/common/Icon.vue'
 
-import { defineComponent, PropType } from 'vue'
-import { ICON_NAMES } from '@/enums'
+import { defineComponent } from 'vue'
 
 export default defineComponent({
   name: 'no-data-message',
   components: { Icon },
   props: {
-    iconName: {
-      type: String as PropType<ICON_NAMES>,
-      default: ICON_NAMES.archive,
-    },
     message: {
       type: String,
       required: true,
@@ -31,18 +29,20 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 .no-data-message {
-  display: grid;
-  place-items: center;
-  grid-gap: toRem(12);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .no-data-message__icon {
-  color: var(--text-primary-light);
+  color: var(--no-data-message-icon);
   font-size: toRem(48);
+  margin-bottom: toRem(12);
 }
 
 .no-data-message__message {
-  color: var(--text-primary-light);
+  color: var(--no-data-message-message);
   font-size: toRem(18);
 }
 </style>

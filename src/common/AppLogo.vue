@@ -2,10 +2,13 @@
   <div class="app-logo">
     <img
       class="app-logo__img"
-      src="/branding/logo.svg"
+      src="@static/branding/logo.svg"
       :alt="$config.APP_NAME"
+    >
+    <router-link
+      class="app-logo__link"
+      :to="{ name: $routes.homePage }"
     />
-    <router-link class="app-logo__link" :to="{ name: $routes.uiKit }" />
   </div>
 </template>
 
@@ -31,4 +34,5 @@ export default defineComponent({
   left: 0;
   bottom: 0;
 }
+
 </style>

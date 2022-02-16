@@ -1,176 +1,136 @@
 <template>
-  <div class="input-field" :class="inputClasses">
+  <div
+    class="input-field"
+    :class="{
+      'input-field--error': errorMessage,
+      'input-field--disabled': isDisabled,
+      'input-field--readonly': isReadonly,
+      'input-field--right-align': scheme === SCHEMES.rightAlign,
+    }"
+  >
+    <label
+      v-if="label"
+      :for="`input-field--${uid}`"
+      class="input-field__label"
+    >
+      {{ label }}
+    </label>
     <div class="input-field__input-wrp">
-      <div v-if="$slots.nodeLeft" class="input-field__node-left-wrp">
-        <slot name="nodeLeft" />
-      </div>
       <input
         class="input-field__input"
         :id="`input-field--${uid}`"
+        v-bind="$attrs"
         v-on="listeners"
-        v-bind="attrs"
         :value="modelValue"
-        :placeholder="!label ? placeholder : ' '"
-        :tabindex="isDisabled || isReadonly ? -1 : attrs.tabindex"
-        :type="inputType"
-        :min="min"
+        :placeholder="placeholder"
+        :tabindex="isDisabled || isReadonly ? -1 : tabIndex"
+        :type="type"
         :max="max"
         :disabled="isDisabled || isReadonly"
-      />
-      <span
-        class="input-field__focus-indicator"
-        v-if="scheme === 'secondary'"
-      />
-      <label
-        v-if="label"
-        :for="`input-field--${uid}`"
-        class="input-field__label"
       >
-        {{ label }}
-      </label>
-      <div
-        v-if="$slots.nodeRight || isPasswordType || props.errorMessage"
-        class="input-field__node-right-wrp"
-      >
-        <button
-          v-if="isPasswordType"
-          type="button"
-          @click="isPasswordShown = !isPasswordShown"
-        >
-          <icon
-            class="input-field__password-icon"
-            :name="isPasswordShown ? $icons.eye : $icons.eyeOff"
-          />
-        </button>
-        <icon
-          v-else-if="props.errorMessage"
-          class="input-field__error-icon"
-          :name="$icons.exclamation"
-        />
-        <slot v-else name="nodeRight" />
-      </div>
     </div>
-    <transition
-      name="input-field__err-msg-transition"
-      @enter="setHeightCSSVar"
-      @before-leave="setHeightCSSVar"
-    >
-      <span v-if="errorMessage" class="input-field__err-msg">
+    <transition name="input-field__err-msg-transition">
+      <span
+        v-if="errorMessage"
+        class="input-field__err-msg"
+      >
         {{ errorMessage }}
       </span>
     </transition>
   </div>
 </template>
 
-<script lang="ts" setup>
-import { Icon } from '@/common'
+<script lang="ts">
+import { MathUtil } from '@/utils/math.util'
+import {
+  computed,
+  defineComponent,
+  getCurrentInstance,
+  PropType,
+} from 'vue'
 
-import { BN } from '@/utils'
-import { computed, getCurrentInstance, ref, useAttrs, useSlots } from 'vue'
+enum INPUT_TYPES {
+  text = 'text',
+  number = 'number',
+}
 
-const props = withDefaults(
-  defineProps<{
-    scheme?: 'primary' | 'secondary'
-    modelValue: string | number
-    label?: string
-    placeholder?: string
-    type?: 'text' | 'number' | 'password'
-    errorMessage?: string
-  }>(),
-  {
-    scheme: 'primary',
-    type: 'text',
-    label: '',
-    placeholder: ' ',
-    errorMessage: '',
+enum EVENTS {
+  updateModelValue = 'update:modelValue',
+}
+
+enum SCHEMES {
+  default = 'default',
+  rightAlign = 'right-align'
+}
+
+export default defineComponent({
+  name: 'input-field',
+  props: {
+    modelValue: { type: [String, Number], default: '' },
+    label: { type: String, default: '' },
+    placeholder: { type: String, default: ' ' },
+    tabIndex: { type: Number, default: 0 },
+    type: {
+      type: String as PropType<INPUT_TYPES>,
+      default: INPUT_TYPES.text,
+    },
+    scheme: { type: String, default: SCHEMES.default },
+    errorMessage: {  type: String, default: ''  },
   },
-)
+  emits: Object.values(EVENTS),
+  setup (props, { emit, attrs }) {
+    const uid = getCurrentInstance()?.uid
 
-const emit = defineEmits<{
-  (e: 'update:modelValue', value: number | string): void
-}>()
+    const isNumberType = computed(() => props.type === INPUT_TYPES.number)
 
-const attrs = useAttrs()
+    const max = computed(() : string => (attrs?.max as string) || '')
 
-const slots = useSlots()
+    const listeners = computed(() => ({
+      input: (event: Event) => {
+        const eventTarget = event.target as HTMLInputElement
+        if (isNumberType.value) {
+          eventTarget.value = normalizeRange(eventTarget.value)
+        }
+        if (props.modelValue === eventTarget.value) return
 
-const uid = getCurrentInstance()?.uid
+        emit(EVENTS.updateModelValue, eventTarget.value)
+      },
+    }))
 
-const isPasswordShown = ref(false)
+    const normalizeRange = (value: string | number): string => {
+      let result = value
 
-const isNumberType = computed(() => props.type === 'number')
-const isPasswordType = computed(() => props.type === 'password')
+      if (
+        max.value &&
+        MathUtil.compare(value as string, max.value as string) > 0
+      ) {
+        result = max.value
+      }
 
-const min = computed((): string => (attrs?.min as string) || '')
-const max = computed((): string => (attrs?.max as string) || '')
-
-const isDisabled = computed(() =>
-  ['', 'disabled', true].includes(attrs.disabled as string | boolean),
-)
-
-const isReadonly = computed(() =>
-  ['', 'readonly', true].includes(attrs.readonly as string | boolean),
-)
-
-const listeners = computed(() => ({
-  input: (event: Event) => {
-    const eventTarget = event.target as HTMLInputElement
-    if (isNumberType.value) {
-      eventTarget.value = normalizeRange(normalizeNumber(eventTarget.value))
+      return result as string
     }
-    if (props.modelValue === eventTarget.value) return
 
-    emit('update:modelValue', eventTarget.value)
+    const isDisabled = computed(() =>
+      ['', 'disabled', true].includes(attrs.disabled as string | boolean),
+    )
+
+    const isReadonly = computed(() =>
+      ['', 'readonly', true].includes(attrs.readonly as string | boolean),
+    )
+
+    return {
+      uid,
+      listeners,
+      isDisabled,
+      isReadonly,
+      max,
+      SCHEMES,
+    }
   },
-}))
-
-const inputClasses = computed(() =>
-  [
-    ...(slots.nodeLeft ? ['input-field--node-left'] : []),
-    ...(slots.nodeRight || isPasswordType.value || props.errorMessage
-      ? ['input-field--node-right']
-      : []),
-    ...(isDisabled.value ? ['input-field--disabled'] : []),
-    ...(isReadonly.value ? ['input-field--readonly'] : []),
-    ...(props.errorMessage ? ['input-field--error'] : []),
-    `input-field--${props.scheme}`,
-  ].join(' '),
-)
-
-const inputType = computed(() => {
-  if (isPasswordType.value) {
-    return isPasswordShown.value ? 'text' : 'password'
-  }
-  return 'text'
 })
-
-const normalizeNumber = (value: string) => {
-  return isNaN(Number(value)) ? props.modelValue : value
-}
-
-const normalizeRange = (value: string | number): string => {
-  let result = value
-
-  if (min.value && new BN(value).compare(min.value) < 0) {
-    result = min.value
-  } else if (max.value && new BN(value).compare(max.value) > 0) {
-    result = max.value
-  }
-
-  return result as string
-}
-
-const setHeightCSSVar = (element: HTMLElement) => {
-  element.style.setProperty(
-    '--field-error-msg-height',
-    `${element.scrollHeight}px`,
-  )
-}
 </script>
 
 <style lang="scss" scoped>
-$z-index-side-nodes: 1;
-
 .input-field {
   display: flex;
   flex-direction: column;
@@ -180,86 +140,22 @@ $z-index-side-nodes: 1;
 
   &--disabled,
   &--readonly {
-    opacity: 0.5;
+    pointer-events: none;
+    filter: grayscale(100%);
   }
 }
 
 .input-field__label {
-  pointer-events: none;
-  position: absolute;
-  padding: toRem(4);
-  top: 0;
-  left: var(--field-padding-left);
-  font-size: toRem(12);
-  line-height: 1.3;
-  font-weight: 700;
-  background: var(--field-bg-primary);
-  transform: translateY(-50%);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 0.5rem;
+  transition: all var(--field-transition-duration);
 
   @include field-label;
 
-  transition-property: all;
-
-  .input-field--secondary & {
-    padding: 0;
-  }
-
-  .input-field--secondary.input-field--node-left & {
-    left: calc(var(--field-padding-left) * 3);
-  }
-
-  .input-field__input:not(:placeholder-shown) ~ & {
-    top: 0;
-    color: var(--field-text);
-    border-color: var(--field-border-hover);
-
-    .input-field--secondary & {
-      transform: translateY(25%);
-    }
-  }
-
-  .input-field__input:not(:focus):placeholder-shown ~ & {
-    top: 50%;
-    color: var(--field-label);
-    font-size: toRem(16);
-    font-weight: 400;
-    line-height: 1.3;
-
-    .input-field--node-left & {
-      left: calc(var(--field-padding-left) * 3);
-    }
-  }
-
-  .input-field--error .input-field__input:not(:focus):placeholder-shown ~ & {
-    color: var(--field-error);
-  }
-
-  /* stylelint-disable-next-line */
-  .input-field__input:not([disabled]):focus ~ & {
-    color: var(--field-label-focus);
-    font-weight: 700;
-
-    .input-field--secondary & {
-      transform: translateY(25%);
-      color: var(--primary-main);
-    }
-  }
-
-  .input-field__input:not(:focus):placeholder-shown:-webkit-autofill ~ & {
-    top: 50%;
-    color: var(--field-label);
-    font-size: toRem(16);
-    font-weight: 400;
-    line-height: 1.3;
-
-    .input-field--node-left & {
-      left: calc(var(--field-padding-left) * 3);
-    }
-  }
-
-  /* stylelint-disable-next-line */
-  .input-field--secondary & {
-    background: var(--field-bg-secondary);
+  .input-field--error & {
+    color: var(--field-col-error);
   }
 }
 
@@ -270,72 +166,48 @@ $z-index-side-nodes: 1;
 }
 
 .input-field__input {
-  padding: var(--field-padding);
-  background: var(--field-bg-primary);
-  box-shadow: inset 0 0 0 toRem(50) var(--field-bg-primary);
+  background: none;
   border: none;
+  text-overflow: ellipsis;
+  padding: var(--field-padding);
 
   @include field-text;
 
-  & + .input-field__focus-indicator {
-    pointer-events: none;
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-
-    &:after {
-      content: '';
-      position: absolute;
-      bottom: toRem(-2);
-      left: 50%;
-      transform: translateX(-50%);
-      height: toRem(2);
-      width: 0;
-      background: var(--primary-main);
-      transition: width calc(var(--field-transition-duration) + 0.3s);
-
-      .input-field--error & {
-        background: var(--field-error);
-      }
-    }
-  }
-
-  .input-field--primary & {
-    @include field-border;
-  }
-
-  .input-field--secondary & {
-    position: relative;
-    background: var(--field-bg-secondary);
-    box-shadow: inset 0 0 0 toRem(50) var(--field-bg-secondary),
-      0 toRem(2) 0 0 var(--field-border);
-    padding: calc(var(--field-padding-top) + #{toRem(12)})
-      var(--field-padding-right) var(--field-padding-bottom)
-      var(--field-padding-left);
-  }
-
-  transition-property: all;
+  @include field-border(var(--field-col-border));
 
   &::-webkit-input-placeholder {
-    @include field-placeholder;
+
+    @include placeholder;
   }
 
   &::-moz-placeholder {
-    @include field-placeholder;
+
+    @include placeholder;
   }
 
   &:-moz-placeholder {
-    @include field-placeholder;
+
+    @include placeholder;
   }
 
   &:-ms-input-placeholder {
-    @include field-placeholder;
+
+    @include placeholder;
   }
 
   &::placeholder {
-    @include field-placeholder;
+
+    @include placeholder;
+  }
+
+  &:not(:read-only) {
+    box-shadow: inset 0 0 0 3.125rem var(--field-col-bg);
+  }
+
+  &:read-only,
+  &:disabled {
+    cursor: default;
+    filter: grayscale(100%);
   }
 
   // Hide number arrows
@@ -350,111 +222,42 @@ $z-index-side-nodes: 1;
     }
   }
 
-  .input-field--node-left & {
-    padding-left: calc(var(--field-padding-left) * 3);
+  .input-field--error & {
+
+    @include field-border(var(--field-col-error));
   }
 
-  .input-field--node-right & {
-    padding-right: calc(var(--field-padding-right) * 3);
+  .input-field--right-align & {
+    text-align: right;
   }
-
-  &:not(:placeholder-shown) {
-    .input-field--secondary & {
-      & + .input-field__focus-indicator:after {
-        width: 100%;
-      }
-    }
-  }
-
-  .input-field--error.input-field--primary & {
-    border-color: var(--field-error);
-    box-shadow: inset 0 0 0 toRem(50) var(--field-bg-primary),
-      0 0 0 toRem(1) var(--field-error);
-  }
-
-  .input-field--error.input-field--secondary & {
-    border-color: var(--field-error);
-    box-shadow: inset 0 0 0 toRem(50) var(--field-bg-secondary),
-      0 toRem(2) 0 0 var(--field-error);
-  }
-
-  &:not([disabled]):focus {
-    .input-field--primary & {
-      box-sizing: border-box;
-      box-shadow: inset 0 0 0 toRem(50) var(--field-bg-primary),
-        0 0 0 toRem(1) var(--field-border-focus);
-      border-color: var(--field-border-focus);
-    }
-
-    .input-field--secondary & {
-      & + .input-field__focus-indicator:after {
-        width: 100%;
-      }
-    }
-  }
-
-  &:not([disabled]):not(:focus):hover {
-    .input-field--primary & {
-      border-color: var(--field-border-hover);
-    }
-  }
-}
-
-.input-field__node-left-wrp {
-  overflow: hidden;
-  position: absolute;
-  top: 50%;
-  left: var(--field-padding-left);
-  transform: translateY(-50%);
-  color: inherit;
-  max-height: 100%;
-  z-index: $z-index-side-nodes;
-}
-
-.input-field__node-right-wrp {
-  position: absolute;
-  top: 50%;
-  right: var(--field-padding-right);
-  transform: translateY(-50%);
-  color: inherit;
-  z-index: $z-index-side-nodes;
-}
-
-.input-field__password-icon {
-  max-width: toRem(24);
-  max-height: toRem(24);
-}
-
-.input-field__error-icon {
-  max-width: toRem(24);
-  max-height: toRem(24);
-  color: var(--field-error);
-}
-
-.input-field__icon {
-  width: toRem(18);
-  height: toRem(18);
 }
 
 .input-field__err-msg {
-  @include field-error;
+  overflow: hidden;
+  margin-top: 0.5rem;
+  color: var(--field-col-error);
+  font-size: 0.625rem;
 }
 
 .input-field__err-msg-transition-enter-active {
-  animation: fade-down var(--field-transition-duration);
+  animation: fade-down var(--field-error-transition);
 }
 
 .input-field__err-msg-transition-leave-active {
-  animation: fade-down var(--field-transition-duration) reverse;
+  animation: fade-down var(--field-error-transition) reverse;
 }
 
 @keyframes fade-down {
   from {
-    height: 0;
+    max-height: 0;
+    margin-top: 0;
   }
 
   to {
-    height: var(--field-error-msg-height);
+    max-height: calc(
+      var(--field-error-font-size) * var(--field-error-line-height)
+    );
+    margin-top: var(--field-error-margin-top);
   }
 }
 </style>
