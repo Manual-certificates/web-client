@@ -1,45 +1,97 @@
 <template>
-  <transition
-    name="collapse__body-transition"
-    @enter="setHeightCSSVar"
-    @before-leave="setHeightCSSVar"
-  >
-    <div v-show="isShown" class="collapse__body">
-      <slot />
+  <div class="collapse" ref="rootEl">
+    <div class="collapse__head">
+      <slot
+        name="head"
+        :collapse="{
+          isOpen: isCollapseOpen,
+          toggle: toggleCollapse,
+          close: closeCollapse,
+        }"
+      />
     </div>
-  </transition>
+    <transition
+      name="collapse__body-transition"
+      @enter="setHeightCSSVar"
+      @before-leave="setHeightCSSVar"
+    >
+      <div v-if="isCollapseOpen" class="collapse__body">
+        <slot
+          :collapse="{
+            isOpen: isCollapseOpen,
+            toggle: toggleCollapse,
+            close: closeCollapse,
+          }"
+        />
+      </div>
+    </transition>
+  </div>
 </template>
 
-<script lang="ts" setup>
-withDefaults(
-  defineProps<{
-    isShown: boolean
-    isOpenedByDefault?: boolean
-    isCloseByClickOutside?: boolean
-  }>(),
-  {
-    isOpenedByDefault: false,
-    isCloseByClickOutside: true,
-  },
-)
+<script lang="ts">
+import { defineComponent, ref } from 'vue'
+import { onClickOutside } from '@vueuse/core'
+import { useRouter } from '@/router'
 
-const setHeightCSSVar = (element: HTMLElement) => {
-  element.style.setProperty(
-    '--collapse-body-height',
-    `${element.scrollHeight}px`,
-  )
-}
+export default defineComponent({
+  name: 'collapse',
+  setup() {
+    const rootEl = ref<HTMLElement | null>(null)
+    const destructClickOutsideHandler = ref<() => void | undefined>()
+    const isCollapseOpen = ref(false)
+    const router = useRouter()
+
+    router.afterEach(() => {
+      closeCollapse()
+    })
+
+    const toggleCollapse = () => {
+      isCollapseOpen.value ? closeCollapse() : openCollapse()
+    }
+    const closeCollapse = () => {
+      isCollapseOpen.value = false
+
+      if (destructClickOutsideHandler.value) {
+        destructClickOutsideHandler.value()
+      }
+    }
+    const openCollapse = () => {
+      isCollapseOpen.value = true
+      destructClickOutsideHandler.value = onClickOutside(
+        rootEl.value,
+        closeCollapse,
+      )
+    }
+
+    const setHeightCSSVar = (element: HTMLElement) => {
+      element.style.setProperty(
+        '--collapse-body-height',
+        `${element.scrollHeight}px`,
+      )
+    }
+
+    return {
+      rootEl,
+      isCollapseOpen,
+      toggleCollapse,
+      closeCollapse,
+      setHeightCSSVar,
+    }
+  },
+})
 </script>
 
 <style lang="scss" scoped>
+.collapse__body {
+  overflow: hidden;
+}
+
 .collapse__body-transition-enter-active {
   animation: collapse-frame-keyframes 0.25s ease-in-out;
-  overflow: hidden;
 }
 
 .collapse__body-transition-leave-active {
   animation: collapse-frame-keyframes 0.25s ease-in-out reverse;
-  overflow: hidden;
 }
 
 @keyframes collapse-frame-keyframes {
