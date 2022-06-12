@@ -56,12 +56,14 @@ import { Icon } from '@/common'
 
 import { computed, defineComponent, PropType } from 'vue'
 import { ICON_NAMES } from '@/enums'
-import { LocationAsRelativeRaw } from 'vue-router'
+import { RouteRecordRaw } from 'vue-router'
 import { isObject } from 'lodash-es'
 
 enum SCHEMES {
   primary = 'primary',
   flat = 'flat',
+  success = 'success',
+  error = 'error',
 }
 
 enum MODIFICATIONS {
@@ -70,10 +72,6 @@ enum MODIFICATIONS {
   iconFirst = 'icon-first',
   big = 'big',
   small = 'small',
-  success = 'success',
-  error = 'error',
-  warning = 'warning',
-  info = 'info',
 }
 
 export default defineComponent({
@@ -92,9 +90,9 @@ export default defineComponent({
       default: MODIFICATIONS.borderRounded,
     },
     route: {
-      type: Object as PropType<LocationAsRelativeRaw>,
+      type: Object as PropType<RouteRecordRaw>,
       default: null,
-      validator: (value: LocationAsRelativeRaw): boolean => {
+      validator: (value: RouteRecordRaw): boolean => {
         return !value || (isObject(value) && Boolean(value.name))
       },
     },
@@ -137,8 +135,6 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 .app-button {
-  --button-transition-duration: 0.2s;
-
   outline: 0;
   font-family: var(--app-font-family);
   margin: 0;
@@ -148,13 +144,14 @@ export default defineComponent({
   display: grid;
   width: min-content;
   grid: auto / auto-flow max-content;
-  grid-gap: toRem(12);
+  grid-gap: toRem(16);
   align-items: center;
   justify-content: center;
-  padding: toRem(16) toRem(30);
+  min-width: toRem(100);
+  padding: toRem(16) toRem(25);
   font-size: toRem(16);
-  line-height: 1.4;
-  font-weight: 600;
+  line-height: 1.2;
+  font-weight: 500;
   letter-spacing: 0;
   transition: var(--button-transition-duration) ease-in;
   transition-property: background-color, color;
@@ -177,107 +174,59 @@ export default defineComponent({
     transition-timing-function: ease-out;
     color: var(--app-button-text-hover);
     background-color: var(--app-button-bg-hover);
-    border-color: var(--app-button-border-hover);
-    border: var(--app-button-border-hover);
   }
 
   &:not([disabled]):active {
     text-decoration: none;
     transition-timing-function: ease-out;
     background-color: var(--app-button-bg-active);
-    border: var(--app-button-border-active);
   }
 
   &--primary {
-    --app-button-primary-bg: var(--primary-main);
-    --app-button-primary-bg-hover: var(--primary-dark);
-    --app-button-primary-bg-active: var(--primary-dark);
-
-    --app-button-primary-text: var(--text-primary-invert-main);
-    --app-button-primary-text-hover: var(--text-primary-invert-main);
-
-    --app-button-bg: var(--app-button-primary-bg);
-    --app-button-bg-hover: var(--app-button-primary-bg-hover);
-    --app-button-bg-active: var(--app-button-primary-bg-active);
-
-    --app-button-text: var(--app-button-primary-text);
-    --app-button-text-hover: var(--app-button-primary-text-hover);
-
-    --app-button-border: 0;
-    --app-button-border-hover: 0;
-    --app-button-border-active: 0;
+    --app-button-bg: var(--col-primary-main);
+    --app-button-bg-hover: var(--col-primary-dark);
+    --app-button-bg-active: var(--col-primary-dark);
+    --app-button-text: var(--col-text-primary-dark);
+    --app-button-text-hover: var(--col-text-primary-dark);
+    --app-button-border: none;
   }
 
-  &--flat {
-    --app-button-flat-text: var(--text-primary-main);
-    --app-button-flat-text-hover: var(--text-primary-dark);
+  &--primary-bright {
+    --app-button-bg: var(--col-primary-light);
+    --app-button-bg-hover: var(--col-primary-main);
+    --app-button-bg-active: var(--col-primary-main);
+    --app-button-text: var(--col-text-primary-dark);
+    --app-button-text-hover: var(--col-text-primary-dark);
+    --app-button-border: none;
+  }
 
-    --app-button-flat-border: #{toRem(2)} solid var(--text-primary-light);
-    --app-button-flat-border-hover: var(--app-button-flat-border);
-    --app-button-flat-border-active: var(--app-button-flat-border);
-
-    --app-button-bg: transparent;
-    --app-button-bg-hover: transparent;
-    --app-button-bg-active: transparent;
-
-    --app-button-text: var(--app-button-flat-text);
-    --app-button-text-hover: var(--app-button-flat-text-hover);
-
-    --app-button-border: var(--app-button-flat-border);
-    --app-button-border-hover: var(--app-button-flat-border-hover);
-    --app-button-border-active: var(--app-button-flat-border-active);
+  &--primary-flat {
+    --app-button-text: var(--col-text-primary-light);
+    --app-button-text-hover: var(--col-text-primary-light);
+    --app-button-border: #{toRem(2)} solid var(--col-text-primary-light);
+    --app-button-bg: var(--app-bg);
   }
 
   &--success {
-    --app-button-flat-text: var(--success-main);
-    --app-button-flat-text-hover: var(--success-dark);
-    --app-button-flat-border: #{toRem(2)} solid var(--success-main);
-    --app-button-flat-border-hover: #{toRem(2)} solid var(--success-dark);
-    --app-button-flat-border-active: #{toRem(2)} solid var(--success-dark);
-
-    --app-button-primary-bg: var(--success-main);
-    --app-button-primary-bg-hover: var(--success-dark);
-    --app-button-primary-bg-active: var(--success-dark);
+    --app-button-bg: var(--col-success-main);
+    --app-button-bg-hover: var(--col-success-dark);
+    --app-button-bg-active: var(--col-success-dark);
+    --app-button-text: var(--col-text-primary-dark);
+    --app-button-text-hover: var(--col-text-primary-dark);
+    --app-button-border: none;
   }
 
   &--error {
-    --app-button-flat-text: var(--error-main);
-    --app-button-flat-text-hover: var(--error-dark);
-    --app-button-flat-border: #{toRem(2)} solid var(--error-main);
-    --app-button-flat-border-hover: #{toRem(2)} solid var(--error-dark);
-    --app-button-flat-border-active: #{toRem(2)} solid var(--error-dark);
-
-    --app-button-primary-bg: var(--error-main);
-    --app-button-primary-bg-hover: var(--error-dark);
-    --app-button-primary-bg-active: var(--error-dark);
-  }
-
-  &--warning {
-    --app-button-flat-text: var(--warning-main);
-    --app-button-flat-text-hover: var(--warning-dark);
-    --app-button-flat-border: #{toRem(2)} solid var(--warning-dark);
-    --app-button-flat-border-hover: #{toRem(2)} solid var(--warning-dark);
-    --app-button-flat-border-active: #{toRem(2)} solid var(--warning-dark);
-
-    --app-button-primary-bg: var(--warning-main);
-    --app-button-primary-bg-hover: var(--warning-dark);
-    --app-button-primary-bg-active: var(--warning-dark);
-  }
-
-  &--info {
-    --app-button-flat-text: var(--info-main);
-    --app-button-flat-text-hover: var(--info-dark);
-    --app-button-flat-border: #{toRem(2)} solid var(--info-main);
-    --app-button-flat-border-hover: #{toRem(2)} solid var(--info-dark);
-    --app-button-flat-border-active: #{toRem(2)} solid var(--info-dark);
-
-    --app-button-primary-bg: var(--info-main);
-    --app-button-primary-bg-hover: var(--info-dark);
-    --app-button-primary-bg-active: var(--info-dark);
+    --app-button-bg: var(--col-error-main);
+    --app-button-bg-hover: var(--col-error-dark);
+    --app-button-bg-active: var(--col-error-dark);
+    --app-button-text: var(--col-text-primary-dark);
+    --app-button-text-hover: var(--col-text-primary-dark);
+    --app-button-border: none;
   }
 
   &--border-circle {
-    border-radius: toRem(50);
+    border-radius: toRem(52);
   }
 
   &--border-rounded {
@@ -285,17 +234,22 @@ export default defineComponent({
   }
 
   &--big {
-    padding: toRem(20) toRem(30);
+    padding: toRem(17) toRem(20);
+    min-height: toRem(60);
+    width: 100%;
   }
 
   &--small {
-    padding: toRem(8) toRem(30);
+    font-size: toRem(12);
+    padding: toRem(8) toRem(10);
+    min-width: toRem(80);
+    grid-gap: toRem(6);
   }
 }
 
 .app-button__icon {
-  height: 1.2em;
-  width: 1.2em;
+  height: toRem(12);
+  width: toRem(12);
 
   .app-button--icon-first & {
     grid-column: -1;
@@ -306,8 +260,11 @@ export default defineComponent({
   color: inherit;
   font: inherit;
   pointer-events: none;
-  word-break: break-all;
   min-width: 0;
+
+  // Magic fix of the font vertical alignment
+  margin-top: calc(#{toRem(2)} * (-1));
+  word-break: break-all;
 
   @include text-ellipsis;
 }

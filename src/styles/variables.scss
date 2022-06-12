@@ -47,14 +47,6 @@
   --text-secondary-main: #{$text-secondary-main};
   --text-secondary-dark: #{$text-secondary-dark};
 
-  --text-primary-invert-light: #{$text-primary-invert-light};
-  --text-primary-invert-main: #{$text-primary-invert-main};
-  --text-primary-invert-dark: #{$text-primary-invert-dark};
-
-  --text-secondary-invert-light: #{$text-secondary-invert-light};
-  --text-secondary-invert-main: #{$text-secondary-invert-main};
-  --text-secondary-invert-dark: #{$text-secondary-invert-dark};
-
   /* border colors */
   --border-primary-light: #{$border-primary-light};
   --border-primary-main: #{$border-primary-main};
@@ -80,7 +72,7 @@
 
   /* label */
   --field-label: var(--text-primary-main);
-  --field-label-font-size: #{toRem(14)};
+  --field-label-font-size: #{toRem(16)};
   --field-label-line-height: 1.4;
 
   /* text */

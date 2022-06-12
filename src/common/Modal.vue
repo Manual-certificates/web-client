@@ -1,9 +1,9 @@
 <template>
   <teleport to="#modal">
     <transition name="modal">
-      <div v-show="isShown" class="modal">
-        <div class="modal__pane" ref="modalPane">
-          <slot :modal="{ close: closeModal }" />
+      <div v-if="isShown" class="modal">
+        <div class="modal__pane">
+          <slot />
         </div>
       </div>
     </transition>
@@ -31,12 +31,12 @@ export default defineComponent({
     },
   },
   setup(props, { emit }) {
-    const modalPane = ref<HTMLElement | undefined>()
+    const modal = ref<HTMLElement | undefined>()
 
     onMounted(() => {
-      if (modalPane.value) {
+      if (modal.value) {
         if (props.isCloseByClickOutside) {
-          onClickOutside(modalPane, () => {
+          onClickOutside(modal, () => {
             closeModal()
           })
         }
@@ -47,11 +47,7 @@ export default defineComponent({
       emit(EVENTS.updateIsShown, false)
     }
 
-    return {
-      modalPane,
-
-      closeModal,
-    }
+    return {}
   },
 })
 </script>

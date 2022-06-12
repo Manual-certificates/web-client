@@ -30,7 +30,7 @@ export default defineComponent({
     },
     iconName: {
       type: String as PropType<ICON_NAMES>,
-      default: ICON_NAMES.exclamationCircle,
+      default: ICON_NAMES.shieldExclamation,
     },
   },
 })
@@ -38,23 +38,25 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 .error-message {
-  display: grid;
-  place-items: center;
-  grid-gap: toRem(12);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .error-message__icon {
-  color: var(--error-main);
+  color: var(--text-primary-main);
   font-size: toRem(48);
+  margin-bottom: toRem(12);
 }
 
 .error-message__title {
-  color: var(--error-main);
+  color: var(--text-primary-main);
   font-size: toRem(24);
 }
 
 .error-message__message {
-  color: var(--error-main);
+  color: var(--text-primary-main);
   font-size: toRem(18);
 }
 </style>

@@ -25,7 +25,7 @@
         >
           <icon
             class="input-field__icon"
-            :name="isPasswordShown ? $icons.eye : $icons.eyeOff"
+            :name="isPasswordShown ? $icons.heart : $icons.check"
           />
         </button>
         <icon v-else class="input-field__icon" :name="iconName" />
@@ -63,7 +63,7 @@ enum INPUT_TYPES {
 }
 
 enum EVENTS {
-  updateModelValue = 'update:model-value',
+  updateModelValue = 'update:modelValue',
 }
 
 enum SCHEMES {
