@@ -1,9 +1,9 @@
 <template>
   <teleport to="#modal">
     <transition name="modal">
-      <div v-show="isShown" class="modal" v-bind="$attrs">
-        <div class="modal__pane" ref="modalPane">
-          <slot :modal="{ close: closeModal }" />
+      <div v-if="isShown" class="modal">
+        <div class="modal__pane">
+          <slot />
         </div>
       </div>
     </transition>
@@ -31,12 +31,12 @@ export default defineComponent({
     },
   },
   setup(props, { emit }) {
-    const modalPane = ref<HTMLElement | undefined>()
+    const modal = ref<HTMLElement | undefined>()
 
     onMounted(() => {
-      if (modalPane.value) {
+      if (modal.value) {
         if (props.isCloseByClickOutside) {
-          onClickOutside(modalPane, () => {
+          onClickOutside(modal, () => {
             closeModal()
           })
         }
@@ -47,18 +47,12 @@ export default defineComponent({
       emit(EVENTS.updateIsShown, false)
     }
 
-    return {
-      modalPane,
-
-      closeModal,
-    }
+    return {}
   },
 })
 </script>
 
 <style lang="scss" scoped>
-$z-index-local: 1;
-
 .modal {
   display: flex;
   justify-content: center;
@@ -69,16 +63,13 @@ $z-index-local: 1;
   width: 100vw;
   height: vh(100);
   background: rgba(var(--black-rgb), 0.5);
-  z-index: $z-index-local;
 }
 
 .modal__pane {
-  display: flex;
-  align-items: center;
-  justify-content: center;
   position: relative;
-  width: auto;
-  height: auto;
+  background: var(--app-bg);
+  padding: toRem(50) toRem(100);
+  border-radius: toRem(10);
 }
 
 .modal-enter-active,
