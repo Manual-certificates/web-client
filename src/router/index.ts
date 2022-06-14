@@ -33,6 +33,11 @@ const routes: Array<RouteRecordRaw> = [
     name: ROUTE_NAMES.common,
     component: () => import('@/pages/CommonPage.vue'),
   },
+  {
+    path: '/buttons',
+    name: ROUTE_NAMES.buttonsPage,
+    component: () => import('@/pages/ButtonsPage.vue'),
+  },
 ]
 
 const router = createRouter({
