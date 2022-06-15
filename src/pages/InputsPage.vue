@@ -2,24 +2,17 @@
   <div class="inputs-page">
     <div class="inputs-page__row">
       <div class="inputs-page__col">
+        <input-field :label="'label'" :placeholder="'placeholder'" />
         <input-field
           :label="'label'"
-          :placeholder="$t('inputs-page.some-placeholder')"
+          :error-message="'some error message'"
+          :placeholder="'placeholder'"
         />
+        <input-field :label="'label'" :placeholder="'placeholder'" disabled />
         <input-field
-          :label="$t('inputs-page.some-label')"
-          :error-message="$t('inputs-page.some-error-message')"
-          :placeholder="$t('inputs-page.some-placeholder')"
-        />
-        <input-field
-          :label="$t('inputs-page.some-label')"
-          :placeholder="$t('inputs-page.some-placeholder')"
-          disabled
-        />
-        <input-field
-          :label="$t('inputs-page.some-label')"
-          :error-message="$t('inputs-page.some-error-message')"
-          :placeholder="$t('inputs-page.some-placeholder')"
+          :label="'label'"
+          :error-message="'some disabled error message'"
+          :placeholder="'placeholder'"
           disabled
         />
       </div>
