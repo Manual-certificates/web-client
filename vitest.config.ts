@@ -2,6 +2,7 @@ import checker from 'vite-plugin-checker'
 import vue from '@vitejs/plugin-vue'
 import { defineConfig, loadEnv } from 'vite'
 import { visualizer } from 'rollup-plugin-visualizer'
+import NodeGlobalsPolyfillPlugin from '@esbuild-plugins/node-globals-polyfill'
 import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
 
 import fs from 'fs'
@@ -19,7 +20,6 @@ export default defineConfig(({ command, mode }) => {
   const isProduction = env.VITE_APP_ENVIRONMENT === 'production'
   const isDevelopment = env.VITE_APP_ENVIRONMENT === 'development'
   const isAnalyze = env.VITE_APP_ENVIRONMENT === 'analyze'
-  const buildVersion = env.VITE_APP_BUILD_VERSION
 
   return {
     server: {
@@ -33,9 +33,6 @@ export default defineConfig(({ command, mode }) => {
         symbolId: '[name]',
       }),
       checker({
-        overlay: {
-          initialIsOpen: false,
-        },
         typescript: true,
         eslint: {
           lintCommand:
@@ -54,8 +51,8 @@ export default defineConfig(({ command, mode }) => {
       preprocessorOptions: {
         scss: {
           additionalData: `
-          @import "@/styles/_functions.scss";
           @import "@/styles/_mixins.scss";
+          @import "@/styles/_functions.scss";
         `,
         },
       },
@@ -69,9 +66,19 @@ export default defineConfig(({ command, mode }) => {
         '@static': `${root}/../static`,
       },
     },
+    optimizeDeps: {
+      esbuildOptions: {
+        define: {
+          global: 'globalThis',
+        },
+        plugins: [
+          NodeGlobalsPolyfillPlugin({
+            buffer: true,
+          }),
+        ],
+      },
+    },
     test: {
-      globals: true,
-      environment: 'happy-dom',
       exclude: [...configDefaults.exclude],
     },
   }
