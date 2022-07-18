@@ -1,12 +1,11 @@
 import { computed, ref } from 'vue'
 import { sleep } from '@/helpers'
 import { PROVIDERS, PROVIDERS_CHECKS } from '@/enums'
-import { DesignatedProvider, ProviderInstance } from '@/types'
 
 export const useWeb3 = () => {
-  const providers = ref<DesignatedProvider[]>([])
+  const providers = ref<any[]>([])
 
-  const _browserProviders = ref<ProviderInstance[]>([])
+  const _browserProviders = ref<any[]>([])
 
   const isEnabled = computed(() => providers.value.length)
 
@@ -29,6 +28,7 @@ export const useWeb3 = () => {
       ...(solflareProvider ? [solflareProvider] : []),
     ]
   }
+
   const _defineProviders = async () => {
     if (_browserProviders.value.length) {
       await handleProviders()
@@ -43,16 +43,16 @@ export const useWeb3 = () => {
     }
   }
 
-  const designateBrowserProviders = (): DesignatedProvider[] => {
+  const designateBrowserProviders = (): any[] => {
     if (!_browserProviders.value.length) return []
 
     const designatedProviders = _browserProviders.value.map(el => {
-      const appropriatedProviderName: PROVIDERS = getAppropriateProviderName(el)
+      const appropriatedProviderName = getAppropriateProviderName(el)
 
       return {
         name: appropriatedProviderName,
-        instance: el,
-      } as DesignatedProvider
+        provider: el,
+      }
     })
 
     return designatedProviders.filter(
@@ -60,20 +60,14 @@ export const useWeb3 = () => {
     )
   }
 
-  const getAppropriateProviderName = (
-    provider: ProviderInstance,
-  ): PROVIDERS => {
+  const getAppropriateProviderName = (provider: any) => {
     const providerName = Object.entries(PROVIDERS_CHECKS).find(el => {
-      const [, value] = el
+      const [_, value] = el
 
-      return ((<unknown>provider) as { [key in PROVIDERS_CHECKS]: boolean })[
-        value
-      ]
+      return provider[value] as keyof typeof PROVIDERS
     })
 
-    return (
-      ((providerName && providerName[0]) as PROVIDERS) || PROVIDERS.fallback
-    )
+    return (providerName && providerName[0]) || PROVIDERS.fallback
   }
 
   return {
