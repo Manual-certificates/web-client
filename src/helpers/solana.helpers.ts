@@ -1,74 +1,61 @@
-import { Transaction } from '@solana/web3.js'
-import bs58 from 'bs58'
+import {
+  ProviderChainDisconnected,
+  ProviderDisconnected,
+  ProviderInternalError,
+  ProviderInvalidInput,
+  ProviderInvalidParams,
+  ProviderInvalidRequest,
+  ProviderJsonRpcVersionNotSupported,
+  ProviderLimitExceeded,
+  ProviderMethodNotFound,
+  ProviderMethodNotSupported,
+  ProviderParseError,
+  ProviderResourceNotFound,
+  ProviderResourceUnavailable,
+  ProviderTransactionRejected,
+  ProviderUnauthorized,
+  ProviderUnsupportedMethod,
+  ProviderUserRejectedRequest,
+} from '@/errors'
+import { SolProviderRpcError } from '@/types'
 
-import { EIP1193, EIP1474, SOLANA_CHAINS } from '@/enums'
-import { errors } from '@/errors'
-import { SolanaProviderRpcError } from '@/types'
-
-export function handleSolError(error: SolanaProviderRpcError) {
-  const ErrorCode = error?.error?.code || error?.code
-
-  switch (ErrorCode) {
-    case EIP1193.userRejectedRequest:
-      throw new errors.ProviderUserRejectedRequest()
-    case EIP1193.unauthorized:
-      throw new errors.ProviderUnauthorized()
-    case EIP1193.unsupportedMethod:
-      throw new errors.ProviderUnsupportedMethod()
-    case EIP1193.disconnected:
-      throw new errors.ProviderDisconnected()
-    case EIP1193.chainDisconnected:
-      throw new errors.ProviderChainDisconnected()
-    case EIP1474.parseError:
-      throw new errors.ProviderParseError()
-    case EIP1474.invalidRequest:
-      throw new errors.ProviderInvalidRequest()
-    case EIP1474.methodNotFound:
-      throw new errors.ProviderMethodNotFound()
-    case EIP1474.invalidParams:
-      throw new errors.ProviderInvalidParams()
-    case EIP1474.internalError:
-      throw new errors.ProviderInternalError()
-    case EIP1474.invalidInput:
-      throw new errors.ProviderInvalidInput()
-    case EIP1474.resourceNotFound:
-      throw new errors.ProviderResourceNotFound()
-    case EIP1474.resourceUnavailable:
-      throw new errors.ProviderResourceUnavailable()
-    case EIP1474.transactionRejected:
-      throw new errors.ProviderTransactionRejected()
-    case EIP1474.methodNotSupported:
-      throw new errors.ProviderMethodNotSupported()
-    case EIP1474.limitExceeded:
-      throw new errors.ProviderLimitExceeded()
-    case EIP1474.jsonRpcVersionNotSupported:
-      throw new errors.ProviderJsonRpcVersionNotSupported()
+export function handleSolError(error: SolProviderRpcError) {
+  switch (error.error.code) {
+    case 4001:
+      throw new ProviderUserRejectedRequest()
+    case 4100:
+      throw new ProviderUnauthorized()
+    case 4200:
+      throw new ProviderUnsupportedMethod()
+    case 4900:
+      throw new ProviderDisconnected()
+    case 4901:
+      throw new ProviderChainDisconnected()
+    case -32700:
+      throw new ProviderParseError()
+    case -32600:
+      throw new ProviderInvalidRequest()
+    case -32601:
+      throw new ProviderMethodNotFound()
+    case -32602:
+      throw new ProviderInvalidParams()
+    case -32603:
+      throw new ProviderInternalError()
+    case -32000:
+      throw new ProviderInvalidInput()
+    case -32001:
+      throw new ProviderResourceNotFound()
+    case -32002:
+      throw new ProviderResourceUnavailable()
+    case -32003:
+      throw new ProviderTransactionRejected()
+    case -32004:
+      throw new ProviderMethodNotSupported()
+    case -32005:
+      throw new ProviderLimitExceeded()
+    case -32006:
+      throw new ProviderJsonRpcVersionNotSupported()
     default:
       throw error
   }
-}
-
-export function decodeSolanaTx(tx: string) {
-  const buff = bs58.decode(tx)
-  return Transaction.from(buff)
-}
-
-export function getSolExplorerTxUrl(
-  chainId: string,
-  explorerUrl: string,
-  txHash: string,
-) {
-  return chainId === SOLANA_CHAINS.mainet
-    ? `${explorerUrl}/tx/${txHash}`
-    : `${explorerUrl}/tx/${txHash}?cluster=${chainId}`
-}
-
-export function getSolExplorerAddressUrl(
-  chainId: string,
-  explorerUrl: string,
-  address: string,
-) {
-  return chainId === SOLANA_CHAINS.mainet
-    ? `${explorerUrl}/address/${address}`
-    : `${explorerUrl}/address/${address}?cluster=${chainId}`
 }
