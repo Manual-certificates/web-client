@@ -1,8 +1,6 @@
 import { ethers } from 'ethers'
 import {
   connectEthAccounts,
-  getEthExplorerAddressUrl,
-  getEthExplorerTxUrl,
   handleEthError,
   requestAddEthChain,
   requestSwitchEthChain,
@@ -10,40 +8,32 @@ import {
 import { computed, ref } from 'vue'
 import {
   EthProviderRpcError,
-  EthTransactionResponse,
-  ChainId,
   ProviderInstance,
   ProviderWrapper,
-  TransactionResponse,
   TxRequestBody,
 } from '@/types'
 import { Deferrable } from '@ethersproject/properties'
 import { TransactionRequest } from '@ethersproject/abstract-provider'
 
 export const useMetamask = (provider: ProviderInstance): ProviderWrapper => {
-  const chainId = ref<ChainId>('')
+  const chainId = ref<number | string>('')
   const selectedAddress = ref('')
 
-  const currentProvider = computed(
-    () =>
-      new ethers.providers.Web3Provider(
-        provider as ethers.providers.ExternalProvider,
-        'any',
-      ),
+  const currentProvider = new ethers.providers.Web3Provider(
+    provider as ethers.providers.ExternalProvider,
   )
-  const currentSigner = computed(() => currentProvider.value.getSigner())
 
   const isConnected = computed(() =>
     Boolean(selectedAddress.value && chainId.value),
   )
 
   const init = async () => {
-    _setListeners()
-    await _updateProviderState()
+    setListeners()
+    _updateProviderState()
   }
 
-  const _setListeners = () => {
-    const tempProviderStub = currentProvider.value.provider as {
+  const setListeners = () => {
+    const tempProviderStub = currentProvider.provider as {
       on: (eventName: string, cb: () => void) => void
     }
 
@@ -60,10 +50,10 @@ export const useMetamask = (provider: ProviderInstance): ProviderWrapper => {
 
   const _updateProviderState = async () => {
     try {
-      const network = await currentProvider.value.detectNetwork()
+      const network = await currentProvider.detectNetwork()
       chainId.value = network.chainId
 
-      const currentAccounts = await currentProvider.value.listAccounts()
+      const currentAccounts = await currentProvider.listAccounts()
       selectedAddress.value = currentAccounts[0]
     } catch (error) {
       handleEthError(error as EthProviderRpcError)
@@ -72,28 +62,28 @@ export const useMetamask = (provider: ProviderInstance): ProviderWrapper => {
 
   const connect = async () => {
     try {
-      await connectEthAccounts(currentProvider.value)
+      await connectEthAccounts(currentProvider)
     } catch (error) {
       handleEthError(error as EthProviderRpcError)
     }
   }
 
-  const switchChain = async (chainId: ChainId) => {
+  const switchChain = async (chainId: string | number) => {
     try {
-      await requestSwitchEthChain(currentProvider.value, Number(chainId))
+      await requestSwitchEthChain(currentProvider, Number(chainId))
     } catch (error) {
       handleEthError(error as EthProviderRpcError)
     }
   }
 
   const addChain = async (
-    chainId: ChainId,
+    chainId: string | number,
     chainName: string,
     chainRpcUrl: string,
   ) => {
     try {
       await requestAddEthChain(
-        currentProvider.value,
+        currentProvider,
         Number(chainId),
         chainName,
         chainRpcUrl,
@@ -105,42 +95,19 @@ export const useMetamask = (provider: ProviderInstance): ProviderWrapper => {
 
   const signAndSendTransaction = async (txRequestBody: TxRequestBody) => {
     try {
-      const transactionResponse = await currentSigner.value.sendTransaction(
+      const signer = currentProvider.getSigner()
+      const transactionResponse = await signer.sendTransaction(
         txRequestBody as Deferrable<TransactionRequest>,
       )
-      return transactionResponse.wait()
+      await transactionResponse.wait()
+
+      return transactionResponse
     } catch (error) {
       handleEthError(error as EthProviderRpcError)
     }
   }
 
-  const getHashFromTxResponse = (txResponse: TransactionResponse) => {
-    const transactionResponse = txResponse as EthTransactionResponse
-
-    return transactionResponse.transactionHash
-  }
-
-  const getTxUrl = (explorerUrl: string, txHash: string) => {
-    return getEthExplorerTxUrl(explorerUrl, txHash)
-  }
-
-  const getAddressUrl = (explorerUrl: string, address: string) => {
-    return getEthExplorerAddressUrl(explorerUrl, address)
-  }
-
-  const signMessage = async (message: string) => {
-    try {
-      const signer = currentProvider.value.getSigner()
-      const msg = await signer.signMessage(message)
-      return msg
-    } catch (error) {
-      handleEthError(error as EthProviderRpcError)
-    }
-  }
   return {
-    currentProvider,
-    currentSigner,
-
     chainId,
     selectedAddress,
     isConnected,
@@ -150,9 +117,5 @@ export const useMetamask = (provider: ProviderInstance): ProviderWrapper => {
     switchChain,
     addChain,
     signAndSendTransaction,
-    getHashFromTxResponse,
-    getTxUrl,
-    getAddressUrl,
-    signMessage,
   }
 }
