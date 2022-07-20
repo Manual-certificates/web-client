@@ -1,20 +1,12 @@
 import {
   PhantomProvider,
-  ChainId,
   ProviderInstance,
   ProviderWrapper,
-  SolanaTransactionResponse,
-  SolanaProviderRpcError,
-  TransactionResponse,
+  SolProviderRpcError,
   TxRequestBody,
 } from '@/types'
 import { computed, ref } from 'vue'
-import {
-  decodeSolanaTx,
-  getSolExplorerAddressUrl,
-  getSolExplorerTxUrl,
-  handleSolError,
-} from '@/helpers'
+import { handleSolError } from '@/helpers/solana.helpers'
 import {
   Connection,
   clusterApiUrl,
@@ -22,12 +14,11 @@ import {
   Transaction as SolTransaction,
   PublicKey,
 } from '@solana/web3.js'
-import { SOLANA_CHAINS } from '@/enums'
 
 export const useSolflare = (provider: ProviderInstance): ProviderWrapper => {
   const currentProvider = provider as PhantomProvider
 
-  const chainId = ref<ChainId>(SOLANA_CHAINS.devnet)
+  const chainId = ref<number | string>('devnet') // TODO: create chains enum (maybe)
   const selectedAddress = ref('')
 
   const connection = ref(
@@ -63,56 +54,32 @@ export const useSolflare = (provider: ProviderInstance): ProviderWrapper => {
     try {
       await currentProvider.connect()
     } catch (error) {
-      handleSolError(error as SolanaProviderRpcError)
+      handleSolError(error as SolProviderRpcError)
     }
   }
 
-  const switchChain = async (_chainId: ChainId) => {
+  const switchChain = async (_chainId: string | number) => {
     try {
       connection.value = new Connection(clusterApiUrl(chainId.value as Cluster))
       chainId.value = _chainId
     } catch (error) {
-      handleSolError(error as SolanaProviderRpcError)
+      handleSolError(error as SolProviderRpcError)
     }
   }
 
   const signAndSendTransaction = async (txRequestBody: TxRequestBody) => {
     try {
-      const txBody =
-        typeof txRequestBody === 'string'
-          ? decodeSolanaTx(txRequestBody)
-          : txRequestBody
-
       const signedTx = await currentProvider.signTransaction(
-        txBody as SolTransaction,
+        txRequestBody as SolTransaction,
       )
-
-      const connection = new Connection(clusterApiUrl(chainId.value as Cluster))
-
-      const signature = await connection.sendRawTransaction(
+      const signature = await connection.value.sendRawTransaction(
         signedTx.serialize(),
       )
-      await connection.confirmTransaction(signature)
+      await connection.value.confirmTransaction(signature)
       return signature
     } catch (error) {
-      handleSolError(error as SolanaProviderRpcError)
+      handleSolError(error as SolProviderRpcError)
     }
-  }
-
-  const getHashFromTxResponse = (txResponse: TransactionResponse) => {
-    return txResponse as SolanaTransactionResponse
-  }
-
-  const getTxUrl = (explorerUrl: string, txHash: string) => {
-    return getSolExplorerTxUrl(chainId.value as string, explorerUrl, txHash)
-  }
-
-  const getAddressUrl = (explorerUrl: string, txHash: string) => {
-    return getSolExplorerAddressUrl(
-      chainId.value as string,
-      explorerUrl,
-      txHash,
-    )
   }
 
   return {
@@ -124,8 +91,5 @@ export const useSolflare = (provider: ProviderInstance): ProviderWrapper => {
     connect,
     switchChain,
     signAndSendTransaction,
-    getHashFromTxResponse,
-    getTxUrl,
-    getAddressUrl,
   }
 }
