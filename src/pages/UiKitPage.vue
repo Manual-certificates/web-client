@@ -1,10 +1,53 @@
+<script lang="ts" setup>
+import {
+  AppButton,
+  Modal,
+  ErrorMessage,
+  NoDataMessage,
+  Loader,
+  Icon,
+  Collapse,
+} from '@/common'
+import { CheckboxField, InputField } from '@/fields'
+import LoginForm from '@/forms/LoginForm.vue'
+
+import { reactive, ref } from 'vue'
+import { Bus } from '@/helpers'
+
+const isModalShown = ref<boolean>(false)
+const form = reactive({
+  chbValue: false,
+  inputValue: '',
+})
+
+const handleClick = () => {
+  alert('some string')
+}
+
+const throwBusSuccess = () => {
+  Bus.success('Success')
+}
+
+const throwBusError = () => {
+  Bus.error('Error')
+}
+
+const throwBusWarning = () => {
+  Bus.warning('Warning')
+}
+
+const throwBusInfo = () => {
+  Bus.info('Info')
+}
+</script>
+
 <template>
   <div class="ui-kit-page">
     <section class="ui-kit-page__buttons">
       <app-button
         :icon-right="$icons.gift"
         :text="'router, border-rounded, icon'"
-        :route="{ name: $routes.uiKit }"
+        :route="{ name: $routes.forms }"
       />
       <app-button
         modification="border-circle"
@@ -168,274 +211,6 @@
       />
     </section>
     <section class="ui-kit-page__inputs">
-      <select-field
-        v-model="form.selectValue"
-        scheme="secondary"
-        :label="'Label'"
-        :placeholder="'select placeholder'"
-        :value-options="['1', '2', '3', '4', '5', '6', '7']"
-        :error-message="form.selectValue === '7' ? 'error for number 7' : ''"
-      />
-      <select-field
-        v-model="form.selectValue"
-        scheme="secondary"
-        :label="'Custom select'"
-        :placeholder="'select placeholder'"
-      >
-        <template #default="{ selectField }">
-          <app-button
-            v-for="(items, idx) in [
-              { label: 'Value 1', value: '1' },
-              { label: 'Value 2', value: '2' },
-              { label: 'Value 3', value: '3' },
-              { label: 'Value 4', value: '4' },
-              { label: 'Value 5', value: '5' },
-              { label: 'Value 6', value: '6' },
-              { label: 'Value 7', value: '7' },
-            ]"
-            :key="idx"
-            :text="items.label"
-            :style="{ width: '100%', hoverOpacity: '0.5' }"
-            scheme="default"
-            :icon-left="$icons.printer"
-            @click="selectField.select(items.value)"
-          />
-        </template>
-      </select-field>
-      <select-field
-        v-model="form.selectValue"
-        scheme="secondary"
-        :label="'Custom select'"
-        :placeholder="'select placeholder'"
-      >
-        <template #head>
-          <div
-            :style="{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '12px',
-            }"
-          >
-            <icon
-              :name="$icons.globe"
-              :style="{ width: '18px', height: '18px' }"
-            />
-            {{
-              [
-                { label: 'Value 1', value: '1' },
-                { label: 'Value 2', value: '2' },
-                { label: 'Value 3', value: '3' },
-                { label: 'Value 4', value: '4' },
-                { label: 'Value 5', value: '5' },
-                { label: 'Value 6', value: '6' },
-                { label: 'Value 7', value: '7' },
-              ].find(item => item.value === form.selectValue)?.label
-            }}
-          </div>
-        </template>
-        <template #default="{ selectField }">
-          <app-button
-            v-for="(items, idx) in [
-              { label: 'Value 1', value: '1' },
-              { label: 'Value 2', value: '2' },
-              { label: 'Value 3', value: '3' },
-              { label: 'Value 4', value: '4' },
-              { label: 'Value 5', value: '5' },
-              { label: 'Value 6', value: '6' },
-              { label: 'Value 7', value: '7' },
-            ]"
-            :key="idx"
-            :text="items.label"
-            :style="{ width: '100%', hoverOpacity: '0.5' }"
-            scheme="default"
-            :icon-left="$icons.printer"
-            @click="selectField.select(items.value)"
-          />
-        </template>
-      </select-field>
-      <input-field
-        v-model="form.inputValue"
-        scheme="secondary"
-        :label="'label'"
-        :placeholder="$t('ui-kit-page.some-placeholder')"
-      />
-      <input-field
-        v-model="form.inputValue"
-        scheme="secondary"
-        :label="'label'"
-        :placeholder="$t('ui-kit-page.some-placeholder')"
-      >
-        <template #nodeRight>
-          <icon class="ui-kit-page__input-icon" :name="$icons.dotsVertical" />
-        </template>
-      </input-field>
-      <input-field
-        v-model="form.inputValue"
-        scheme="secondary"
-        :label="'label'"
-        :placeholder="$t('ui-kit-page.some-placeholder')"
-      >
-        <template #nodeLeft>
-          <icon class="ui-kit-page__input-icon" :name="$icons.dotsVertical" />
-        </template>
-      </input-field>
-      <input-field
-        v-model="form.inputValue"
-        scheme="secondary"
-        type="password"
-        :label="'label'"
-        :placeholder="$t('ui-kit-page.some-placeholder')"
-      />
-      <input-field
-        v-model="form.inputValue"
-        scheme="secondary"
-        :label="$t('ui-kit-page.some-label')"
-        :error-message="$t('ui-kit-page.some-error-message')"
-        :placeholder="$t('ui-kit-page.some-placeholder')"
-      >
-        <template #nodeLeft>
-          <icon class="ui-kit-page__input-icon" :name="$icons.dotsVertical" />
-        </template>
-        <template #nodeRight>
-          <icon class="ui-kit-page__input-icon" :name="$icons.dotsVertical" />
-        </template>
-      </input-field>
-      <input-field
-        v-model="form.inputValue"
-        scheme="secondary"
-        :label="$t('ui-kit-page.some-label')"
-        :placeholder="$t('ui-kit-page.some-placeholder')"
-        disabled
-      />
-      <input-field
-        v-model="form.inputValue"
-        scheme="secondary"
-        :label="$t('ui-kit-page.some-label')"
-        :error-message="$t('ui-kit-page.some-error-message')"
-        :placeholder="$t('ui-kit-page.some-placeholder')"
-        disabled
-      />
-      <checkbox-field
-        v-model="form.chbValue"
-        :label="$t('ui-kit-page.some-label')"
-      />
-      <checkbox-field
-        v-model="form.chbValue"
-        :label="$t('ui-kit-page.some-label')"
-        disabled
-      />
-      <textarea-field
-        v-model="form.textareaValue"
-        scheme="secondary"
-        :label="'textarea'"
-        :placeholder="'textarea'"
-      />
-      <textarea-field
-        v-model="form.textareaValue"
-        scheme="secondary"
-        :label="'textarea'"
-        :placeholder="'textarea'"
-        :error-message="form.textareaValue"
-      />
-      <textarea-field
-        v-model="form.textareaValue"
-        scheme="secondary"
-        :label="'textarea'"
-        :placeholder="'textarea'"
-        :error-message="form.textareaValue ? 'form.textareaValue' : ''"
-      />
-      <textarea-field
-        v-model="form.textareaValue"
-        scheme="secondary"
-        :label="'textarea'"
-        :placeholder="'textarea'"
-        :error-message="form.textareaValue"
-        disabled
-      />
-    </section>
-    <section class="ui-kit-page__inputs">
-      <select-field
-        v-model="form.selectValue"
-        :label="'Label'"
-        :placeholder="'select placeholder'"
-        :value-options="['1', '2', '3', '4', '5', '6', '7']"
-        :error-message="form.selectValue === '7' ? 'error for number 7' : ''"
-      />
-      <select-field
-        v-model="form.selectValue"
-        :label="'Custom select'"
-        :placeholder="'select placeholder'"
-      >
-        <template #default="{ selectField }">
-          <app-button
-            v-for="(items, idx) in [
-              { label: 'Value 1', value: '1' },
-              { label: 'Value 2', value: '2' },
-              { label: 'Value 3', value: '3' },
-              { label: 'Value 4', value: '4' },
-              { label: 'Value 5', value: '5' },
-              { label: 'Value 6', value: '6' },
-              { label: 'Value 7', value: '7' },
-            ]"
-            :key="idx"
-            :text="items.label"
-            :style="{ width: '100%', hoverOpacity: '0.5' }"
-            scheme="default"
-            :icon-left="$icons.printer"
-            @click="selectField.select(items.value)"
-          />
-        </template>
-      </select-field>
-      <select-field
-        v-model="form.selectValue"
-        :label="'Custom select'"
-        :placeholder="'select placeholder'"
-      >
-        <template #head>
-          <div
-            :style="{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '12px',
-            }"
-          >
-            <icon
-              :name="$icons.globe"
-              :style="{ width: '18px', height: '18px' }"
-            />
-            {{
-              [
-                { label: 'Value 1', value: '1' },
-                { label: 'Value 2', value: '2' },
-                { label: 'Value 3', value: '3' },
-                { label: 'Value 4', value: '4' },
-                { label: 'Value 5', value: '5' },
-                { label: 'Value 6', value: '6' },
-                { label: 'Value 7', value: '7' },
-              ].find(item => item.value === form.selectValue)?.label
-            }}
-          </div>
-        </template>
-        <template #default="{ selectField }">
-          <app-button
-            v-for="(items, idx) in [
-              { label: 'Value 1', value: '1' },
-              { label: 'Value 2', value: '2' },
-              { label: 'Value 3', value: '3' },
-              { label: 'Value 4', value: '4' },
-              { label: 'Value 5', value: '5' },
-              { label: 'Value 6', value: '6' },
-              { label: 'Value 7', value: '7' },
-            ]"
-            :key="idx"
-            :text="items.label"
-            :style="{ width: '100%', hoverOpacity: '0.5' }"
-            scheme="default"
-            :icon-left="$icons.printer"
-            @click="selectField.select(items.value)"
-          />
-        </template>
-      </select-field>
       <input-field
         v-model="form.inputValue"
         :label="'label'"
@@ -445,20 +220,15 @@
         v-model="form.inputValue"
         :label="'label'"
         :placeholder="$t('ui-kit-page.some-placeholder')"
-      >
-        <template #nodeRight>
-          <icon class="ui-kit-page__input-icon" :name="$icons.dotsVertical" />
-        </template>
-      </input-field>
+        :icon-name="$icons.dotsVertical"
+      />
       <input-field
         v-model="form.inputValue"
+        schemes="icon-left"
         :label="'label'"
         :placeholder="$t('ui-kit-page.some-placeholder')"
-      >
-        <template #nodeLeft>
-          <icon class="ui-kit-page__input-icon" :name="$icons.dotsVertical" />
-        </template>
-      </input-field>
+        :icon-name="$icons.dotsVertical"
+      />
       <input-field
         v-model="form.inputValue"
         type="password"
@@ -470,14 +240,7 @@
         :label="$t('ui-kit-page.some-label')"
         :error-message="$t('ui-kit-page.some-error-message')"
         :placeholder="$t('ui-kit-page.some-placeholder')"
-      >
-        <template #nodeLeft>
-          <icon class="ui-kit-page__input-icon" :name="$icons.dotsVertical" />
-        </template>
-        <template #nodeRight>
-          <icon class="ui-kit-page__input-icon" :name="$icons.dotsVertical" />
-        </template>
-      </input-field>
+      />
       <input-field
         v-model="form.inputValue"
         :label="$t('ui-kit-page.some-label')"
@@ -499,11 +262,6 @@
         v-model="form.chbValue"
         :label="$t('ui-kit-page.some-label')"
         disabled
-      />
-      <textarea-field
-        v-model="form.textareaValue"
-        :label="'textarea'"
-        :placeholder="'textarea'"
       />
     </section>
     <section class="ui-kit-page__form">
@@ -513,45 +271,36 @@
       <error-message :message="$t('ui-kit-page.loading-error-msg')" />
       <no-data-message :message="$t('ui-kit-page.no-data-msg')" />
       <loader />
-      <loader class="ui-kit-page__loader-skeleton" scheme="skeleton" />
-      <accordion class="ui-kit-page__collapse">
-        <template #head="{ accordion }">
+      <collapse class="ui-kit-page__collapse">
+        <template #head="{ collapse }">
           <app-button
-            class="ui-kit-page__accordion-btn"
-            scheme="flat"
-            :text="$t('ui-kit-page.accordion-btn')"
-            @click="accordion.toggle"
+            class="ui-kit-page__collapse-btn"
+            schemes="flat"
+            :text="$t('ui-kit-page.collapse-btn')"
+            @click="collapse.toggle"
           >
           </app-button>
         </template>
-        <div class="ui-kit-page__accordion-body">
+        <div class="ui-kit-page__collapse-body">
           {{ $t('ui-kit-page.collapse-text') }}
         </div>
-      </accordion>
-      <div class="ui-kit-page__collapse-wrp">
-        <app-button
-          text="Toggle collapse"
-          @click="() => (isCollapseShown = !isCollapseShown)"
-        />
-        <collapse :is-shown="isCollapseShown">
-          <div class="ui-kit-page__collapse-body">
-            {{ $t('ui-kit-page.collapse-text') }}
-          </div>
-        </collapse>
-      </div>
+      </collapse>
       <app-button
         :text="$t('ui-kit-page.modal-btn')"
         @click="isModalShown = true"
       />
-      <basic-modal
-        v-model:is-shown="isModalShown"
-        title="Modal Title"
-        subtitle="Lorem ipsum dolor sit amet, consectetur adipisicing elit."
-      >
-        <div class="ui-kit-page__modal-body">
-          {{ $t('ui-kit-page.collapse-text') }}
-        </div>
-      </basic-modal>
+      <modal v-model:is-shown="isModalShown">
+        <template #default="{ modal }">
+          <app-button
+            @click="modal.close"
+            :icon-right="$icons.xCircle"
+            scheme="default"
+            modification="default"
+            size="default"
+            color="default"
+          />
+        </template>
+      </modal>
       <div class="ui-kit-page__icons">
         <icon :name="$icons.academicCap" />
         <icon :name="$icons.adjustments" />
@@ -788,54 +537,6 @@
   </div>
 </template>
 
-<script lang="ts" setup>
-import {
-  AppButton,
-  BasicModal,
-  ErrorMessage,
-  NoDataMessage,
-  Loader,
-  Icon,
-  Accordion,
-  Collapse,
-} from '@/common'
-import { CheckboxField, InputField, SelectField, TextareaField } from '@/fields'
-import LoginForm from '@/forms/LoginForm.vue'
-
-import { reactive, ref } from 'vue'
-import { Bus } from '@/helpers'
-
-const isModalShown = ref(false)
-const isCollapseShown = ref(false)
-
-const form = reactive({
-  chbValue: false,
-  inputValue: '',
-  selectValue: '',
-  textareaValue: '',
-})
-
-const handleClick = () => {
-  alert('some string')
-}
-
-const throwBusSuccess = () => {
-  Bus.success('Success')
-}
-
-const throwBusError = () => {
-  Bus.error('Error')
-}
-
-const throwBusWarning = () => {
-  Bus.warning('Warning')
-}
-
-const throwBusInfo = () => {
-  Bus.info('Info')
-}
-</script>
-
 <style lang="scss" scoped>
 .ui-kit-page {
   display: grid;
@@ -868,23 +569,11 @@ const throwBusInfo = () => {
   width: 100%;
 }
 
-.ui-kit-page__accordion-btn {
-  width: 100%;
-}
-
-.ui-kit-page__accordion-body {
-  font-size: toRem(24);
-}
-
-.ui-kit-page__collapse-wrp {
-  display: flex;
-  flex-direction: column;
-  gap: toRem(16);
+.ui-kit-page__collapse-btn {
   width: 100%;
 }
 
 .ui-kit-page__collapse-body {
-  width: 100%;
   font-size: toRem(24);
 }
 
@@ -898,16 +587,5 @@ const throwBusInfo = () => {
     width: toRem(24);
     height: toRem(24);
   }
-}
-
-.ui-kit-page__input-icon {
-  max-width: toRem(24);
-  max-height: toRem(24);
-}
-
-.ui-kit-page__loader-skeleton {
-  width: toRem(200);
-  height: toRem(24);
-  margin-bottom: toRem(16);
 }
 </style>
