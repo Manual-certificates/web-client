@@ -5,7 +5,6 @@ import { InputField } from '@/fields'
 import { useErc20, UseProvider } from '@/composables'
 import { reactive, ref } from 'vue'
 import { ErrorHandler } from '@/helpers'
-import Loader from '@/common/Loader.vue'
 
 const props = defineProps<{
   provider: UseProvider
@@ -65,87 +64,82 @@ init()
 <template>
   <div class="erc20">
     <template v-if="isLoaded">
-      <template v-if="isLoadFailed">
-        <error-message :message="$t('erc20.loading-error-msg')" />
-      </template>
-      <template v-else>
-        <h2 class="erc20__title">
-          {{ $t('erc20.title') }}
-        </h2>
-        <div class="erc20__entries-wrp">
-          <div class="erc20__entry">
-            <span class="erc20__entry-lbl">
-              {{ $t('erc20.name-lbl') }}
-            </span>
-            <span class="erc20__entry-value">
-              {{ erc20.name.value }}
-            </span>
-          </div>
-          <div class="erc20__entry">
-            <span class="erc20__entry-lbl">
-              {{ $t('erc20.symbol-lbl') }}
-            </span>
-            <span class="erc20__entry-value">
-              {{ erc20.symbol.value }}
-            </span>
-          </div>
-          <div class="erc20__entry">
-            <span class="erc20__entry-lbl">
-              {{ $t('erc20.decimals-lbl') }}
-            </span>
-            <span class="erc20__entry-value">
-              {{ erc20.decimals.value }}
-            </span>
-          </div>
-          <div class="erc20__entry">
-            <span class="erc20__entry-lbl">
-              {{ $t('erc20.total-supply-lbl') }}
-            </span>
-            <span class="erc20__entry-value">
-              {{ erc20.totalSupply.value }}
-            </span>
-          </div>
-          <div class="erc20__entry">
-            <span class="erc20__entry-lbl">
-              {{ $t('erc20.balance-lbl') }}
-            </span>
-            <span class="erc20__entry-value">
-              {{ erc20.balance.value }}
-            </span>
+      <h2 class="erc20__title">
+        {{ $t('erc20.title') }}
+      </h2>
+      <div class="erc20__entries-wrp">
+        <div class="erc20__entry">
+          <span class="erc20__entry-lbl">
+            {{ $t('erc20.name-lbl') }}
+          </span>
+          <span class="erc20__entry-value">
+            {{ erc20.name.value }}
+          </span>
+        </div>
+        <div class="erc20__entry">
+          <span class="erc20__entry-lbl">
+            {{ $t('erc20.symbol-lbl') }}
+          </span>
+          <span class="erc20__entry-value">
+            {{ erc20.symbol.value }}
+          </span>
+        </div>
+        <div class="erc20__entry">
+          <span class="erc20__entry-lbl">
+            {{ $t('erc20.decimals-lbl') }}
+          </span>
+          <span class="erc20__entry-value">
+            {{ erc20.decimals.value }}
+          </span>
+        </div>
+        <div class="erc20__entry">
+          <span class="erc20__entry-lbl">
+            {{ $t('erc20.total-supply-lbl') }}
+          </span>
+          <span class="erc20__entry-value">
+            {{ erc20.totalSupply.value }}
+          </span>
+        </div>
+        <div class="erc20__entry">
+          <span class="erc20__entry-lbl">
+            {{ $t('erc20.balance-lbl') }}
+          </span>
+          <span class="erc20__entry-value">
+            {{ erc20.balance.value }}
+          </span>
+        </div>
+      </div>
+      <div class="erc20__actions-wrp">
+        <div class="erc20__action">
+          <span class="erc20__action-lbl">
+            {{ $t('erc20.transfer-lbl') }}
+          </span>
+          <div class="erc20__action-control">
+            <input-field
+              v-model="transferForm.address"
+              :placeholder="'address'"
+            />
+            <input-field
+              v-model="transferForm.amount"
+              :placeholder="'amount'"
+            />
+            <app-button :text="'submit'" @click="tryTransfer" />
           </div>
         </div>
-        <div class="erc20__actions-wrp">
-          <div class="erc20__action">
-            <span class="erc20__action-lbl">
-              {{ $t('erc20.transfer-lbl') }}
-            </span>
-            <div class="erc20__action-control">
-              <input-field
-                v-model="transferForm.address"
-                :placeholder="'address'"
-              />
-              <input-field
-                v-model="transferForm.amount"
-                :placeholder="'amount'"
-              />
-              <app-button :text="'submit'" @click="tryTransfer" />
-            </div>
-          </div>
-          <div class="erc20__action">
-            <span class="erc20__action-lbl">
-              {{ $t('erc20.mint-lbl') }}
-            </span>
-            <div class="erc20__action-control">
-              <input-field v-model="mintForm.to" :placeholder="'to'" />
-              <input-field v-model="mintForm.amount" :placeholder="'amount'" />
-              <app-button :text="'submit'" @click="tryMint" />
-            </div>
+        <div class="erc20__action">
+          <span class="erc20__action-lbl">
+            {{ $t('erc20.mint-lbl') }}
+          </span>
+          <div class="erc20__action-control">
+            <input-field v-model="mintForm.to" :placeholder="'to'" />
+            <input-field v-model="mintForm.amount" :placeholder="'amount'" />
+            <app-button :text="'submit'" @click="tryMint" />
           </div>
         </div>
-      </template>
+      </div>
     </template>
-    <template v-else>
-      <loader />
+    <template v-if="isLoadFailed">
+      <error-message :message="$t('erc20.loading-error-msg')" />
     </template>
   </div>
 </template>
