@@ -1,7 +1,6 @@
 import { ref } from 'vue'
-import { UseProvider } from '@/types'
+import { UseProvider, Erc20, Erc20__factory } from '@/types'
 import { BN } from '@/utils/math.util'
-import { Erc20, Erc20__factory } from '@/types'
 
 export const useErc20 = (provider: UseProvider, address?: string) => {
   const _instance = ref<Erc20 | undefined>()
