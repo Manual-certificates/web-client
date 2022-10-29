@@ -73,6 +73,7 @@ export interface ProviderWrapper {
   getHashFromTxResponse: (txResponse: TransactionResponse) => string
   getTxUrl: (explorerUrl: string, txHash: string) => string
   getAddressUrl: (explorerUrl: string, address: string) => string
+  disconnect?: () => Promise<void>
 }
 
 export type { UseProvider } from '@/composables/useProvider'

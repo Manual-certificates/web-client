@@ -229,9 +229,18 @@ init()
                 @click="sendTx(provider)"
               />
             </template>
+            <app-button
+              v-if="provider.isConnected.value"
+              class="web3-page__card-btn"
+              :text="'Disconnect'"
+              scheme="flat"
+              color="error"
+              size="small"
+              @click="provider.disconnect"
+            />
           </div>
         </div>
-        <div class="web3-page__erc20">
+        <div v-if="metamaskProvider.isConnected.value" class="web3-page__erc20">
           <erc20 :provider="metamaskProvider" />
         </div>
       </template>
