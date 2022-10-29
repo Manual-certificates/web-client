@@ -15,6 +15,7 @@ import {
 } from '@/types'
 import { errors } from '@/errors'
 import { ethers } from 'ethers'
+import { useWeb3ProvidersStore } from '@/store'
 
 export interface UseProvider {
   currentProvider: ComputedRef<ethers.providers.Web3Provider | undefined>
@@ -27,7 +28,7 @@ export interface UseProvider {
 
   init: (provider: DesignatedProvider) => Promise<void>
   connect: () => Promise<void>
-  disconnect: () => void
+  disconnect: () => Promise<void>
   switchChain: (chainId: ChainId) => Promise<void>
   addChain: (
     chainId: ChainId,
@@ -87,14 +88,39 @@ export const useProvider = (): UseProvider => {
   }
 
   const connect = async () => {
-    if (!providerWrp.value)
-      throw new errors.ProviderWrapperMethodNotFoundError()
+    if (!providerWrp.value) {
+      if (selectedProvider.value) {
+        const web3Store = useWeb3ProvidersStore()
+        const _designatedProvider = web3Store.providers.find(
+          el => el.name === selectedProvider.value,
+        )
 
-    await providerWrp.value.connect()
+        if (_designatedProvider) {
+          await init(_designatedProvider)
+
+          if (
+            providerWrp.value &&
+            (providerWrp.value as ProviderWrapper).init
+          ) {
+            await (providerWrp.value as ProviderWrapper).init()
+          }
+        } else {
+          throw new Error('Invalid Provider')
+        }
+      }
+    } else if (!providerWrp.value?.connect) {
+      throw new errors.ProviderWrapperMethodNotFoundError()
+    } else {
+      await providerWrp.value.connect()
+    }
   }
 
-  const disconnect = () => {
-    providerWrp.value = undefined
+  const disconnect = async () => {
+    if (providerWrp.value?.disconnect) {
+      await providerWrp.value.disconnect()
+    } else {
+      providerWrp.value = undefined
+    }
   }
 
   const switchChain = async (chainId: ChainId) => {
