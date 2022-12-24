@@ -19,9 +19,9 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import('@/pages/UiKitPage.vue'),
   },
   {
-    path: '/web3',
-    name: ROUTE_NAMES.web3,
-    component: () => import('@/pages/Web3Page.vue'),
+    path: '/complex-form',
+    name: ROUTE_NAMES.uiKit,
+    component: () => import('@/forms/ComplexForm.vue'),
   },
 ]
 
