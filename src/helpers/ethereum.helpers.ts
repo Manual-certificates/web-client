@@ -1,7 +1,7 @@
 import { EthProviderRpcError } from '@/types'
 import { errors } from '@/errors'
 import { ethers } from 'ethers'
-import { EIP1193, EIP1474 } from '@/enums'
+import { EIP1193, EIP1474, EIP1193String } from '@/enums'
 
 export const connectEthAccounts = async (
   provider: ethers.providers.Web3Provider,
@@ -36,6 +36,7 @@ export async function requestAddEthChain(
 export function handleEthError(error: EthProviderRpcError) {
   switch (error.code) {
     case EIP1193.userRejectedRequest:
+    case EIP1193String.userRejectedRequest: // TODO: discuss
       throw new errors.ProviderUserRejectedRequest(error.message)
     case EIP1193.unauthorized:
       throw new errors.ProviderUnauthorized(error.message)
@@ -45,6 +46,8 @@ export function handleEthError(error: EthProviderRpcError) {
       throw new errors.ProviderDisconnected(error.message)
     case EIP1193.chainDisconnected:
       throw new errors.ProviderChainDisconnected(error.message)
+    case EIP1193.unrecognizedChain:
+      throw new errors.ProviderChainUnrecognized(error.message)
     case EIP1474.parseError:
       throw new errors.ProviderParseError(error.message)
     case EIP1474.invalidRequest:

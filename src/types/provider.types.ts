@@ -38,7 +38,7 @@ export type TxRequestBody =
   | string
   | unknown
 
-export type EthTransactionResponse = ethers.providers.TransactionResponse
+export type EthTransactionResponse = ethers.providers.TransactionReceipt
 
 export type SolanaTransactionResponse = TransactionSignature
 
@@ -74,6 +74,7 @@ export interface ProviderWrapper {
   getTxUrl: (explorerUrl: string, txHash: string) => string
   getAddressUrl: (explorerUrl: string, address: string) => string
   disconnect?: () => Promise<void>
+  signMessage?: (message: string) => Promise<string | undefined>
 }
 
-export type { UseProvider } from '@/composables/useProvider'
+export type { UseProvider } from '@/composables'

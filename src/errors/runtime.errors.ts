@@ -19,6 +19,8 @@ export class ProviderDisconnected extends RuntimeError {}
 
 export class ProviderChainDisconnected extends RuntimeError {}
 
+export class ProviderChainUnrecognized extends RuntimeError {}
+
 export class ProviderParseError extends RuntimeError {}
 
 export class ProviderInvalidRequest extends RuntimeError {}

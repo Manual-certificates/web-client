@@ -108,9 +108,7 @@ export const useMetamask = (provider: ProviderInstance): ProviderWrapper => {
       const transactionResponse = await currentSigner.value.sendTransaction(
         txRequestBody as Deferrable<TransactionRequest>,
       )
-      await transactionResponse.wait()
-
-      return transactionResponse
+      return transactionResponse.wait()
     } catch (error) {
       handleEthError(error as EthProviderRpcError)
     }
@@ -119,7 +117,7 @@ export const useMetamask = (provider: ProviderInstance): ProviderWrapper => {
   const getHashFromTxResponse = (txResponse: TransactionResponse) => {
     const transactionResponse = txResponse as EthTransactionResponse
 
-    return transactionResponse.hash
+    return transactionResponse.transactionHash
   }
 
   const getTxUrl = (explorerUrl: string, txHash: string) => {
@@ -130,6 +128,15 @@ export const useMetamask = (provider: ProviderInstance): ProviderWrapper => {
     return getEthExplorerAddressUrl(explorerUrl, address)
   }
 
+  const signMessage = async (message: string) => {
+    try {
+      const signer = currentProvider.value.getSigner()
+      const msg = await signer.signMessage(message)
+      return msg
+    } catch (error) {
+      handleEthError(error as EthProviderRpcError)
+    }
+  }
   return {
     currentProvider,
     currentSigner,
@@ -146,5 +153,6 @@ export const useMetamask = (provider: ProviderInstance): ProviderWrapper => {
     getHashFromTxResponse,
     getTxUrl,
     getAddressUrl,
+    signMessage,
   }
 }

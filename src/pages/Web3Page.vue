@@ -1,3 +1,92 @@
+<template>
+  <div class="web3-page">
+    <template v-if="isLoaded">
+      <template v-if="isLoadFailed">
+        <error-message :message="$t('web3-page.loading-error-msg')" />
+      </template>
+      <template v-else>
+        <div class="web3-page__list">
+          <div
+            class="web3-page__card"
+            v-for="provider in providers"
+            :key="provider.selectedProvider.value"
+          >
+            <div
+              class="web3-page__card-indicator"
+              :class="{
+                'web3-page__card-indicator--active': provider.isConnected.value,
+              }"
+            />
+            <h2 class="web3-page__card-title">
+              {{ provider.selectedProvider.value }}
+            </h2>
+            <span class="web3-page__card-name">
+              {{ provider.selectedAddress.value }}
+            </span>
+            <span class="web3-page__txt">
+              {{ `chainId: ${provider.chainId.value}` }}
+            </span>
+            <app-button
+              scheme="flat"
+              size="small"
+              class="web3-page__card-btn"
+              :text="provider.selectedAddress.value || 'Connect'"
+              @click="connect(provider)"
+              :disabled="provider.isConnected.value"
+            />
+            <template
+              v-if="testingData[provider.selectedProvider.value]?.chainToSwitch"
+            >
+              <app-button
+                scheme="flat"
+                size="small"
+                class="web3-page__card-btn"
+                :text="'switch chain'"
+                @click="switchChain(provider)"
+              />
+            </template>
+            <template
+              v-if="testingData[provider.selectedProvider.value]?.chainToAdd"
+            >
+              <app-button
+                scheme="flat"
+                size="small"
+                class="web3-page__card-btn"
+                :text="'add chain'"
+                @click="addChain(provider)"
+              />
+            </template>
+            <template v-if="testingData[provider.selectedProvider.value]?.tx">
+              <app-button
+                scheme="flat"
+                size="small"
+                class="web3-page__card-btn"
+                :text="'sendTx'"
+                @click="sendTx(provider)"
+              />
+            </template>
+            <app-button
+              v-if="provider.isConnected.value"
+              class="web3-page__card-btn"
+              :text="'Disconnect'"
+              scheme="flat"
+              color="error"
+              size="small"
+              @click="provider.disconnect"
+            />
+          </div>
+        </div>
+        <div v-if="metamaskProvider.isConnected.value" class="web3-page__erc20">
+          <erc20 :provider="metamaskProvider" />
+        </div>
+      </template>
+    </template>
+    <template v-else>
+      <loader />
+    </template>
+  </div>
+</template>
+
 <script lang="ts" setup>
 import { AppButton, Loader, ErrorMessage, Erc20 } from '@/common'
 
@@ -161,95 +250,6 @@ const sendTx = async (provider: UseProvider) => {
 
 init()
 </script>
-
-<template>
-  <div class="web3-page">
-    <template v-if="isLoaded">
-      <template v-if="isLoadFailed">
-        <error-message :message="$t('web3-page.loading-error-msg')" />
-      </template>
-      <template v-else>
-        <div class="web3-page__list">
-          <div
-            class="web3-page__card"
-            v-for="provider in providers"
-            :key="provider.selectedProvider.value"
-          >
-            <div
-              class="web3-page__card-indicator"
-              :class="{
-                'web3-page__card-indicator--active': provider.isConnected.value,
-              }"
-            />
-            <h2 class="web3-page__card-title">
-              {{ provider.selectedProvider.value }}
-            </h2>
-            <span class="web3-page__card-name">
-              {{ provider.selectedAddress.value }}
-            </span>
-            <span class="web3-page__txt">
-              {{ `chainId: ${provider.chainId.value}` }}
-            </span>
-            <app-button
-              scheme="flat"
-              size="small"
-              class="web3-page__card-btn"
-              :text="provider.selectedAddress.value || 'Connect'"
-              @click="connect(provider)"
-              :disabled="provider.isConnected.value"
-            />
-            <template
-              v-if="testingData[provider.selectedProvider.value]?.chainToSwitch"
-            >
-              <app-button
-                scheme="flat"
-                size="small"
-                class="web3-page__card-btn"
-                :text="'switch chain'"
-                @click="switchChain(provider)"
-              />
-            </template>
-            <template
-              v-if="testingData[provider.selectedProvider.value]?.chainToAdd"
-            >
-              <app-button
-                scheme="flat"
-                size="small"
-                class="web3-page__card-btn"
-                :text="'add chain'"
-                @click="addChain(provider)"
-              />
-            </template>
-            <template v-if="testingData[provider.selectedProvider.value]?.tx">
-              <app-button
-                scheme="flat"
-                size="small"
-                class="web3-page__card-btn"
-                :text="'sendTx'"
-                @click="sendTx(provider)"
-              />
-            </template>
-            <app-button
-              v-if="provider.isConnected.value"
-              class="web3-page__card-btn"
-              :text="'Disconnect'"
-              scheme="flat"
-              color="error"
-              size="small"
-              @click="provider.disconnect"
-            />
-          </div>
-        </div>
-        <div v-if="metamaskProvider.isConnected.value" class="web3-page__erc20">
-          <erc20 :provider="metamaskProvider" />
-        </div>
-      </template>
-    </template>
-    <template v-else>
-      <loader />
-    </template>
-  </div>
-</template>
 
 <style lang="scss" scoped>
 .web3-page {
