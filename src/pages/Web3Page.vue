@@ -77,7 +77,10 @@
           </div>
         </div>
         <div v-if="metamaskProvider.isConnected.value" class="web3-page__erc20">
-          <erc20 :provider="metamaskProvider" />
+          <erc20
+            :provider="metamaskProvider"
+            :key="metamaskProvider.chainId.value"
+          />
         </div>
       </template>
     </template>
@@ -121,8 +124,8 @@ const testingData: Record<
       maxPriorityFeePerGas: '0x9502F900',
     },
     chainToSwitch: {
-      first: 4,
-      second: 42,
+      first: 11155111,
+      second: 5,
     },
     chainToAdd: {
       id: 10,
