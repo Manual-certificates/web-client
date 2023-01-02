@@ -6,7 +6,10 @@ import { errors } from '@/errors'
 export class ErrorHandler {
   static process(error: Error | unknown, errorMessage = ''): void {
     const msgTranslation = errorMessage || ErrorHandler._getErrorMessage(error)
-    Bus.error(msgTranslation)
+
+    if (msgTranslation) {
+      Bus.error(msgTranslation)
+    }
 
     ErrorHandler.processWithoutFeedback(error)
   }
@@ -30,7 +33,6 @@ export class ErrorHandler {
           errorMessage = t('errors.provider-not-supported-error')
           break
         case errors.ProviderUserRejectedRequest:
-          errorMessage = t('errors.provider-user-rejected-request')
           break
         case errors.ProviderUnauthorized:
           errorMessage = t('errors.provider-unauthorized')
