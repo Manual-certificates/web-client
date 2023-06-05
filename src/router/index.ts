@@ -23,6 +23,16 @@ const routes: Array<RouteRecordRaw> = [
     name: ROUTE_NAMES.complexForm,
     component: () => import('@/forms/ComplexForm.vue'),
   },
+  {
+    path: '/web3',
+    name: ROUTE_NAMES.web3,
+    component: () => import('@/pages/Web3Page.vue'),
+  },{
+    path: '/main',
+    name: ROUTE_NAMES.main,
+    component: () => import('@/pages/MainPage.vue'),
+  },
+
 ]
 
 const router = createRouter({
