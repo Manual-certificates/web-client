@@ -27,7 +27,12 @@ const routes: Array<RouteRecordRaw> = [
     path: '/web3',
     name: ROUTE_NAMES.web3,
     component: () => import('@/pages/Web3Page.vue'),
+  },{
+    path: '/main',
+    name: ROUTE_NAMES.main,
+    component: () => import('@/pages/MainPage.vue'),
   },
+
 ]
 
 const router = createRouter({
