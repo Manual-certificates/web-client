@@ -41,15 +41,17 @@ const connect = async () => {
 
 const prepareAddress = () => {
   if (provider.isConnected) {
-    preparedAddress.value =
+    return (
       provider.selectedAddress!.slice(0, 6) +
       '...' +
       provider.selectedAddress!.slice(-4)
+    )
   }
+  return ''
 }
 
 onBeforeMount(() => {
-  prepareAddress()
+  preparedAddress.value = prepareAddress()
 })
 </script>
 
