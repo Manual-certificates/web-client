@@ -66,7 +66,7 @@
     "issue-sbt-btn": "Issue",
     "description": "Turpis rutrum varius pretium pharetra id. Amet lectus sit at molestie cursus."
   },
-  "generation-page": {
+  "mint-page": {
     "title":"Issue certificates",
     "step-1-title": "Upload files",
     "step-2-title": "Upload the table",
@@ -80,6 +80,10 @@
     "step-3-placeholder": "Address",
     "issue-btn": "Issue",
     "cancel-btn": "Cancel",
+    "select-table-title" : "Drag and drop or Browse file",
+    "select-table-description" : "XLS",
+    "select-images-description": "You can upload up to 100 files",
+    "select-images-title": "Drag and drop or Browse file",
     "upload-new-template-symbol": "+",
     "upload-new-template": "Upload new template",
     "choose-template": "Choose from my templates"
