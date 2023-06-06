@@ -4,9 +4,8 @@ import { defineConfig, loadEnv } from 'vite'
 import { visualizer } from 'rollup-plugin-visualizer'
 import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
 
-import fs from 'fs'
-import path from 'path'
-
+import * as fs from 'fs'
+import * as path from 'path'
 const appDirectory = fs.realpathSync(process.cwd())
 const resolveApp = (relative: string) => path.resolve(appDirectory, relative)
 const root = path.resolve(__dirname, resolveApp('src'))
