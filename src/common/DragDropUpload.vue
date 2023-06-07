@@ -1,43 +1,33 @@
 <template>
-  <div
-    class="file-drop-area"
-    @dragenter.prevent="active = true"
-    @dragover.prevent="active = true"
-    @dragleave.prevent="active = false"
-    @drop="handleDrop"
-  >
-    <div v-if="!files.length" class="file-drop-area__content">
-      <icon class="file-drop-area__icon" :name="icon" />
+  <div class="file-drop-area">
+    <div class="file-drop-area__content" @drag="dragFile">
+      <icon class="file-drop-area__icon" :name="icon" @drag="dragFile" />
       <div class="file-drop-area__text">
-        <p class="file-drop-area__text-title">
+        <label for="input">
           {{ title }}
-        </p>
+        </label>
+        <input
+          type="file"
+          multiple
+          id="input"
+          hidden
+          @input="uploadFile"
+          class="file-drop-area__text-title"
+        />
+
         <p class="file-drop-area__text-description">
           {{ description }}
         </p>
       </div>
     </div>
-    <div v-else>
-      <ul>
-        <li v-for="file in files" :key="file.name">
-          {{ file.name }}
-        </li>
-      </ul>
-      <button @click="clearFiles">Clear</button>
-    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue'
-import * as XLSX from 'xlsx'
+import { ref } from 'vue'
 import { ICON_NAMES } from '@/enums'
 import Icon from '@/common/Icon.vue'
-import log from 'loglevel'
-
-const active = ref(false)
 const files = ref<File[]>([])
-const headers = ref<string[]>([])
 const data = ref<string[][]>([])
 
 const props = defineProps<{
@@ -47,62 +37,21 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits<{
-  (e: 'handle-files-upload', file: FileList): void
+  (e: 'handle-files-upload', file: File[]): void
 }>()
 
-const handleDrop = (event: DragEvent) => {
-  event.preventDefault()
-  event.stopPropagation()
-
-  active.value = false
-  if (event.dataTransfer && event.dataTransfer.files) {
-    const fileList = event.dataTransfer.files
-    console.log('fileList inner: ', event.dataTransfer.files)
-    emit('handle-files-upload', fileList)
-  }
+const uploadFile = e => {
+  console.log('test')
+  console.log(e.target.files)
+  files.value = e.target.files
+  emit('handle-files-upload', files.value)
 }
-
-const clearFiles = () => {
-  files.value = []
+const dragFile = e => {
+  console.log('test2 ')
+  console.log(e.dataTransfer.files)
+  files.value = e.dataTransfer.files
+  emit('handle-files-upload', files.value)
 }
-
-onMounted(() => {
-  const dragEnterHandler = (event: DragEvent) => {
-    event.preventDefault()
-    event.stopPropagation()
-    active.value = true
-  }
-
-  const dragOverHandler = (event: DragEvent) => {
-    event.preventDefault()
-    event.stopPropagation()
-    active.value = true
-  }
-
-  const dragLeaveHandler = (event: DragEvent) => {
-    event.preventDefault()
-    event.stopPropagation()
-    active.value = false
-  }
-
-  const dropHandler = (event: DragEvent) => {
-    event.preventDefault()
-    event.stopPropagation()
-    handleDrop(event)
-  }
-
-  document.addEventListener('dragenter', dragEnterHandler)
-  document.addEventListener('dragover', dragOverHandler)
-  document.addEventListener('dragleave', dragLeaveHandler)
-  document.addEventListener('drop', dropHandler)
-
-  onUnmounted(() => {
-    document.removeEventListener('dragenter', dragEnterHandler)
-    document.removeEventListener('dragover', dragOverHandler)
-    document.removeEventListener('dragleave', dragLeaveHandler)
-    document.removeEventListener('drop', dropHandler)
-  })
-})
 </script>
 
 <style lang="scss" scoped>
@@ -143,11 +92,7 @@ onMounted(() => {
   border-color: #007bff;
 }
 
-.file-drop-area ul {
-  list-style-type: none;
-}
-
-.file-drop-area button {
-  margin-top: 1rem;
+input[type='file']::file-selector-button {
+  display: none;
 }
 </style>
