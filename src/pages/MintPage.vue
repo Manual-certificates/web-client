@@ -1,19 +1,76 @@
 <template>
   <div>
-    <drag-drop-upload
-      class="mint-page__select-images mint-page__select"
-      icon="file-select"
-      :title="$t('mint-page.select-images-title')"
-      :description="$t('mint-page.select-images-description')"
-      @handle-files-upload="parseImages"
-    />
-    <drag-drop-upload
-      class="mint-page__select-table mint-page__select"
-      icon="file-select"
-      :title="$t('mint-page.select-table-title')"
-      :description="$t('mint-page.select-table-description')"
-      @handle-files-upload="parseTable"
-    />
+    <h2>
+      {{ $t('mint-page.title') }}
+    </h2>
+    <div class="mint-page__body">
+      <div class="mint-page__state-labels">
+        <div class="mint-page__field">
+          <p class="mint-page__field-number">
+1
+</p>
+          <div class="mint-page__field-border mint-page__field-payload"></div>
+        </div>
+        <div class="mint-page__field">
+          <p class="mint-page__field-number">
+1
+</p>
+          <div class="mint-page__field-border mint-page__field-payload"></div>
+        </div>
+        <div class="mint-page__field">
+          <p class="mint-page__field-number">
+1
+</p>
+
+          <div class="mint-page__field-border mint-page__field-payload"></div>
+        </div>
+      </div>
+      <div class="mint-page__payload">
+        <div class="mint-page__field">
+          <p class="mint-page__field-payload-title">
+            {{ $t('mint-page.step-1-title') }}
+          </p>
+          <p>
+            {{ $t('mint-page.step-1-description') }}
+          </p>
+          <drag-drop-upload
+            :title="$t('mint-page.select-images-title')"
+            :icon="'template'"
+            :description="$t('mint-page.select-images-description')"
+          />
+        </div>
+        <div class="mint-page__field">
+          <p class="mint-page__field-payload-title">
+            {{ $t('mint-page.step-2-title') }}
+          </p>
+          <p class="mint-page__field-payload-title">
+            {{ $t('mint-page.step-1-title') }}
+          </p>
+          <p>
+            {{ $t('mint-page.step-1-description') }}
+          </p>
+          <drag-drop-upload
+            class="mint-page__select-table mint-page__select"
+            icon="file-select"
+            :title="$t('mint-page.select-table-title')"
+            :description="$t('mint-page.select-table-description')"
+            @handle-files-upload="parseTable"
+          />
+        </div>
+        <div class="mint-page__field">
+          <p class="mint-page__field-payload-title">
+            {{ $t('mint-page.step-3-title') }}
+          </p>
+        </div>
+      </div>
+      <!--    <drag-drop-upload-->
+      <!--      class="mint-page__select-images mint-page__select"-->
+      <!--      icon="file-select"-->
+      <!--      :title="$t('mint-page.select-images-title')"-->
+      <!--      :description="$t('mint-page.select-images-description')"-->
+      <!--      @handle-files-upload="parseImages"-->
+      <!--    />-->
+    </div>
   </div>
 </template>
 
@@ -26,10 +83,11 @@ import { ErrorHandler } from '@/helpers'
 const files = ref<FileList>()
 const tableData = ref<string[][]>()
 
-const parseTable = (fileList: FileList) => {
+const parseTable = (fileList: File[]) => {
   const file = fileList[0]
   const reader = new FileReader()
   reader.onload = e => {
+    console.log('reader ', reader)
     const fileData = new Uint8Array(e.target?.result as ArrayBuffer)
     const workbook = XLSX.read(fileData, { type: 'array' })
     const sheetName = workbook.SheetNames[0]
@@ -63,7 +121,7 @@ const getTableDataRows = (worksheet: XLSX.WorkSheet) => {
   return dataRows
 }
 
-const parseImages = (fileList: FileList) => {
+const parseImages = (fileList: File[]) => {
   console.log(fileList)
   if (!fileList) {
     ErrorHandler.process('empty list')
@@ -89,7 +147,44 @@ const parseImages = (fileList: FileList) => {
 
 <style lang="scss" scoped>
 .mint-page__select {
-  width: toRem(278);
+  width: toRem(300);
   height: toRem(72);
+}
+
+.mint-page__body {
+  display: flex;
+}
+
+.mint-page__payload {
+  margin-left: toRem(20);
+}
+
+.mint-page__field {
+  display: grid;
+  text-align: center;
+  justify-items: center;
+  height: toRem(200);
+  margin: toRem(30) 0;
+}
+
+.mint-page__field-number {
+  width: toRem(30);
+  border-radius: toRem(20);
+  background: var(--info-dark);
+}
+
+.mint-page__field-border {
+  width: toRem(1);
+  border: toRem(2) solid var(--info-dark);
+}
+
+.mint-page__field-payload {
+  height: toRem(180);
+  margin: toRem(10) 0;
+}
+
+.mint-page__field-payload-title {
+  display: flex;
+  text-align: left;
 }
 </style>
