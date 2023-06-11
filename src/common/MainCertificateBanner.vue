@@ -18,6 +18,9 @@
           size="large"
           color="info"
           :text="$t('main-certificate-banner.issue-sbt-btn')"
+          :route="{
+            name: ROUTE_NAMES.mint,
+          }"
         />
       </div>
     </div>
@@ -25,7 +28,7 @@
 </template>
 
 <script setup lang="ts">
-import { ICON_NAMES } from '@/enums'
+import { ICON_NAMES, ROUTE_NAMES } from '@/enums'
 import { Icon } from '@/common'
 import AppButton from '@/common/AppButton.vue'
 
