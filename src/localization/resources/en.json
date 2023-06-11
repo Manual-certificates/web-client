@@ -86,10 +86,17 @@
     "select-images-title": "Drag and drop or Browse file",
     "upload-new-template-symbol": "+",
     "upload-new-template": "Upload new template",
-    "choose-template": "Choose from my templates"
+    "choose-template": "Choose from my templates",
+    "see-all": "See all "
+  },
+  "certificates-modal": {
+    "title": "Certificates ",
+    "count": "of ",
+    "search-placeholder": "Search by name ",
+    "close-btn": "Close"
   },
   "app-navbar": {
-    "metamask-ico-alt": "metamask ico",
+    "metamask-ico-alt": "Metamask ico",
     "metamask-connect" : "Connect"
   }
 }

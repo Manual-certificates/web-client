@@ -1,52 +1,71 @@
 <template>
-  <div>
-    <h2>
+  <div class="mint-page">
+    <certificates-modal
+      class="mint-page__certificate-modal"
+      v-model:is-shown="isShown"
+      :certificate-list="certificateList"
+    />
+
+    <h2 class="mint-page__title">
       {{ $t('mint-page.title') }}
     </h2>
     <div class="mint-page__body">
       <div class="mint-page__state-labels">
         <div class="mint-page__field">
+          <!--          <div class="mint-page__field-border-wrp v">-->
           <p class="mint-page__field-number">
-1
-</p>
-          <div class="mint-page__field-border mint-page__field-payload"></div>
+            {{ $t('mint-page.step-1-number') }}
+          </p>
+          <div class="mint-page__field-border"></div>
+          <!--          </div>-->
         </div>
         <div class="mint-page__field">
           <p class="mint-page__field-number">
-1
-</p>
-          <div class="mint-page__field-border mint-page__field-payload"></div>
+            {{ $t('mint-page.step-2-number') }}
+          </p>
+          <div class="mint-page__field-border"></div>
         </div>
         <div class="mint-page__field">
           <p class="mint-page__field-number">
-1
-</p>
-
-          <div class="mint-page__field-border mint-page__field-payload"></div>
+            {{ $t('mint-page.step-3-number') }}
+          </p>
+          <div class="mint-page__field-border"></div>
         </div>
       </div>
+
       <div class="mint-page__payload">
         <div class="mint-page__field">
-          <p class="mint-page__field-payload-title">
-            {{ $t('mint-page.step-1-title') }}
-          </p>
-          <p>
-            {{ $t('mint-page.step-1-description') }}
-          </p>
-          <drag-drop-upload
-            :title="$t('mint-page.select-images-title')"
-            :icon="'template'"
-            :description="$t('mint-page.select-images-description')"
-          />
+          <div class="mint-page__field-info">
+            <p class="mint-page__field-title">
+              {{ $t('mint-page.step-1-title') }}
+            </p>
+
+            <app-button
+              class="mint_page__certificate-count"
+              :text="$t('mint-page.see-all') + count.toString()"
+              @click="showModal"
+            />
+          </div>
+          <div>
+            <p class="mint-page__field-description">
+              {{ $t('mint-page.step-1-description') }}
+            </p>
+            <drag-drop-upload
+              class="mint-page__select-table mint-page__select"
+              :title="$t('mint-page.select-images-title')"
+              icon="template"
+              :description="$t('mint-page.select-images-description')"
+            />
+          </div>
         </div>
+
         <div class="mint-page__field">
-          <p class="mint-page__field-payload-title">
-            {{ $t('mint-page.step-2-title') }}
-          </p>
-          <p class="mint-page__field-payload-title">
-            {{ $t('mint-page.step-1-title') }}
-          </p>
-          <p>
+          <div class="mint-page__field-info">
+            <p class="mint-page__field-title">
+              {{ $t('mint-page.step-1-title') }}
+            </p>
+          </div>
+          <p class="mint-page__field-description">
             {{ $t('mint-page.step-1-description') }}
           </p>
           <drag-drop-upload
@@ -57,19 +76,31 @@
             @handle-files-upload="parseTable"
           />
         </div>
+
         <div class="mint-page__field">
-          <p class="mint-page__field-payload-title">
-            {{ $t('mint-page.step-3-title') }}
-          </p>
+          <div class="mint-page__field-info">
+            <p class="mint-page__field-title">
+              {{ $t('mint-page.step-3-title') }}
+            </p>
+          </div>
+          <input-field
+            class="mint-page__field-input"
+            :model-value="contractAddress"
+          />
         </div>
       </div>
-      <!--    <drag-drop-upload-->
-      <!--      class="mint-page__select-images mint-page__select"-->
-      <!--      icon="file-select"-->
-      <!--      :title="$t('mint-page.select-images-title')"-->
-      <!--      :description="$t('mint-page.select-images-description')"-->
-      <!--      @handle-files-upload="parseImages"-->
-      <!--    />-->
+    </div>
+    <div class="mint-page__btns-wrp">
+      <app-button
+        class="mint-page__btn"
+        size="medium"
+        :text="$t('mint-page.cancel-btn')"
+      />
+      <app-button
+        class="mint-page__btn"
+        size="medium"
+        :text="$t('mint-page.create-btn')"
+      />
     </div>
   </div>
 </template>
@@ -77,12 +108,19 @@
 <script setup lang="ts">
 import * as XLSX from 'xlsx'
 import DragDropUpload from '@/common/DragDropUpload.vue'
-import { ref } from 'vue'
+import { onBeforeMount, ref } from 'vue'
 import { ErrorHandler } from '@/helpers'
+import { AppButton } from '@/common'
+import CertificatesModal from '@/common/modals/CertificatesModal.vue'
+import { CertificateFile } from '@/types'
+import InputField from '@/fields/InputField.vue'
 
 const files = ref<FileList>()
+const isShown = ref(false)
 const tableData = ref<string[][]>()
-
+const certificateList = ref<CertificateFile[]>([])
+const count = ref(0)
+const contractAddress = ref('')
 const parseTable = (fileList: File[]) => {
   const file = fileList[0]
   const reader = new FileReader()
@@ -143,6 +181,14 @@ const parseImages = (fileList: File[]) => {
     }
   }
 }
+
+const showModal = () => {
+  isShown.value = true
+  console.log(isShown.value)
+}
+onBeforeMount(() => {
+  console.log('test mint')
+})
 </script>
 
 <style lang="scss" scoped>
@@ -155,26 +201,46 @@ const parseImages = (fileList: File[]) => {
   display: flex;
 }
 
+.mint-page__title {
+  margin-bottom: toRem(30);
+}
+
+.mint-page__certificate-modal {
+}
+
+.mint-page__state-labels {
+  //width: 100%;
+  display: grid;
+  justify-content: center;
+  margin: 0;
+}
+
 .mint-page__payload {
   margin-left: toRem(20);
+  width: 100%;
 }
 
 .mint-page__field {
-  display: grid;
+  display: flow;
   text-align: center;
-  justify-items: center;
+  row-gap: toRem(8);
   height: toRem(200);
-  margin: toRem(30) 0;
+  //margin: toRem(30) 0;
 }
 
 .mint-page__field-number {
   width: toRem(30);
+  height: toRem(30);
+  color: var(--text-primary-invert-light);
   border-radius: toRem(20);
+
   background: var(--info-dark);
 }
 
 .mint-page__field-border {
   width: toRem(1);
+  height: 60%;
+  margin: toRem(30) auto;
   border: toRem(2) solid var(--info-dark);
 }
 
@@ -183,8 +249,37 @@ const parseImages = (fileList: File[]) => {
   margin: toRem(10) 0;
 }
 
-.mint-page__field-payload-title {
+.mint-page__field-title {
   display: flex;
   text-align: left;
+}
+
+.mint-page__field-info {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin-bottom: toRem(20);
+}
+
+.mint-page__field-border-wrp {
+  display: grid;
+  justify-items: center;
+}
+
+.mint-page__btns-wrp {
+  display: flex;
+}
+
+.mint-page__btn {
+  width: toRem(200);
+  margin-right: toRem(10);
+}
+
+.mint-page__field-description {
+  text-align: left;
+}
+
+.mint-page__field-input {
+  width: toRem(427);
 }
 </style>
