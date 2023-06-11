@@ -62,11 +62,11 @@
         <div class="mint-page__field">
           <div class="mint-page__field-info">
             <p class="mint-page__field-title">
-              {{ $t('mint-page.step-1-title') }}
+              {{ $t('mint-page.step-2-title') }}
             </p>
           </div>
           <p class="mint-page__field-description">
-            {{ $t('mint-page.step-1-description') }}
+            {{ $t('mint-page.step-2-description') }}
           </p>
           <drag-drop-upload
             class="mint-page__select-table mint-page__select"
@@ -93,13 +93,15 @@
     <div class="mint-page__btns-wrp">
       <app-button
         class="mint-page__btn"
-        size="medium"
+        size="large"
+        color="info"
         :text="$t('mint-page.cancel-btn')"
       />
       <app-button
         class="mint-page__btn"
-        size="medium"
-        :text="$t('mint-page.create-btn')"
+        size="large"
+        color="info"
+        :text="$t('mint-page.issue-btn')"
       />
     </div>
   </div>
@@ -209,7 +211,6 @@ onBeforeMount(() => {
 }
 
 .mint-page__state-labels {
-  //width: 100%;
   display: grid;
   justify-content: center;
   margin: 0;
@@ -225,7 +226,6 @@ onBeforeMount(() => {
   text-align: center;
   row-gap: toRem(8);
   height: toRem(200);
-  //margin: toRem(30) 0;
 }
 
 .mint-page__field-number {
@@ -272,11 +272,17 @@ onBeforeMount(() => {
 
 .mint-page__btn {
   width: toRem(200);
+  border-radius: toRem(8);
   margin-right: toRem(10);
 }
 
 .mint-page__field-description {
   text-align: left;
+  max-width: 30%;
+  font-size: toRem(14);
+  color: var(--text-primary-light);
+  margin-bottom: toRem(10);
+  line-height: 1.5;
 }
 
 .mint-page__field-input {

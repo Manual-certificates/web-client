@@ -84,9 +84,6 @@
     "select-table-description" : "XLS",
     "select-images-description": "You can upload up to 100 files",
     "select-images-title": "Drag and drop or Browse file",
-    "upload-new-template-symbol": "+",
-    "upload-new-template": "Upload new template",
-    "choose-template": "Choose from my templates",
     "see-all": "See all "
   },
   "certificates-modal": {
