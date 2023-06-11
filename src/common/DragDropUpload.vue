@@ -72,24 +72,18 @@ const dragFile = e => {
   align-items: center;
 }
 
-.file-drop-area__text-description {
-  margin-top: toRem(-10);
-}
-
 .file-drop-area__icon {
   width: toRem(21);
   height: toRem(27);
 }
 
 .file-drop-area__text {
-  font-size: toRem(20);
-  line-height: 1.5;
-
-  font-family: 'Inter', fantasy;
+  font-style: normal;
+  //font-weight: 500;
 }
 
 .file-drop-area.active {
-  border-color: #007bff;
+  border-color: var(--info-dark);
 }
 
 input[type='file']::file-selector-button {
