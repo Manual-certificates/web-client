@@ -24,11 +24,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { defineEmits, ref } from 'vue'
 import { ICON_NAMES } from '@/enums'
 import Icon from '@/common/Icon.vue'
 const files = ref<File[]>([])
-const data = ref<string[][]>([])
 
 const props = defineProps<{
   icon: ICON_NAMES
@@ -37,18 +36,17 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits<{
-  (e: 'handle-files-upload', file: File[]): void
+  (e: 'handle-files-upload', files: File[]): void
 }>()
 
 const uploadFile = e => {
-  console.log('test')
-  console.log(e.target.files)
   files.value = e.target.files
+  for (let i = 0; i < 100; i++) {
+    console.log(e.target.files.length)
+  }
   emit('handle-files-upload', files.value)
 }
 const dragFile = e => {
-  console.log('test2 ')
-  console.log(e.dataTransfer.files)
   files.value = e.dataTransfer.files
   emit('handle-files-upload', files.value)
 }
@@ -56,7 +54,7 @@ const dragFile = e => {
 
 <style lang="scss" scoped>
 .file-drop-area {
-  border: 2px dashed #ccc;
+  border: toRem(2) dashed var(--border-primary-light);
 
   text-align: center;
   cursor: pointer;
@@ -73,13 +71,12 @@ const dragFile = e => {
 }
 
 .file-drop-area__icon {
-  width: toRem(21);
-  height: toRem(27);
+  width: toRem(33);
+  height: toRem(37);
 }
 
 .file-drop-area__text {
   font-style: normal;
-  //font-weight: 500;
 }
 
 .file-drop-area.active {
