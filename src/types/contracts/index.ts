@@ -53,4 +53,4 @@ export { ITokenContract__factory } from "./factories/contracts/interfaces/IToken
 export type { TokenContractV2 } from "./contracts/mock/TokenContractV2";
 export { TokenContractV2__factory } from "./factories/contracts/mock/TokenContractV2__factory";
 export type { TokenContract } from "./contracts/TokenContract";
-export { TokenContract__factory } from "./factories/contracts/TokenContract__factory";
+export { TokenContract__factory } from "./factories/contracts/TokenContract__factory"

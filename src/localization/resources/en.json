@@ -44,15 +44,6 @@
     "default-message-info": "Something is happening. Just want you to know that",
     "default-message-default": "Just a message"
   },
-  "login-form": {
-    "login-lbl": "Login",
-    "password-lbl": "Password",
-    "login-success-msg": "Access granted",
-    "submit-btn": "Submit"
-  },
-  "web3-page": {
-    "loading-error-msg": "Oops... Something went wrong"
-  },
   "main-page": {
     "page-title": "Service name",
     "page-description": "Ac integer sapien nisl turpis arcu integer. Pellentesque phasellus egestas pharetra quam cursus",
@@ -84,7 +75,11 @@
     "select-table-description" : "XLS",
     "select-images-description": "You can upload up to 100 files",
     "select-images-title": "Drag and drop or Browse file",
-    "see-all": "See all "
+    "see-all": "See all ",
+    "loader-modal-title": "Process",
+    "loader-modal-description-upload-files": "Uploading files to IPFS",
+    "loader-modal-description-mint": "Minting SBTs",
+    "loader-modal-description": "Wait until all certificates are created"
   },
   "certificates-modal": {
     "title": "Certificates ",
@@ -95,5 +90,11 @@
   "app-navbar": {
     "metamask-ico-alt": "Metamask ico",
     "metamask-connect" : "Connect"
+  },
+  "error-modal": {
+    "btn": "Try again",
+    "title": "Something went wrong",
+    "description": "Elit dapibus at egestas odio. Elit dolor non ornare magna"
+
   }
 }

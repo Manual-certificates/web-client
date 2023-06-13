@@ -4,20 +4,33 @@
       class="mint-page__certificate-modal"
       v-model:is-shown="isShown"
       :certificate-list="certificateList"
+      @remove-certificate="removeCertificate"
     />
 
+    <loader-modal
+      :title="$t('mint-page.loader-modal-title')"
+      :description="$t('mint-page.loader-modal-description')"
+      :is-shown="isMintLoaderShown"
+      :load-state="loadState"
+      :file-count="certificateList.length"
+    />
+
+    <error-modal
+      v-model:is-shown="isErrorModalShown"
+      @send-again="mintCertificates"
+    />
+
+    <success-modal :is-shown="isSuccessModalShown" :tx="txHash" />
     <h2 class="mint-page__title">
       {{ $t('mint-page.title') }}
     </h2>
     <div class="mint-page__body">
       <div class="mint-page__state-labels">
         <div class="mint-page__field">
-          <!--          <div class="mint-page__field-border-wrp v">-->
           <p class="mint-page__field-number">
             {{ $t('mint-page.step-1-number') }}
           </p>
           <div class="mint-page__field-border"></div>
-          <!--          </div>-->
         </div>
         <div class="mint-page__field">
           <p class="mint-page__field-number">
@@ -29,7 +42,6 @@
           <p class="mint-page__field-number">
             {{ $t('mint-page.step-3-number') }}
           </p>
-          <div class="mint-page__field-border"></div>
         </div>
       </div>
 
@@ -42,7 +54,9 @@
 
             <app-button
               class="mint_page__certificate-count"
-              :text="$t('mint-page.see-all') + count.toString()"
+              :text="
+                $t('mint-page.see-all') + certificateList.length.toString()
+              "
               @click="showModal"
             />
           </div>
@@ -50,12 +64,30 @@
             <p class="mint-page__field-description">
               {{ $t('mint-page.step-1-description') }}
             </p>
-            <drag-drop-upload
-              class="mint-page__select-table mint-page__select"
-              :title="$t('mint-page.select-images-title')"
-              icon="template"
-              :description="$t('mint-page.select-images-description')"
-            />
+            <div class="mint-page__field-images">
+              <drag-drop-upload
+                class="mint-page__select-table mint-page__select"
+                :title="$t('mint-page.select-images-title')"
+                icon="template"
+                :description="$t('mint-page.select-images-description')"
+                @handle-files-upload="handlerUploadFile"
+              />
+              <div
+                v-if="certificateList.length > 0"
+                class="mint-page__field-images"
+              >
+                <div v-for="item in certificateList.slice(0, 3)" :key="item">
+                  <file-item
+                    class="mint-page__select mint-page__select-item"
+                    icon="file-item"
+                    :title="item.title"
+                    :description="preparedSize(item.size)"
+                    :item="item"
+                    @delete-item="removeCertificate"
+                  />
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -73,7 +105,7 @@
             icon="file-select"
             :title="$t('mint-page.select-table-title')"
             :description="$t('mint-page.select-table-description')"
-            @handle-files-upload="parseTable"
+            @handle-files-upload="handlerUploadFile"
           />
         </div>
 
@@ -83,26 +115,30 @@
               {{ $t('mint-page.step-3-title') }}
             </p>
           </div>
+          <p class="mint-page__field-description">
+            {{ $t('mint-page.step-3-description') }}
+          </p>
           <input-field
             class="mint-page__field-input"
-            :model-value="contractAddress"
+            v-model:model-value="contractAddress"
           />
+          <div class="mint-page__btns-wrp">
+            <app-button
+              class="mint-page__btn"
+              size="large"
+              color="info"
+              :text="$t('mint-page.cancel-btn')"
+            />
+            <app-button
+              class="mint-page__btn"
+              size="large"
+              color="info"
+              :text="$t('mint-page.issue-btn')"
+              @click="mintCertificates"
+            />
+          </div>
         </div>
       </div>
-    </div>
-    <div class="mint-page__btns-wrp">
-      <app-button
-        class="mint-page__btn"
-        size="large"
-        color="info"
-        :text="$t('mint-page.cancel-btn')"
-      />
-      <app-button
-        class="mint-page__btn"
-        size="large"
-        color="info"
-        :text="$t('mint-page.issue-btn')"
-      />
     </div>
   </div>
 </template>
@@ -110,30 +146,37 @@
 <script setup lang="ts">
 import * as XLSX from 'xlsx'
 import DragDropUpload from '@/common/DragDropUpload.vue'
-import { onBeforeMount, ref } from 'vue'
+import { ref } from 'vue'
 import { ErrorHandler } from '@/helpers'
 import { AppButton } from '@/common'
 import CertificatesModal from '@/common/modals/CertificatesModal.vue'
 import { CertificateFile } from '@/types'
 import InputField from '@/fields/InputField.vue'
+import FileItem from '@/common/FileItem.vue'
+import { useTokenContact } from '@/composables'
+import { IpfsUtils } from '@/utils/ipfs.utils'
+import LoaderModal from '@/common/modals/LoaderModal.vue'
+import ErrorModal from '@/common/modals/ErrorModal.vue'
+import SuccessModal from '@/common/modals/SuccessModal.vue'
 
-const files = ref<FileList>()
 const isShown = ref(false)
+const isMintLoaderShown = ref(false)
+const isErrorModalShown = ref(false)
+const isSuccessModalShown = ref(false)
 const tableData = ref<string[][]>()
 const certificateList = ref<CertificateFile[]>([])
-const count = ref(0)
 const contractAddress = ref('')
-const parseTable = (fileList: File[]) => {
-  const file = fileList[0]
+const loadState = ref(0)
+const txHash = ref('')
+const parseTable = (files: File[]) => {
   const reader = new FileReader()
+  const file = files[0]
   reader.onload = e => {
-    console.log('reader ', reader)
     const fileData = new Uint8Array(e.target?.result as ArrayBuffer)
     const workbook = XLSX.read(fileData, { type: 'array' })
     const sheetName = workbook.SheetNames[0]
     const worksheet = workbook.Sheets[sheetName]
     tableData.value = getTableDataRows(worksheet)
-    console.log(tableData.value)
   }
   reader.readAsArrayBuffer(file)
 }
@@ -162,7 +205,6 @@ const getTableDataRows = (worksheet: XLSX.WorkSheet) => {
 }
 
 const parseImages = (fileList: File[]) => {
-  console.log(fileList)
   if (!fileList) {
     ErrorHandler.process('empty list')
   }
@@ -172,31 +214,95 @@ const parseImages = (fileList: File[]) => {
       ErrorHandler.process('empty file')
     }
     const reader = new FileReader()
-    console.log(file)
     reader.readAsDataURL(file)
     reader.onload = function () {
-      //me.modelvalue = reader.result;
-      console.log(reader.result)
+      const certificate: CertificateFile = {
+        title: file.name,
+        size: file.size.toString(),
+        file: file,
+        content: reader.result as string,
+      }
+
+      certificateList.value.push(certificate)
     }
     reader.onerror = function (error) {
-      console.log('Error: ', error)
+      ErrorHandler.process(error)
     }
   }
 }
 
+const handlerUploadFile = (fileList: File[]) => {
+  if (
+    fileList[0].type ===
+    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+  ) {
+    parseTable(fileList)
+    return
+  }
+  parseImages(fileList)
+}
+const preparedSize = (size: string) => {
+  return (Number(size) / 1000).toString() + 'KB'
+}
 const showModal = () => {
   isShown.value = true
-  console.log(isShown.value)
 }
-onBeforeMount(() => {
-  console.log('test mint')
-})
+
+const mintCertificates = async () => {
+  console.log('mint')
+  const undefinedNames = []
+  const addresses: string[] = []
+  const URIs: string[] = []
+  try {
+    isMintLoaderShown.value = true
+
+    for (const item of tableData.value!) {
+      const certificateByFileName = certificateList.value.find(
+        certificate => certificate.title === item[2],
+      )
+      if (certificateByFileName === undefined) {
+        undefinedNames.push(item)
+        continue
+      }
+      addresses.push(item[1])
+      loadState.value++
+
+      URIs.push(await IpfsUtils.storeFile(certificateByFileName.file!))
+    }
+
+    const res = await useTokenContact(contractAddress.value).mintBatch(
+      addresses,
+      URIs,
+    )
+
+    txHash.value = res.transactionHash
+  } catch (error) {
+    isMintLoaderShown.value = false
+    isErrorModalShown.value = true
+    loadState.value = 0
+
+    ErrorHandler.process(error)
+  } finally {
+    isMintLoaderShown.value = false
+    loadState.value = 0
+  }
+}
+
+const removeCertificate = (certificate: CertificateFile) => {
+  certificateList.value = certificateList.value.filter(
+    obj => obj.title !== certificate.title,
+  )
+}
 </script>
 
 <style lang="scss" scoped>
 .mint-page__select {
   width: toRem(300);
   height: toRem(72);
+}
+
+.mint-page__image-item {
+  border: toRem(2) solid var(--info-dark);
 }
 
 .mint-page__body {
@@ -239,9 +345,9 @@ onBeforeMount(() => {
 
 .mint-page__field-border {
   width: toRem(1);
-  height: 60%;
+  height: 65%;
   margin: toRem(30) auto;
-  border: toRem(2) solid var(--info-dark);
+  border: toRem(1) solid var(--info-dark);
 }
 
 .mint-page__field-payload {
@@ -268,6 +374,7 @@ onBeforeMount(() => {
 
 .mint-page__btns-wrp {
   display: flex;
+  margin-top: toRem(50);
 }
 
 .mint-page__btn {
@@ -287,5 +394,13 @@ onBeforeMount(() => {
 
 .mint-page__field-input {
   width: toRem(427);
+}
+
+.mint-page__field-images {
+  display: flex;
+}
+
+.mint-page__select-item {
+  margin-left: toRem(15);
 }
 </style>
