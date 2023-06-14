@@ -30,7 +30,6 @@
 import { AppButton, AppLogo } from '@/common'
 import { useWeb3ProvidersStore } from '@/store'
 import { onBeforeMount, ref } from 'vue'
-import { ROUTE_NAMES } from '@/enums'
 
 const { provider } = useWeb3ProvidersStore()
 const preparedAddress = ref('')

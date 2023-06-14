@@ -4,27 +4,25 @@ LoaderModal.vue
     :is-shown="props.isShown"
     @update:is-shown="(value: boolean) => emit('update:is-shown', value)"
   >
-    <template #default="{ modal }">
-      <div class="error-modal__pane">
-        <div class="error-modal__payload">
-          <icon class="error-modal__icon" :name="ICON_NAMES.certificateError" />
-          <div class="error-modal__info">
-            <h3 class="error-modal__title">
-              {{ $t('error-modal.title') }}
-            </h3>
-            <p class="error-modal__description">
-              {{ $t('error-modal.description') }}
-            </p>
-          </div>
+    <div class="error-modal__pane">
+      <div class="error-modal__payload">
+        <icon class="error-modal__icon" :name="ICON_NAMES.certificateError" />
+        <div class="error-modal__info">
+          <h3 class="error-modal__title">
+            {{ $t('error-modal.title') }}
+          </h3>
+          <p class="error-modal__description">
+            {{ $t('error-modal.description') }}
+          </p>
         </div>
-        <app-button
-          class="error-modal__btn"
-          :text="$t('error-modal.btn')"
-          :size="'large'"
-          @click="tryAgain"
-        />
       </div>
-    </template>
+      <app-button
+        class="error-modal__btn"
+        :text="$t('error-modal.btn')"
+        :size="'large'"
+        @click="tryAgain"
+      />
+    </div>
   </modal>
 </template>
 

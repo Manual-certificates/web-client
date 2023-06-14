@@ -3,22 +3,20 @@
     :is-shown="props.isShown"
     @update:is-shown="(value: boolean) => emit('update:is-shown', value)"
   >
-    <template #default="{ modal }">
-      <div class="loader-modal__pane">
-        <h3 class="loader-modal__title">
-          {{ title }}
-        </h3>
-        <p class="loader-modal__description">
-          {{ description }}
-        </p>
+    <div class="loader-modal__pane">
+      <h3 class="loader-modal__title">
+        {{ title }}
+      </h3>
+      <p class="loader-modal__description">
+        {{ description }}
+      </p>
 
-        <progress
-          class="loader-modal__loader"
-          :max="fileCount"
-          :value="loadState"
-        ></progress>
-      </div>
-    </template>
+      <progress
+        class="loader-modal__loader"
+        :max="fileCount"
+        :value="loadState"
+      ></progress>
+    </div>
   </modal>
 </template>
 

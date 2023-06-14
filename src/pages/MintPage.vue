@@ -210,6 +210,7 @@ const parseImages = (fileList: File[]) => {
   }
   for (let i = 0; i < fileList.length; i++) {
     const file = fileList[i]
+
     if (!file) {
       ErrorHandler.process('empty file')
     }
@@ -249,7 +250,6 @@ const showModal = () => {
 }
 
 const mintCertificates = async () => {
-  console.log('mint')
   const undefinedNames = []
   const addresses: string[] = []
   const URIs: string[] = []
@@ -313,9 +313,6 @@ const removeCertificate = (certificate: CertificateFile) => {
   margin-bottom: toRem(30);
 }
 
-.mint-page__certificate-modal {
-}
-
 .mint-page__state-labels {
   display: grid;
   justify-content: center;
@@ -339,7 +336,6 @@ const removeCertificate = (certificate: CertificateFile) => {
   height: toRem(30);
   color: var(--text-primary-invert-light);
   border-radius: toRem(20);
-
   background: var(--info-dark);
 }
 

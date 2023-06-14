@@ -74,7 +74,5 @@ onBeforeMount(prepareFileTitle)
 
 .file-item__text {
   font-style: normal;
-  //line-height: ;
-  //font-weight: 500;
 }
 </style>
