@@ -24,7 +24,7 @@ import { Icon } from '@/common/'
 import AppButton from '@/common/AppButton.vue'
 import { ICON_NAMES } from '@/enums'
 
-const props = defineProps<{
+defineProps<{
   certificate: CertificateFile
 }>()
 
@@ -37,9 +37,9 @@ const emit = defineEmits<{
 .certificate-item {
   display: flex;
   padding: toRem(15);
-  border: 1px solid #e0e0e0;
+  border: toRem(1) solid var(--border-primary-light);
   justify-content: space-between;
-  border-radius: 12px;
+  border-radius: toRem(12);
   margin: toRem(14);
 }
 

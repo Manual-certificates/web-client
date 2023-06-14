@@ -14,7 +14,7 @@
               {{ (pageCount * 5).toString() + '-' + (pageCount + 1) * 5 }}
               {{
                 $t('certificates-modal.count') +
-                certificateList.length.toString()
+                certificatesListBuffer.length.toString()
               }}
             </p>
 
@@ -25,7 +25,7 @@
             />
             <app-button
               icon-left="chevron-right"
-              :disabled="(pageCount + 1) * 5 > certificateList.length"
+              :disabled="(pageCount + 1) * 5 > certificatesListBuffer.length"
               @click="pageCount++"
             />
           </div>
@@ -34,14 +34,14 @@
         <div class="certificates-modal__search">
           <input-field
             class="certificates-modal__search-input"
-            :model-value="searchData"
+            v-model:model-value="searchData"
             :placeholder="$t('certificates-modal.search-placeholder')"
             @input="search"
           />
         </div>
 
         <div
-          v-for="item in certificateList?.slice(
+          v-for="item in certificatesListBuffer?.slice(
             pageCount * 5,
             pageCount * 5 + 5,
           )"
@@ -77,6 +77,7 @@ import InputField from '@/fields/InputField.vue'
 
 const searchData = ref('')
 const pageCount = ref(0)
+const certificatesListBuffer = ref<CertificateFile[]>([])
 
 const props = defineProps<{
   isShown: boolean
@@ -91,7 +92,18 @@ const emit = defineEmits<{
 }>()
 
 const search = () => {
-  console.log(searchData)
+  if (searchData.value === '' && certificatesListBuffer.value) {
+    certificatesListBuffer.value = props.certificateList!
+    return
+  }
+  const searchQuery = searchData.value.toLowerCase()
+  const filteredData = certificatesListBuffer.value.filter(certificate => {
+    const title = certificate.title.toLowerCase()
+
+    return title.includes(searchQuery)
+  })
+
+  certificatesListBuffer.value = filteredData
 }
 
 const removeItem = (certificate: CertificateFile) => {
@@ -125,15 +137,7 @@ const removeItem = (certificate: CertificateFile) => {
   margin: auto;
 }
 
-.certificates-modal__search-input {
-}
-
 .certificates-modal__header-title {
-  //display: flex;
-
-  //flex-direction: column;
-  //gap: toRem(8);
-
   width: toRem(600);
   text-align: center;
 }
@@ -160,6 +164,7 @@ const removeItem = (certificate: CertificateFile) => {
   margin-left: auto;
   margin-right: auto;
 }
+
 .certificates-modal__close-btn {
   width: 90%;
 }

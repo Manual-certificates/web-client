@@ -4,28 +4,23 @@ LoaderModal.vue
     :is-shown="props.isShown"
     @update:is-shown="(value: boolean) => emit('update:is-shown', value)"
   >
-    <template #default="{ modal }">
-      <div class="success-modal__pane">
-        <div class="success-modal__payload">
-          <icon
-            class="success-modal__icon"
-            :name="ICON_NAMES.certificateError"
-          />
-          <div class="success-modal__info">
-            <h3 class="success-modal__title">
-              {{ $t('success-modal.title') }}
-            </h3>
-            <p class="success-modal__description">
-              {{ $t('success-modal.description') }}
-            </p>
-          </div>
-        </div>
-
-        <div class="success-modal__tx-wrp">
-          <h2>{{ tx }}</h2>
+    <div class="success-modal__pane">
+      <div class="success-modal__payload">
+        <icon class="success-modal__icon" :name="ICON_NAMES.certificateError" />
+        <div class="success-modal__info">
+          <h3 class="success-modal__title">
+            {{ $t('success-modal.title') }}
+          </h3>
+          <p class="success-modal__description">
+            {{ $t('success-modal.description') }}
+          </p>
         </div>
       </div>
-    </template>
+
+      <div class="success-modal__tx-wrp">
+        <h2>{{ tx }}</h2>
+      </div>
+    </div>
   </modal>
 </template>
 

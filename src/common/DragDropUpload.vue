@@ -1,6 +1,13 @@
 <template>
-  <div class="file-drop-area">
-    <div class="file-drop-area__content" @drag="dragFile">
+  <div
+    class="file-drop-area"
+    :data-active="active"
+    @dragenter.prevent="setActive"
+    @dragover.prevent="setActive"
+    @dragleave.prevent="setInactive"
+    @drop.prevent="dragFile"
+  >
+    <div class="file-drop-area__content">
       <icon class="file-drop-area__icon" :name="icon" @drag="dragFile" />
       <div class="file-drop-area__text">
         <label for="input">
@@ -29,7 +36,7 @@ import { ICON_NAMES } from '@/enums'
 import Icon from '@/common/Icon.vue'
 const files = ref<File[]>([])
 
-const props = defineProps<{
+defineProps<{
   icon: ICON_NAMES
   title: string
   description: string
@@ -41,21 +48,27 @@ const emit = defineEmits<{
 
 const uploadFile = e => {
   files.value = e.target.files
-  for (let i = 0; i < 100; i++) {
-    console.log(e.target.files.length)
-  }
   emit('handle-files-upload', files.value)
 }
 const dragFile = e => {
-  files.value = e.dataTransfer.files
+  setInactive()
+  files.value = e.target.files || e.dataTransfer.files
   emit('handle-files-upload', files.value)
+}
+
+const active = ref(false)
+
+function setActive() {
+  active.value = true
+}
+function setInactive() {
+  active.value = false
 }
 </script>
 
 <style lang="scss" scoped>
 .file-drop-area {
   border: toRem(2) dashed var(--border-primary-light);
-
   text-align: center;
   cursor: pointer;
   border-radius: toRem(8);
