@@ -6,7 +6,7 @@ LoaderModal.vue
   >
     <div class="success-modal__pane">
       <div class="success-modal__payload">
-        <icon class="success-modal__icon" :name="ICON_NAMES.certificateError" />
+        <icon class="success-modal__icon" :name="ICON_NAMES.certificate" />
         <div class="success-modal__info">
           <h3 class="success-modal__title">
             {{ $t('success-modal.title') }}
@@ -18,14 +18,21 @@ LoaderModal.vue
       </div>
 
       <div class="success-modal__tx-wrp">
-        <h2>{{ tx }}</h2>
+        <p class="success-modal__tx">
+          {{ tx }}
+        </p>
       </div>
+      <app-button
+        class="success-modal__btn"
+        :text="$t('success-modal.btn')"
+        color="success"
+      />
     </div>
   </modal>
 </template>
 
 <script lang="ts" setup>
-import { Icon, Modal } from '@/common'
+import { Icon, Modal, AppButton } from '@/common'
 import { ICON_NAMES } from '@/enums'
 
 const props = defineProps<{
@@ -62,7 +69,15 @@ const emit = defineEmits<{
 }
 
 .success-modal__tx-wrp {
+  margin-top: toRem(25);
+}
+
+.success-modal__tx {
   background: var(--background-primary-dark);
   padding: toRem(20);
+}
+
+.success-modal__btn {
+  margin: toRem(15) auto;
 }
 </style>

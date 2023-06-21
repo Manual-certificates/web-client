@@ -218,6 +218,7 @@ const buttonClasses = computed(() =>
     --app-button-flat-border-active: #{toRem(2)} solid var(--success-dark);
 
     --app-button-filled-text: var(--text-primary-invert-main);
+    --app-button-filled-text-hover: var(--text-primary-invert-main);
     --app-button-filled-bg: var(--success-main);
     --app-button-filled-bg-hover: var(--success-dark);
     --app-button-filled-bg-active: var(--success-dark);
@@ -231,6 +232,7 @@ const buttonClasses = computed(() =>
     --app-button-flat-border-active: #{toRem(2)} solid var(--error-dark);
 
     --app-button-filled-text: var(--text-primary-invert-main);
+    --app-button-filled-text-hover: var(--text-primary-invert-main);
     --app-button-filled-bg: var(--error-main);
     --app-button-filled-bg-hover: var(--error-dark);
     --app-button-filled-bg-active: var(--error-dark);

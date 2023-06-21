@@ -1,5 +1,7 @@
 @import '../../static/branding/app-colors';
 
+@import '../../src/styles/functions';
+
 :root,
 :before,
 :after {
@@ -83,6 +85,11 @@
   }
 
   /* --------------------------------------- */
+
+  /* Page sizes */
+  --page-large: #{toRem(1450)};
+  --page-medium: #{toRem(1024)};
+  --page-xmedium: #{toRem(1280)};
 
   /* Field variables */
 

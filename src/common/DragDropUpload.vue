@@ -83,9 +83,8 @@ function setInactive() {
 .file-drop-area__content {
   display: flex;
   text-align: left;
-  padding: toRem(12);
-  gap: toRem(8);
-  justify-content: space-around;
+  padding: toRem(10);
+  justify-content: left;
   align-items: center;
 }
 
@@ -95,7 +94,9 @@ function setInactive() {
 }
 
 .file-drop-area__text {
+  padding-top: toRem(5);
   font-style: normal;
+  margin: auto;
 }
 
 .file-drop-area.active {
