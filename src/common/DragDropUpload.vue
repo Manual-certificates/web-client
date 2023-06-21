@@ -18,6 +18,7 @@
           multiple
           id="input"
           hidden
+          :accept="filesType"
           @input="uploadFile"
           class="file-drop-area__text-title"
         />
@@ -40,6 +41,7 @@ defineProps<{
   icon: ICON_NAMES
   title: string
   description: string
+  filesType: string
 }>()
 
 const emit = defineEmits<{

@@ -67,8 +67,10 @@
             <div class="mint-page__field-images">
               <drag-drop-upload
                 class="mint-page__select-table mint-page__select"
+                :key="imageKey"
+                :files-type="imageFormat"
+                :icon="$icons.template"
                 :title="$t('mint-page.select-images-title')"
-                icon="template"
                 :description="$t('mint-page.select-images-description')"
                 @handle-files-upload="handlerUploadFile"
               />
@@ -79,7 +81,7 @@
                 <div v-for="item in certificateList.slice(0, 3)" :key="item">
                   <file-item
                     class="mint-page__select mint-page__select-item"
-                    icon="file-item"
+                    :icon="$icons.fileItem"
                     :title="item.title"
                     :description="preparedSize(item.size)"
                     :item="item"
@@ -102,7 +104,9 @@
           </p>
           <drag-drop-upload
             class="mint-page__select-table mint-page__select"
-            icon="file-select"
+            :key="tableKey"
+            :files-type="tableFormat"
+            :icon="$icons.fileSelect"
             :title="$t('mint-page.select-table-title')"
             :description="$t('mint-page.select-table-description')"
             @handle-files-upload="handlerUploadFile"
@@ -168,6 +172,12 @@ const certificateList = ref<CertificateFile[]>([])
 const contractAddress = ref('')
 const loadState = ref(0)
 const txHash = ref('')
+const tableFormat =
+  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+const imageFormat = 'image/png, image/jpeg'
+const imageKey = 'imageKey'
+const tableKey = 'tableKey'
+
 const parseTable = (files: File[]) => {
   const reader = new FileReader()
   const file = files[0]
