@@ -40,20 +40,12 @@
           />
         </div>
 
-        <div
-          v-for="item in certificatesListBuffer?.slice(
-            pageCount * 5,
-            pageCount * 5 + 5,
-          )"
-          :key="item"
-        >
-          <certificate-modal-item
-            :certificate="item"
-            @remove-certificate="removeItem"
-          />
+        <certificates-item-list
+          v-model:page-count="pageCount"
+          :certificate-list="prepareList()"
+          @remove-certificate="removeItem"
+        />
 
-          <div class=""></div>
-        </div>
         <div class="certificates-modal__close-btn-wrp">
           <app-button
             size="large"
@@ -71,27 +63,28 @@
 import { AppButton, Modal } from '@/common'
 
 import { ref } from 'vue'
-import { CertificateFile } from '@/types'
-import CertificateModalItem from '@/common/CertificateModalItem.vue'
+import { FileItemType } from '@/types'
 import InputField from '@/fields/InputField.vue'
+import CertificatesItemList from '@/common/CertificatesItemList.vue'
 
 const searchData = ref('')
 const pageCount = ref(0)
-const certificatesListBuffer = ref<CertificateFile[]>([])
+const certificatesListBuffer = ref<FileItemType[]>([])
 
 const props = defineProps<{
   isShown: boolean
-  certificateList?: CertificateFile[]
+  certificateList: FileItemType[]
   title?: string
   subtitle?: string
 }>()
 
 const emit = defineEmits<{
   (e: 'update:is-shown', v: boolean): void
-  (e: 'remove-certificate', v: CertificateFile): void
+  (e: 'remove-certificate', v: FileItemType): void
 }>()
 
 const search = () => {
+  console.log('search', searchData.value)
   if (searchData.value === '' && certificatesListBuffer.value) {
     certificatesListBuffer.value = props.certificateList!
     return
@@ -102,12 +95,18 @@ const search = () => {
 
     return title.includes(searchQuery)
   })
-
   certificatesListBuffer.value = filteredData
 }
 
-const removeItem = (certificate: CertificateFile) => {
+const removeItem = (certificate: FileItemType) => {
   emit('remove-certificate', certificate)
+}
+
+const prepareList = () => {
+  if (searchData.value === '' && certificatesListBuffer.value) {
+    certificatesListBuffer.value = props.certificateList!
+  }
+  return certificatesListBuffer.value
 }
 </script>
 

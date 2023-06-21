@@ -37,12 +37,10 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   (e: 'update:is-shown', v: boolean): void
-  (e: 'send-again'): void
 }>()
 
 const tryAgain = () => {
   emit('update:is-shown', false)
-  emit('send-again')
 }
 </script>
 

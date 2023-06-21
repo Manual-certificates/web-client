@@ -13,6 +13,7 @@
       </div>
     </div>
     <app-button
+      class="file-item__btn"
       :icon-left="ICON_NAMES.x"
       @click="emit('delete-item', item)"
       size="small"
@@ -24,17 +25,17 @@
 import { onBeforeMount, ref } from 'vue'
 import { ICON_NAMES } from '@/enums'
 import { Icon, AppButton } from '@/common'
-import { CertificateFile } from '@/types'
+import { FileItemType } from '@/types'
 
 const props = defineProps<{
   icon: ICON_NAMES
   title: string
   description: string
-  item: CertificateFile
+  item: FileItemType
 }>()
 
 const emit = defineEmits<{
-  (e: 'delete-item', v: CertificateFile): void
+  (e: 'delete-item', v: FileItemType): void
 }>()
 
 const preparedTitle = ref('')
@@ -57,6 +58,11 @@ onBeforeMount(prepareFileTitle)
   display: flex;
   justify-content: space-between;
   border-radius: toRem(8);
+}
+
+.file-item__btn {
+  max-height: toRem(40);
+  margin: auto 0;
 }
 
 .file-item__content {

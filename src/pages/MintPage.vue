@@ -3,7 +3,7 @@
     <certificates-modal
       class="mint-page__certificate-modal"
       v-model:is-shown="isShown"
-      :certificate-list="certificateList"
+      :certificate-list="certificateList.slice(0, 100)"
       @remove-certificate="removeCertificate"
     />
 
@@ -15,10 +15,7 @@
       :file-count="certificateList.length"
     />
 
-    <error-modal
-      v-model:is-shown="isErrorModalShown"
-      @send-again="mintCertificates"
-    />
+    <error-modal v-model:is-shown="isErrorModalShown" />
 
     <success-modal :is-shown="isSuccessModalShown" :tx="txHash" />
     <h2 class="mint-page__title">
@@ -70,6 +67,7 @@
                 :key="imageKey"
                 :files-type="imageFormat"
                 :icon="$icons.template"
+                :is-disabled="certificateList.length >= 100"
                 :title="$t('mint-page.select-images-title')"
                 :description="$t('mint-page.select-images-description')"
                 @handle-files-upload="handlerUploadFile"
@@ -103,6 +101,7 @@
             {{ $t('mint-page.step-2-description') }}
           </p>
           <drag-drop-upload
+            v-if="!tableFile.title"
             class="mint-page__select-table mint-page__select"
             :key="tableKey"
             :files-type="tableFormat"
@@ -110,6 +109,15 @@
             :title="$t('mint-page.select-table-title')"
             :description="$t('mint-page.select-table-description')"
             @handle-files-upload="handlerUploadFile"
+          />
+          <file-item
+            v-else
+            class="mint-page__select mint-page__select-item"
+            :icon="$icons.fileItem"
+            :title="tableFile.title"
+            :description="preparedSize(tableFile.size)"
+            :item="tableFile"
+            @delete-item="removeTableFile"
           />
         </div>
 
@@ -131,6 +139,9 @@
               class="mint-page__btn"
               size="large"
               color="info"
+              :route="{
+                name: ROUTE_NAMES.main,
+              }"
               :text="$t('mint-page.cancel-btn')"
             />
             <app-button
@@ -154,7 +165,7 @@ import { ref } from 'vue'
 import { ErrorHandler } from '@/helpers'
 import { AppButton } from '@/common'
 import CertificatesModal from '@/common/modals/CertificatesModal.vue'
-import { CertificateFile } from '@/types'
+import { FileItemType } from '@/types'
 import InputField from '@/fields/InputField.vue'
 import FileItem from '@/common/FileItem.vue'
 import { useTokenContact } from '@/composables'
@@ -162,19 +173,22 @@ import { IpfsUtils } from '@/utils/ipfs.utils'
 import LoaderModal from '@/common/modals/LoaderModal.vue'
 import ErrorModal from '@/common/modals/ErrorModal.vue'
 import SuccessModal from '@/common/modals/SuccessModal.vue'
+import { ROUTE_NAMES } from '@/enums'
 
 const isShown = ref(false)
 const isMintLoaderShown = ref(false)
 const isErrorModalShown = ref(false)
 const isSuccessModalShown = ref(false)
 const tableData = ref<string[][]>()
-const certificateList = ref<CertificateFile[]>([])
+const tableFile = ref<FileItemType>({} as FileItemType)
+const certificateList = ref<FileItemType[]>([])
 const contractAddress = ref('')
 const loadState = ref(0)
 const txHash = ref('')
 const tableFormat =
   'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-const imageFormat = 'image/png, image/jpeg'
+const imageFormat = 'image/*'
+// const imageFormat = 'image/png, image/svg, image/jpeg'
 const imageKey = 'imageKey'
 const tableKey = 'tableKey'
 
@@ -187,6 +201,12 @@ const parseTable = (files: File[]) => {
     const sheetName = workbook.SheetNames[0]
     const worksheet = workbook.Sheets[sheetName]
     tableData.value = getTableDataRows(worksheet)
+    tableFile.value = {
+      title: file.name,
+      size: file.size.toString(),
+      file: file,
+      content: '',
+    }
   }
   reader.readAsArrayBuffer(file)
 }
@@ -227,7 +247,7 @@ const parseImages = (fileList: File[]) => {
     const reader = new FileReader()
     reader.readAsDataURL(file)
     reader.onload = function () {
-      const certificate: CertificateFile = {
+      const certificate: FileItemType = {
         title: file.name,
         size: file.size.toString(),
         file: file,
@@ -286,6 +306,7 @@ const mintCertificates = async () => {
     )
 
     txHash.value = res.transactionHash
+    isSuccessModalShown.value = true
   } catch (error) {
     isMintLoaderShown.value = false
     isErrorModalShown.value = true
@@ -298,10 +319,14 @@ const mintCertificates = async () => {
   }
 }
 
-const removeCertificate = (certificate: CertificateFile) => {
+const removeCertificate = (certificate: FileItemType) => {
   certificateList.value = certificateList.value.filter(
     obj => obj.title !== certificate.title,
   )
+}
+
+const removeTableFile = () => {
+  tableFile.value = {} as FileItemType
 }
 </script>
 
@@ -309,6 +334,7 @@ const removeCertificate = (certificate: CertificateFile) => {
 .mint-page__select {
   width: toRem(300);
   height: toRem(72);
+  margin-right: toRem(15);
 }
 
 .mint-page__image-item {
@@ -407,6 +433,6 @@ const removeCertificate = (certificate: CertificateFile) => {
 }
 
 .mint-page__select-item {
-  margin-left: toRem(15);
+  margin-right: toRem(15);
 }
 </style>
