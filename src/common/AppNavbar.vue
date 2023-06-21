@@ -1,25 +1,27 @@
 <template>
   <div class="app-navbar">
-    <app-logo class="app-navbar__logo" />
+    <div class="app-navbar__content">
+      <app-logo class="app-navbar__logo" />
 
-    <div class="app-navbar__configuration">
-      <div class="app-navbar__metamask">
-        <app-button
-          class="app-navbar__btn"
-          :text="prepareAddress() || $t('app-navbar.metamask-connect')"
-          :icon-left="$icons.metamask"
-          @click="connect"
-        />
-      </div>
+      <div class="app-navbar__configuration">
+        <div class="app-navbar__metamask">
+          <app-button
+            class="app-navbar__btn"
+            :text="prepareAddress() || $t('app-navbar.metamask-connect')"
+            :icon-left="$icons.metamask"
+            @click="connect"
+          />
+        </div>
 
-      <div class="app-navbar__settings">
-        <app-button
-          class="app-navbar__btn"
-          :icon-left="$icons.settings"
-          :route="{
-            name: $routes.main,
-          }"
-        />
+        <div class="app-navbar__settings">
+          <app-button
+            class="app-navbar__btn"
+            :icon-left="$icons.settings"
+            :route="{
+              name: $routes.main,
+            }"
+          />
+        </div>
       </div>
     </div>
   </div>
@@ -28,10 +30,8 @@
 <script lang="ts" setup>
 import { AppButton, AppLogo } from '@/common'
 import { useWeb3ProvidersStore } from '@/store'
-import { onMounted, ref } from 'vue'
 
 const { provider } = useWeb3ProvidersStore()
-const preparedAddress = ref('')
 
 const connect = async () => {
   await provider.connect()
@@ -57,15 +57,21 @@ $box-shadow-b: 0;
 $box-shadow-a: 0.06;
 
 .app-navbar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: toRem(24) var(--app-padding-right) toRem(24) var(--app-padding-left);
+  width: 100%;
   background: var(--background-primary-main);
   border-bottom: var(--border-primary-main);
   box-shadow: 0 toRem(4) toRem(16)
     rgba($box-shadow-r, $box-shadow-g, $box-shadow-b, $box-shadow-a);
   margin-bottom: toRem(20);
+}
+
+.app-navbar__content {
+  display: flex;
+  align-items: center;
+  margin: auto;
+  justify-content: space-between;
+  padding: toRem(12) var(--app-padding-right) toRem(12) var(--app-padding-left);
+  max-width: var(--page-large);
 
   @include respond-to(xmedium) {
     width: toRem(1280);

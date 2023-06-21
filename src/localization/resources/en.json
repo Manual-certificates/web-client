@@ -79,13 +79,20 @@
     "loader-modal-title": "Process",
     "loader-modal-description-upload-files": "Uploading files to IPFS",
     "loader-modal-description-mint": "Minting SBTs",
-    "loader-modal-description": "Wait until all certificates are created"
+    "loader-modal-description": "Wait until all certificates are created",
+    "address-error-msg": "Not valid address"
   },
   "certificates-modal": {
     "title": "Certificates ",
     "count": "of ",
     "search-placeholder": "Search by name ",
     "close-btn": "Close"
+  },
+  "success-modal": {
+    "title": "Success",
+    "tx-hash": "Transaction hash",
+    "description": "Elit dapibus at egestas odio. Elit dolor non ornare magna.",
+    "btn": "Ok"
   },
   "app-navbar": {
     "metamask-ico-alt": "Metamask ico",
@@ -95,6 +102,5 @@
     "btn": "Try again",
     "title": "Something went wrong",
     "description": "Elit dapibus at egestas odio. Elit dolor non ornare magna"
-
   }
 }

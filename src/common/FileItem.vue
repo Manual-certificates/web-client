@@ -6,7 +6,6 @@
         <p class="file-item__title">
           {{ preparedTitle }}
         </p>
-
         <p class="file-item__description">
           {{ description }}
         </p>
@@ -78,7 +77,7 @@ onBeforeMount(prepareFileTitle)
   height: toRem(37);
 }
 
-.file-item__text {
-  font-style: normal;
+.file-item__description {
+  font-size: toRem(14);
 }
 </style>

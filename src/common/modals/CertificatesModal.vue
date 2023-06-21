@@ -84,7 +84,6 @@ const emit = defineEmits<{
 }>()
 
 const search = () => {
-  console.log('search', searchData.value)
   if (searchData.value === '' && certificatesListBuffer.value) {
     certificatesListBuffer.value = props.certificateList!
     return

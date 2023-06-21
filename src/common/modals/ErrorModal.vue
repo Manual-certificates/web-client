@@ -20,6 +20,7 @@ LoaderModal.vue
         class="error-modal__btn"
         :text="$t('error-modal.btn')"
         :size="'large'"
+        color="error"
         @click="tryAgain"
       />
     </div>
@@ -69,7 +70,7 @@ const tryAgain = () => {
 }
 
 .error-modal__btn {
-  margin: auto;
+  margin: toRem(10) auto;
   width: 40%;
 }
 </style>

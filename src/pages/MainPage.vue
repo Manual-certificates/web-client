@@ -1,33 +1,31 @@
 <template>
   <div class="main-page">
-    <div class="main-page__content">
-      <div class="main-page__info">
-        <h1 class="main-page__info-title">
-          {{ $t('main-page.page-title') }}
-        </h1>
-        <p class="main-page__info-description">
-          {{ $t('main-page.page-description') }}
-        </p>
-      </div>
+    <div class="main-page__info">
+      <h1 class="main-page__info-title">
+        {{ $t('main-page.page-title') }}
+      </h1>
+      <p class="main-page__info-description">
+        {{ $t('main-page.page-description') }}
+      </p>
+    </div>
 
-      <main-certificate-banner
-        class="main-page__banner"
-        :class="{ 'main-page__banner--ready': provider.isConnected }"
-        :is-ready="provider.isConnected"
+    <main-certificate-banner
+      class="main-page__banner"
+      :class="{ 'main-page__banner--ready': provider.isConnected }"
+      :is-ready="provider.isConnected"
+    />
+
+    <div v-if="!provider.isConnected" class="main-page__login">
+      <p class="main-page__login-description">
+        {{ $t('main-page.login-message') }}
+      </p>
+      <app-button
+        class="main-page__login-btn"
+        size="large"
+        color="success"
+        :text="$t('main-page.metamask-connect-btn')"
+        @click="connect"
       />
-
-      <div v-if="!provider.isConnected" class="main-page__login">
-        <p class="main-page__login-description">
-          {{ $t('main-page.login-message') }}
-        </p>
-        <app-button
-          class="main-page__login-btn"
-          color="info"
-          size="large"
-          :text="$t('main-page.metamask-connect-btn')"
-          @click="connect"
-        />
-      </div>
     </div>
   </div>
 </template>
@@ -46,18 +44,13 @@ const connect = async () => {
 
 <style lang="scss" scoped>
 .main-page {
-  width: var(--page-large);
   margin: 0 auto;
-}
-
-.main-page__content {
-  display: grid;
-  width: toRem(426);
 }
 
 .main-page__info {
   text-align: center;
-  margin-bottom: toRem(25);
+  margin: 0 auto toRem(25) auto;
+  width: toRem(426);
 }
 
 .main-page__info-title {
@@ -71,7 +64,9 @@ const connect = async () => {
 }
 
 .main-page__banner {
+  margin: auto;
   height: toRem(260);
+  width: toRem(426);
 
   &--ready {
     height: toRem(340);

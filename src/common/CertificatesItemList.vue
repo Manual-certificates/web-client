@@ -18,7 +18,7 @@
 import CertificateModalItem from '@/common/CertificateModalItem.vue'
 import { FileItemType } from '@/types'
 
-const props = defineProps<{
+defineProps<{
   pageCount: number
   certificateList: FileItemType[]
 }>()

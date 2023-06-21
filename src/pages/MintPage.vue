@@ -18,6 +18,7 @@
     <error-modal v-model:is-shown="isErrorModalShown" />
 
     <success-modal :is-shown="isSuccessModalShown" :tx="txHash" />
+
     <h2 class="mint-page__title">
       {{ $t('mint-page.title') }}
     </h2>
@@ -51,6 +52,7 @@
 
             <app-button
               class="mint_page__certificate-count"
+              color="info"
               :text="
                 $t('mint-page.see-all') + certificateList.length.toString()
               "
@@ -113,7 +115,7 @@
           <file-item
             v-else
             class="mint-page__select mint-page__select-item"
-            :icon="$icons.fileItem"
+            :icon="$icons.fileSelect"
             :title="tableFile.title"
             :description="preparedSize(tableFile.size)"
             :item="tableFile"
@@ -132,6 +134,13 @@
           </p>
           <input-field
             class="mint-page__field-input"
+            :error-message="
+              !contractAddress ||
+              isNotValidAddress ||
+              contractAddress.match(/(\b0x[a-f0-9A-F]{40}\b)/g)
+                ? ''
+                : $t('mint-page.address-error-msg')
+            "
             v-model:model-value="contractAddress"
           />
           <div class="mint-page__btns-wrp">
@@ -148,6 +157,11 @@
               class="mint-page__btn"
               size="large"
               color="info"
+              :disabled="
+                !contractAddress.match(/(\b0x[a-f0-9A-F]{40}\b)/g) ||
+                !certificateList.length ||
+                !tableFile
+              "
               :text="$t('mint-page.issue-btn')"
               @click="mintCertificates"
             />
@@ -188,9 +202,9 @@ const txHash = ref('')
 const tableFormat =
   'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
 const imageFormat = 'image/*'
-// const imageFormat = 'image/png, image/svg, image/jpeg'
 const imageKey = 'imageKey'
 const tableKey = 'tableKey'
+const isNotValidAddress = ref(false)
 
 const parseTable = (files: File[]) => {
   const reader = new FileReader()
@@ -331,6 +345,15 @@ const removeTableFile = () => {
 </script>
 
 <style lang="scss" scoped>
+.mint-page {
+  width: var(--page-large);
+  margin: 0 auto;
+
+  @include respond-to(large) {
+    width: var(--page-xmedium);
+  }
+}
+
 .mint-page__select {
   width: toRem(300);
   height: toRem(72);
