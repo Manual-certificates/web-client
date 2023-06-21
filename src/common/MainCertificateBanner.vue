@@ -16,7 +16,7 @@
         <app-button
           class="main-certificate-banner__btn"
           size="large"
-          color="info"
+          color="success"
           :text="$t('main-certificate-banner.issue-sbt-btn')"
           :route="{
             name: ROUTE_NAMES.mint,

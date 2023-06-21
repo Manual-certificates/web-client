@@ -10,19 +10,19 @@
     <div class="file-drop-area__content">
       <icon class="file-drop-area__icon" :name="icon" @drag="dragFile" />
       <div class="file-drop-area__text">
-        <label for="input">
+        <label :for="id">
           {{ title }}
         </label>
         <input
           type="file"
           multiple
-          id="input"
-          hidden
+          :id="id"
+          :disabled="isDisabled"
           :accept="filesType"
+          hidden
           @input="uploadFile"
           class="file-drop-area__text-title"
         />
-
         <p class="file-drop-area__text-description">
           {{ description }}
         </p>
@@ -37,12 +37,15 @@ import { ICON_NAMES } from '@/enums'
 import Icon from '@/common/Icon.vue'
 const files = ref<File[]>([])
 
-defineProps<{
+const props = defineProps<{
   icon: ICON_NAMES
   title: string
   description: string
   filesType: string
+  isDisabled?: boolean
 }>()
+
+const id = props.filesType + '_id'
 
 const emit = defineEmits<{
   (e: 'handle-files-upload', files: File[]): void
@@ -51,6 +54,7 @@ const emit = defineEmits<{
 const uploadFile = e => {
   files.value = e.target.files
   emit('handle-files-upload', files.value)
+  e.target.files = undefined
 }
 const dragFile = e => {
   setInactive()

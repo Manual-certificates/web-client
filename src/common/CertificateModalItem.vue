@@ -8,7 +8,7 @@
         <h5>
           {{ certificate.title }}
         </h5>
-        <p>{{ certificate.size }}</p>
+        <p>{{ preparedSize(certificate.size) }}</p>
       </div>
       <div class="certificate-item__info-size"></div>
     </div>
@@ -19,18 +19,22 @@
   </div>
 </template>
 <script setup lang="ts">
-import { CertificateFile } from '@/types'
+import { FileItemType } from '@/types'
 import { Icon } from '@/common/'
 import AppButton from '@/common/AppButton.vue'
 import { ICON_NAMES } from '@/enums'
 
 defineProps<{
-  certificate: CertificateFile
+  certificate: FileItemType
 }>()
 
 const emit = defineEmits<{
-  (e: 'remove-certificate', certificate: CertificateFile): void
+  (e: 'remove-certificate', certificate: FileItemType): void
 }>()
+
+const preparedSize = (size: string) => {
+  return (Number(size) / 1000).toString() + 'KB'
+}
 </script>
 
 <style scoped lang="scss">
