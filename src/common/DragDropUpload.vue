@@ -21,6 +21,7 @@
           :accept="filesType"
           hidden
           @input="uploadFile"
+          @drag="dragFile"
           class="file-drop-area__text-title"
         />
         <p class="file-drop-area__text-description">
@@ -35,6 +36,7 @@
 import { defineEmits, ref } from 'vue'
 import { ICON_NAMES } from '@/enums'
 import Icon from '@/common/Icon.vue'
+
 const files = ref<File[]>([])
 
 const props = defineProps<{
@@ -54,20 +56,20 @@ const emit = defineEmits<{
 const uploadFile = e => {
   files.value = e.target.files
   emit('handle-files-upload', files.value)
-  e.target.files = undefined
 }
 const dragFile = e => {
   setInactive()
-  files.value = e.target.files || e.dataTransfer.files
+  files.value = e.dataTransfer.files
   emit('handle-files-upload', files.value)
+  e.dataTransfer.files = []
 }
 
 const active = ref(false)
 
-function setActive() {
+const setActive = () => {
   active.value = true
 }
-function setInactive() {
+const setInactive = () => {
   active.value = false
 }
 </script>
