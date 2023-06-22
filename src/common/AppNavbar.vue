@@ -3,26 +3,12 @@
     <div class="app-navbar__content">
       <app-logo class="app-navbar__logo" />
 
-      <div class="app-navbar__configuration">
-        <div class="app-navbar__metamask">
-          <app-button
-            class="app-navbar__btn"
-            :text="prepareAddress() || $t('app-navbar.metamask-connect')"
-            :icon-left="$icons.metamask"
-            @click="connect"
-          />
-        </div>
-
-        <div class="app-navbar__settings">
-          <app-button
-            class="app-navbar__btn"
-            :icon-left="$icons.settings"
-            :route="{
-              name: $routes.main,
-            }"
-          />
-        </div>
-      </div>
+      <app-button
+        class="app-navbar__btn"
+        :text="prepareAddress() || $t('app-navbar.metamask-connect')"
+        :icon-left="$icons.metamask"
+        @click="connect"
+      />
     </div>
   </div>
 </template>
