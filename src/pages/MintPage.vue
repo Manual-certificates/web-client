@@ -15,9 +15,13 @@
       :file-count="certificateList.length"
     />
 
-    <error-modal v-model:is-shown="isErrorModalShown" />
+    <error-modal v-model:is-shown="isErrorModalShown" :error-msg="errorMsg" />
 
-    <success-modal :is-shown="isSuccessModalShown" :tx="txHash" />
+    <success-modal
+      v-model:is-shown="isSuccessModalShown"
+      :tx="txHash"
+      @success="router.push({ name: ROUTE_NAMES.main })"
+    />
 
     <h2 class="mint-page__title">
       {{ $t('mint-page.title') }}
@@ -65,7 +69,7 @@
             </p>
             <div class="mint-page__field-images">
               <drag-drop-upload
-                class="mint-page__select-table mint-page__select"
+                class="mint-page__select"
                 :key="imageKey"
                 :files-type="imageFormat"
                 :icon="$icons.template"
@@ -80,7 +84,7 @@
               >
                 <div v-for="item in certificateList.slice(0, 3)" :key="item">
                   <file-item
-                    class="mint-page__select mint-page__select-item"
+                    class="mint-page__select-item"
                     :icon="$icons.fileItem"
                     :title="item.title"
                     :description="preparedSize(item.size)"
@@ -104,7 +108,7 @@
           </p>
           <drag-drop-upload
             v-if="!tableFile.title"
-            class="mint-page__select-table mint-page__select"
+            class="mint-page__select"
             :key="tableKey"
             :files-type="tableFormat"
             :icon="$icons.fileSelect"
@@ -114,7 +118,7 @@
           />
           <file-item
             v-else
-            class="mint-page__select mint-page__select-item"
+            class="mint-page__select-item"
             :icon="$icons.fileSelect"
             :title="tableFile.title"
             :description="preparedSize(tableFile.size)"
@@ -188,6 +192,8 @@ import LoaderModal from '@/common/modals/LoaderModal.vue'
 import ErrorModal from '@/common/modals/ErrorModal.vue'
 import SuccessModal from '@/common/modals/SuccessModal.vue'
 import { ROUTE_NAMES } from '@/enums'
+import { useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 
 const isShown = ref(false)
 const isMintLoaderShown = ref(false)
@@ -205,6 +211,10 @@ const imageFormat = 'image/*'
 const imageKey = 'imageKey'
 const tableKey = 'tableKey'
 const isNotValidAddress = ref(false)
+const { t } = useI18n()
+
+const router = useRouter()
+const errorMsg = ref('')
 
 const parseTable = (files: File[]) => {
   const reader = new FileReader()
@@ -299,7 +309,7 @@ const mintCertificates = async () => {
   const URIs: string[] = []
   try {
     isMintLoaderShown.value = true
-
+    let iFilesUpload = false
     for (const item of tableData.value!) {
       const certificateByFileName = certificateList.value.find(
         certificate => certificate.title === item[2],
@@ -312,13 +322,17 @@ const mintCertificates = async () => {
       loadState.value++
 
       URIs.push(await IpfsUtils.storeFile(certificateByFileName.file!))
+      iFilesUpload = true
     }
-
+    if (!iFilesUpload) {
+      errorMsg.value = t('errors.files-not-found')
+      isErrorModalShown.value = true
+      return
+    }
     const res = await useTokenContact(contractAddress.value).mintBatch(
       addresses,
       URIs,
     )
-
     txHash.value = res.transactionHash
     isSuccessModalShown.value = true
   } catch (error) {
@@ -326,6 +340,7 @@ const mintCertificates = async () => {
     isErrorModalShown.value = true
     loadState.value = 0
 
+    errorMsg.value = t('errors.failed-sent-tx')
     ErrorHandler.process(error)
   } finally {
     isMintLoaderShown.value = false
@@ -358,10 +373,20 @@ const removeTableFile = () => {
   width: toRem(300);
   height: toRem(72);
   margin-right: toRem(15);
+
+  @include respond-to(large) {
+    width: toRem(250);
+  }
 }
 
-.mint-page__image-item {
-  border: toRem(2) solid var(--info-dark);
+.mint-page__select-item {
+  width: toRem(300);
+  height: toRem(72);
+  margin-right: toRem(10);
+
+  @include respond-to('large') {
+    width: toRem(260);
+  }
 }
 
 .mint-page__body {
@@ -370,12 +395,6 @@ const removeTableFile = () => {
 
 .mint-page__title {
   margin-bottom: toRem(30);
-}
-
-.mint-page__state-labels {
-  display: grid;
-  justify-content: center;
-  margin: 0;
 }
 
 .mint-page__payload {
@@ -453,9 +472,5 @@ const removeTableFile = () => {
 
 .mint-page__field-images {
   display: flex;
-}
-
-.mint-page__select-item {
-  margin-right: toRem(15);
 }
 </style>

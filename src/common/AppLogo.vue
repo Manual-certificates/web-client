@@ -19,6 +19,7 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 .app-logo {
+  width: toRem(40);
   display: flex;
   flex-direction: column;
   position: relative;

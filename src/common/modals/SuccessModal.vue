@@ -1,4 +1,3 @@
-LoaderModal.vue
 <template>
   <modal
     :is-shown="props.isShown"
@@ -26,14 +25,16 @@ LoaderModal.vue
         class="success-modal__btn"
         :text="$t('success-modal.btn')"
         color="success"
+        @click="closeModal"
       />
     </div>
   </modal>
 </template>
 
 <script lang="ts" setup>
-import { Icon, Modal, AppButton } from '@/common'
+import { Icon, AppButton } from '@/common'
 import { ICON_NAMES } from '@/enums'
+import modal from '@/common/Modal.vue'
 
 const props = defineProps<{
   isShown: boolean
@@ -42,7 +43,13 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   (e: 'update:is-shown', v: boolean): void
+  (e: 'success'): void
 }>()
+
+const closeModal = () => {
+  emit('update:is-shown', false)
+  emit('success')
+}
 </script>
 
 <style lang="scss" scoped>
