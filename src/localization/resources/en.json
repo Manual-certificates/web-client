@@ -47,17 +47,16 @@
     "default-message-default": "Just a message"
   },
   "main-page": {
-    "page-title": "Service name",
-    "page-description": "Ac integer sapien nisl turpis arcu integer. Pellentesque phasellus egestas pharetra quam cursus",
+    "page-title": "SBT Certificates",
+    "page-description": "An easy way to issue certificates for your course",
     "metamask-connect-btn": "Connect to MetaMask",
     "login-message" : "To log in, please connect to your MetaMask wallet"
   },
   "main-certificate-banner": {
     "title": "Issue certificates",
     "issue-certificate-title" :"Issue certificates",
-    "issue-certificate-description" :"Turpis rutrum varius pretium pharetra id. Amet lectus sit at molestie cursus.",
     "issue-sbt-btn": "Issue",
-    "description": "Turpis rutrum varius pretium pharetra id. Amet lectus sit at molestie cursus."
+    "description": "Upload the certificate image and select the recipient's MetaMask address. The selected user will receive the certificate and will not be able to transfer it to anyone else"
   },
   "mint-page": {
     "title":"Issue certificates",
@@ -66,6 +65,7 @@
     "step-3-title": "Enter the contract address",
     "step-1-description": "Upload files with .jpeg certificates",
     "step-2-description": "Upload the table with relation between certificates and their recipients. You can download table template",
+    "step-2-description-link": "You can download table template",
     "step-3-description": "Enter the course contract address where certificates will be issued",
     "step-1-number": "1",
     "step-2-number": "2",
@@ -99,10 +99,5 @@
   "app-navbar": {
     "metamask-ico-alt": "Metamask ico",
     "metamask-connect" : "Connect"
-  },
-  "error-modal": {
-    "btn": "Try again",
-    "title": "Something went wrong",
-    "description": "Elit dapibus at egestas odio. Elit dolor non ornare magna"
   }
 }

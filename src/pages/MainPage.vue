@@ -65,11 +65,11 @@ const connect = async () => {
 
 .main-page__banner {
   margin: auto;
-  height: toRem(260);
+  min-height: toRem(300);
   width: toRem(426);
 
   &--ready {
-    height: toRem(340);
+    height: toRem(400);
   }
 }
 
