@@ -62,20 +62,19 @@ defineProps<{
 }
 
 .main-certificate-border__description {
-  margin: auto;
   font-family: 'Inter', sans-serif;
   color: var(--text-primary-light);
-  max-width: 90%;
+  max-width: 100%;
 }
 
 .main-certificate-banner__icon {
-  margin: auto;
-  max-width: toRem(88);
-  max-height: toRem(78);
+  margin: toRem(10) auto;
+  max-width: toRem(108);
+  max-height: toRem(108);
 }
 
 .main-certificate-banner__btn {
-  margin: toRem(20) auto 0 auto;
+  margin: toRem(20) auto;
   width: 60%;
   border-radius: toRem(8);
 }
