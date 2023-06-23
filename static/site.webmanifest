@@ -1,6 +1,6 @@
 {
-  "name": "vue-vite-template",
-  "short_name": "vue-vite-template",
+  "name": "manual-certificates",
+  "short_name": "manual-certificates",
   "icons": [
     {
       "src": "/branding/android-chrome-192x192.png",
