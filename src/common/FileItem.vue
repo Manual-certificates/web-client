@@ -40,9 +40,9 @@ const emit = defineEmits<{
 const preparedTitle = ref('')
 
 const prepareFileTitle = () => {
-  if (props.title.length > 15) {
+  if (props.title.length > 10) {
     preparedTitle.value =
-      props.title.slice(0, 15) + '...' + props.title.slice(-5)
+      props.title.slice(0, 10) + '...' + props.title.slice(-5)
     return
   }
   preparedTitle.value = props.title
@@ -62,6 +62,10 @@ onBeforeMount(prepareFileTitle)
 .file-item__btn {
   max-height: toRem(40);
   margin: auto 0;
+
+  @include respond-to('large') {
+    max-width: toRem(30);
+  }
 }
 
 .file-item__content {
@@ -75,9 +79,17 @@ onBeforeMount(prepareFileTitle)
   margin: auto toRem(10);
   width: toRem(33);
   height: toRem(37);
+
+  @include respond-to('large') {
+    width: toRem(30);
+  }
 }
 
 .file-item__description {
   font-size: toRem(14);
+
+  @include respond-to('large') {
+    font-size: toRem(12);
+  }
 }
 </style>

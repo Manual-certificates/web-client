@@ -10,7 +10,7 @@
     <div class="file-drop-area__content">
       <icon class="file-drop-area__icon" :name="icon" @drag="dragFile" />
       <div class="file-drop-area__text">
-        <label :for="id">
+        <label :for="id" class="file-drop-area__text">
           {{ title }}
         </label>
         <input
@@ -24,7 +24,7 @@
           @drag="dragFile"
           class="file-drop-area__text-title"
         />
-        <p class="file-drop-area__text-description">
+        <p class="file-drop-area__text-description file-drop-area__text">
           {{ description }}
         </p>
       </div>
@@ -93,12 +93,21 @@ const setInactive = () => {
 .file-drop-area__icon {
   width: toRem(33);
   height: toRem(37);
+
+  @include respond-to('large') {
+    width: toRem(30);
+    height: toRem(30);
+  }
 }
 
 .file-drop-area__text {
   padding-top: toRem(5);
   font-style: normal;
   margin: auto;
+
+  @include respond-to('large') {
+    font-size: toRem(14);
+  }
 }
 
 .file-drop-area.active {

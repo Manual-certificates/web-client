@@ -12,7 +12,7 @@ LoaderModal.vue
             {{ $t('error-modal.title') }}
           </h3>
           <p class="error-modal__description">
-            {{ $t('error-modal.description') }}
+            {{ errorMsg }}
           </p>
         </div>
       </div>
@@ -34,6 +34,7 @@ import AppButton from '@/common/AppButton.vue'
 
 const props = defineProps<{
   isShown: boolean
+  errorMsg: string
 }>()
 
 const emit = defineEmits<{

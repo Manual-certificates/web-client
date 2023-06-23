@@ -8,7 +8,6 @@
         :certificate="item"
         @remove-certificate="removeItem"
       />
-
       <div class=""></div>
     </div>
   </div>
