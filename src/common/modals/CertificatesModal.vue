@@ -89,12 +89,13 @@ const search = () => {
     return
   }
   const searchQuery = searchData.value.toLowerCase()
-  const filteredData = certificatesListBuffer.value.filter(certificate => {
-    const title = certificate.title.toLowerCase()
+  certificatesListBuffer.value = certificatesListBuffer.value.filter(
+    certificate => {
+      const title = certificate.title.toLowerCase()
 
-    return title.includes(searchQuery)
-  })
-  certificatesListBuffer.value = filteredData
+      return title.includes(searchQuery)
+    },
+  )
 }
 
 const removeItem = (certificate: FileItemType) => {
@@ -155,12 +156,11 @@ const prepareList = () => {
 .certificates-modal__close-btn-wrp {
   display: flex;
   justify-content: center;
-  bottom: toRem(50);
+  bottom: toRem(30);
   position: absolute;
   left: 0;
   right: 0;
-  margin-left: auto;
-  margin-right: auto;
+  margin: 0 auto;
 }
 
 .certificates-modal__close-btn {

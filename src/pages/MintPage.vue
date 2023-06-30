@@ -20,7 +20,7 @@
     <success-modal
       v-model:is-shown="isSuccessModalShown"
       :tx="txHash"
-      @success="router.push({ name: ROUTE_NAMES.main })"
+      @success="router.push({ name: $router.main })"
     />
 
     <h2 class="mint-page__title">
@@ -105,7 +105,16 @@
           </div>
           <p class="mint-page__field-description">
             {{ $t('mint-page.step-2-description') }}
+            <a
+              class="mint-page__field-description-link"
+              href="https://docs.google.com/spreadsheets/d/1ceqqJimxOKcfsYC9RFrYGLUnVnfet2bgNUBmLOGQR34"
+              target="_blank"
+              rel="noopener"
+            >
+              {{ $t('mint-page.step-2-description-link') }}
+            </a>
           </p>
+
           <drag-drop-upload
             v-if="!tableFile.title"
             class="mint-page__select"
@@ -333,7 +342,7 @@ const mintCertificates = async () => {
       addresses,
       URIs,
     )
-    txHash.value = res.transactionHash
+    txHash.value = res!.transactionHash!
     isSuccessModalShown.value = true
   } catch (error) {
     isMintLoaderShown.value = false
@@ -406,7 +415,7 @@ const removeTableFile = () => {
   display: flow;
   text-align: center;
   row-gap: toRem(8);
-  height: toRem(200);
+  height: toRem(220);
 }
 
 .mint-page__field-number {
@@ -455,6 +464,11 @@ const removeTableFile = () => {
   width: toRem(200);
   border-radius: toRem(8);
   margin-right: toRem(10);
+}
+
+.mint-page__field-description-link {
+  color: var(--info-dark);
+  font-size: toRem(14);
 }
 
 .mint-page__field-description {

@@ -1,8 +1,8 @@
 import { computed, ref } from 'vue'
 import {
   EthProviderRpcError,
+  EthTransactionResponse,
   TokenContractV2__factory,
-  TransactionResponse,
 } from '@/types'
 import { useWeb3ProvidersStore } from '@/store'
 import { handleEthError } from '@/helpers'
@@ -31,7 +31,7 @@ export const useTokenContact = (address: string) => {
       return (await provider.value.signAndSendTx({
         to: contractAddress.value,
         data,
-      })) as TransactionResponse
+      })) as EthTransactionResponse
     } catch (error) {
       handleEthError(error as EthProviderRpcError)
     }
