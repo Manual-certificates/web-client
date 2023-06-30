@@ -31,3 +31,10 @@ export const maxLength = (length: number): ValidationRule =>
 export const sameAs = (field: Ref): ValidationRule => {
   return <ValidationRule>withI18nMessage(_sameAs(field, get(field, '_key')))
 }
+
+export const validateAddress = (address: string): boolean => {
+  const re = new RegExp('^0x[a-fA-F0-9]{40}$')
+  return re.test(address)
+}
+
+export const address = <ValidationRule>withI18nMessage(validateAddress)

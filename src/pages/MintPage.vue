@@ -107,9 +107,9 @@
             {{ $t('mint-page.step-2-description') }}
             <a
               class="mint-page__field-description-link"
-              href="https://docs.google.com/spreadsheets/d/1ceqqJimxOKcfsYC9RFrYGLUnVnfet2bgNUBmLOGQR34"
               target="_blank"
               rel="noopener"
+              :href="templateLink"
             >
               {{ $t('mint-page.step-2-description-link') }}
             </a>
@@ -145,40 +145,10 @@
           <p class="mint-page__field-description">
             {{ $t('mint-page.step-3-description') }}
           </p>
-          <input-field
-            class="mint-page__field-input"
-            :error-message="
-              !contractAddress ||
-              isNotValidAddress ||
-              contractAddress.match(/(\b0x[a-f0-9A-F]{40}\b)/g)
-                ? ''
-                : $t('mint-page.address-error-msg')
-            "
-            v-model:model-value="contractAddress"
+          <mint-form
+            :is-file-uploaded="filesIsReady()"
+            @mint="mintCertificates"
           />
-          <div class="mint-page__btns-wrp">
-            <app-button
-              class="mint-page__btn"
-              size="large"
-              color="info"
-              :route="{
-                name: ROUTE_NAMES.main,
-              }"
-              :text="$t('mint-page.cancel-btn')"
-            />
-            <app-button
-              class="mint-page__btn"
-              size="large"
-              color="info"
-              :disabled="
-                !contractAddress.match(/(\b0x[a-f0-9A-F]{40}\b)/g) ||
-                !certificateList.length ||
-                !tableFile
-              "
-              :text="$t('mint-page.issue-btn')"
-              @click="mintCertificates"
-            />
-          </div>
         </div>
       </div>
     </div>
@@ -193,16 +163,15 @@ import { ErrorHandler } from '@/helpers'
 import { AppButton } from '@/common'
 import CertificatesModal from '@/common/modals/CertificatesModal.vue'
 import { FileItemType } from '@/types'
-import InputField from '@/fields/InputField.vue'
 import FileItem from '@/common/FileItem.vue'
 import { useTokenContact } from '@/composables'
 import { IpfsUtils } from '@/utils/ipfs.utils'
 import LoaderModal from '@/common/modals/LoaderModal.vue'
 import ErrorModal from '@/common/modals/ErrorModal.vue'
 import SuccessModal from '@/common/modals/SuccessModal.vue'
-import { ROUTE_NAMES } from '@/enums'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
+import MintForm from '@/forms/MintForm.vue'
 
 const isShown = ref(false)
 const isMintLoaderShown = ref(false)
@@ -211,7 +180,6 @@ const isSuccessModalShown = ref(false)
 const tableData = ref<string[][]>()
 const tableFile = ref<FileItemType>({} as FileItemType)
 const certificateList = ref<FileItemType[]>([])
-const contractAddress = ref('')
 const loadState = ref(0)
 const txHash = ref('')
 const tableFormat =
@@ -219,11 +187,12 @@ const tableFormat =
 const imageFormat = 'image/*'
 const imageKey = 'imageKey'
 const tableKey = 'tableKey'
-const isNotValidAddress = ref(false)
 const { t } = useI18n()
 
 const router = useRouter()
 const errorMsg = ref('')
+const templateLink =
+  'https://docs.google.com/spreadsheets/d/1ceqqJimxOKcfsYC9RFrYGLUnVnfet2bgNUBmLOGQR34'
 
 const parseTable = (files: File[]) => {
   const reader = new FileReader()
@@ -312,7 +281,7 @@ const showModal = () => {
   isShown.value = true
 }
 
-const mintCertificates = async () => {
+const mintCertificates = async (address: string) => {
   const undefinedNames = []
   const addresses: string[] = []
   const URIs: string[] = []
@@ -323,7 +292,7 @@ const mintCertificates = async () => {
       const certificateByFileName = certificateList.value.find(
         certificate => certificate.title === item[2],
       )
-      if (certificateByFileName === undefined) {
+      if (!certificateByFileName) {
         undefinedNames.push(item)
         continue
       }
@@ -333,22 +302,20 @@ const mintCertificates = async () => {
       URIs.push(await IpfsUtils.storeFile(certificateByFileName.file!))
       iFilesUpload = true
     }
+
     if (!iFilesUpload) {
       errorMsg.value = t('errors.files-not-found')
       isErrorModalShown.value = true
       return
     }
-    const res = await useTokenContact(contractAddress.value).mintBatch(
-      addresses,
-      URIs,
-    )
+
+    const res = await useTokenContact(address).mintBatch(addresses, URIs)
     txHash.value = res!.transactionHash!
     isSuccessModalShown.value = true
   } catch (error) {
     isMintLoaderShown.value = false
     isErrorModalShown.value = true
     loadState.value = 0
-
     errorMsg.value = t('errors.failed-sent-tx')
     ErrorHandler.process(error)
   } finally {
@@ -365,6 +332,10 @@ const removeCertificate = (certificate: FileItemType) => {
 
 const removeTableFile = () => {
   tableFile.value = {} as FileItemType
+}
+
+const filesIsReady = () => {
+  return !!certificateList.value && !!tableFile.value
 }
 </script>
 
@@ -455,17 +426,6 @@ const removeTableFile = () => {
   justify-items: center;
 }
 
-.mint-page__btns-wrp {
-  display: flex;
-  margin-top: toRem(50);
-}
-
-.mint-page__btn {
-  width: toRem(200);
-  border-radius: toRem(8);
-  margin-right: toRem(10);
-}
-
 .mint-page__field-description-link {
   color: var(--info-dark);
   font-size: toRem(14);
@@ -478,10 +438,6 @@ const removeTableFile = () => {
   color: var(--text-primary-light);
   margin-bottom: toRem(10);
   line-height: 1.5;
-}
-
-.mint-page__field-input {
-  width: toRem(427);
 }
 
 .mint-page__field-images {
