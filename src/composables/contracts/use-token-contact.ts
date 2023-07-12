@@ -28,10 +28,10 @@ export const useTokenContact = (address: string) => {
         URIs,
       ])
 
-      return (await provider.value.signAndSendTx({
+      return await provider.value.signAndSendTx({
         to: contractAddress.value,
         data,
-      })) as EthTransactionResponse
+      })
     } catch (error) {
       handleEthError(error as EthProviderRpcError)
     }

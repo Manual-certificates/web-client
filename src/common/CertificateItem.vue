@@ -48,7 +48,6 @@ const preparedSize = (size: string) => {
 
 .certificate-item__info {
   margin: auto toRem(10);
-  width: 80%;
   display: grid;
 }
 

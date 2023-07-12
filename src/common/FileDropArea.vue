@@ -2,15 +2,15 @@
   <div
     class="file-drop-area"
     :data-active="active"
-    @dragenter.prevent="setActive"
-    @dragover.prevent="setActive"
-    @dragleave.prevent="setUnactive"
+    @dragenter.prevent="active = true"
+    @dragover.prevent="active = true"
+    @dragleave.prevent="active = false"
     @drop.prevent="dragFile"
   >
     <div class="file-drop-area__content">
       <icon class="file-drop-area__icon" :name="$icons.fileSelect" />
       <div class="file-drop-area__content-text">
-        <label class="file-drop-area__label" :for="id"></label>
+        <label class="file-drop-area__label" :for="ID"></label>
         <p class="file-drop-area__text">
           {{ title }}
         </p>
@@ -19,7 +19,7 @@
           type="file"
           multiple
           hidden
-          :id="id"
+          :id="ID"
           :disabled="isDisabled"
           :accept="filesType"
           @input="uploadFile"
@@ -39,41 +39,41 @@ import { ICON_NAMES } from '@/enums'
 import { Icon } from '@/common'
 
 const files = ref<File[]>([])
+const active = ref(false)
 
 const ID_WRP = '_id'
 
-const props = defineProps<{
-  icon: ICON_NAMES
-  title: string
-  description: string
-  filesType: string
-  isDisabled?: boolean
-}>()
+const props = withDefaults(
+  defineProps<{
+    icon: ICON_NAMES
+    title: string
+    description: string
+    filesType: string
+    isDisabled?: boolean
+  }>(),
+  {
+    isDisabled: false,
+  },
+)
 
-const active = ref(false)
-
-const id = props.filesType + ID_WRP
+const ID = props.filesType + ID_WRP
 
 const emit = defineEmits<{
   (e: 'handle-files-upload', files: File[]): void
 }>()
 
-const uploadFile = e => {
-  files.value = e.target.files
-  emit('handle-files-upload', files.value)
-}
-const dragFile = e => {
-  active.value = false
-  files.value = e.dataTransfer.files
-
+const uploadFile = (e: Event) => {
+  const target = e.target as HTMLInputElement
+  const selectedFiles = target.files
+  files.value = [...selectedFiles!]
   emit('handle-files-upload', files.value)
 }
 
-const setActive = () => {
-  active.value = true
-}
-const setUnactive = () => {
+const dragFile = (e: DragEvent) => {
   active.value = false
+  const fileList = e.dataTransfer!.files
+  files.value = [...fileList]
+  emit('handle-files-upload', files.value)
 }
 </script>
 
@@ -104,6 +104,14 @@ const setUnactive = () => {
   }
 }
 
+.file-drop-area__label {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  left: 0;
+}
+
 .file-drop-area__text {
   padding-top: toRem(5);
   font-style: normal;
@@ -116,13 +124,5 @@ const setUnactive = () => {
 
 input[type='file']::file-selector-button {
   display: none;
-}
-
-.file-drop-area__label {
-  position: absolute;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  left: 0;
 }
 </style>

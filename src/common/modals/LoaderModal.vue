@@ -23,14 +23,18 @@
 <script lang="ts" setup>
 import { Modal } from '@/common'
 
-defineProps<{
-  isShown: boolean
-  title: string
-  description: string
-  loadState: number
-  fileCount?: number
-}>()
-//todo  default value
+withDefaults(
+  defineProps<{
+    isShown: boolean
+    title: string
+    description: string
+    loadState: number
+    fileCount?: number
+  }>(),
+  {
+    fileCount: 0,
+  },
+)
 
 const emit = defineEmits<{
   (e: 'update:is-shown', v: boolean): void

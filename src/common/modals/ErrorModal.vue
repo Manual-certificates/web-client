@@ -1,4 +1,3 @@
-LoaderModal.vue
 <template>
   <modal
     :is-shown="isShown"

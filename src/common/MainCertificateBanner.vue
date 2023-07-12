@@ -69,7 +69,7 @@ defineProps<{
 
 .main-certificate-banner__btn {
   margin: toRem(20) auto;
-  width: 60%;
+  width: toRem(200);
   border-radius: toRem(8);
 }
 </style>

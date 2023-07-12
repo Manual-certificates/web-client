@@ -74,12 +74,18 @@ const certificatesListBuffer = ref<FileItemType[]>([])
 
 const CERTIFICATES_ON_PAGE = 5
 
-const props = defineProps<{
-  isShown: boolean
-  certificateList: FileItemType[]
-  title?: string
-  subtitle?: string
-}>()
+const props = withDefaults(
+  defineProps<{
+    isShown: boolean
+    certificateList: FileItemType[]
+    title?: string
+    subtitle?: string
+  }>(),
+  {
+    title: '',
+    subtitle: '',
+  },
+)
 
 const emit = defineEmits<{
   (e: 'update:is-shown', v: boolean): void
@@ -173,6 +179,6 @@ const validateCertificatesCount = () => {
 }
 
 .certificates-modal__close-btn {
-  width: 90%;
+  width: toRem(540);
 }
 </style>

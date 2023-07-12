@@ -58,7 +58,9 @@
               class="mint_page__certificate-count"
               color="info"
               :text="
-                $t('mint-page.see-all') + certificateList.length.toString()
+                $t('mint-page.see-all', {
+                  number: certificateList.length.toString(),
+                })
               "
               @click="showModal"
             />
@@ -68,7 +70,7 @@
               {{ $t('mint-page.step-1-description') }}
             </p>
             <div class="mint-page__field-images">
-              <drag-drop-upload
+              <file-drop-area
                 class="mint-page__select"
                 :key="IMAGE_KEY"
                 :files-type="IMAGE_FORMAT"
@@ -106,19 +108,25 @@
               {{ $t('mint-page.step-2-title') }}
             </p>
           </div>
-          <p class="mint-page__field-description">
-            {{ $t('mint-page.step-2-description') }}
-            <a
-              class="mint-page__field-description-link"
-              target="_blank"
-              rel="noopener"
-              :href="TEMPLATE_LINK"
-            >
-              {{ $t('mint-page.step-2-description-link') }}
-            </a>
-          </p>
 
-          <drag-drop-upload
+          <i18n-t
+            class="mint-page__field-description"
+            keypath="mint-page.step-2-description"
+            tag="p"
+          >
+            <template #link>
+              <a
+                class="mint-page__field-description-link"
+                target="_blank"
+                rel="noopener"
+                :href="TEMPLATE_LINK"
+              >
+                {{ $t('mint-page.step-2-description-link') }}
+              </a>
+            </template>
+          </i18n-t>
+
+          <file-drop-area
             v-if="!tableFile.title"
             class="mint-page__select"
             :key="TABLE_KEY"
@@ -162,7 +170,7 @@
 import * as XLSX from 'xlsx'
 import { ref } from 'vue'
 import { ErrorHandler } from '@/helpers'
-import { AppButton, DragDropUpload, FileItem } from '@/common'
+import { AppButton, FileDropArea, FileItem } from '@/common'
 import { FileItemType } from '@/types'
 import { useTokenContact } from '@/composables'
 import { IpfsUtil } from '@/utils'
@@ -173,10 +181,10 @@ import {
   CertificatesModal,
 } from '@/common/modals'
 import { useRouter } from 'vue-router'
-import { useI18n } from 'vue-i18n'
 import { MintForm } from '@/forms'
 import { FILE_SIZE } from '@/enums'
-
+import { useI18n } from 'vue-i18n'
+import { Log } from '@ethersproject/abstract-provider'
 const { t } = useI18n()
 
 const isShown = ref(false)
@@ -316,8 +324,12 @@ const mintCertificates = async (address: string) => {
       return
     }
 
-    const res = await useTokenContact(address).mintBatch(addresses, URIs)
-    txHash.value = res!.transactionHash!
+    const res = (await useTokenContact(address).mintBatch(
+      addresses,
+      URIs,
+    )) as Log
+
+    txHash.value = res.transactionHash
     isSuccessModalShown.value = true
   } catch (error) {
     isMintLoaderShown.value = false
