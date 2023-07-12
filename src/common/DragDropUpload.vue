@@ -2,21 +2,18 @@
   <div
     class="file-drop-area"
     :data-active="active"
-    @dragenter.prevent="active = true"
-    @dragover.prevent="active = true"
-    @dragleave.prevent="active = false"
+    @dragenter.prevent="setActive"
+    @dragover.prevent="setActive"
+    @dragleave.prevent="setUnactive"
     @drop.prevent="dragFile"
   >
     <div class="file-drop-area__content">
-      <icon
-        class="file-drop-area__icon"
-        :name="$icons.fileSelect"
-        @drag="dragFile"
-      />
-      <div class="file-drop-area__text">
-        <label :for="id" class="file-drop-area__text">
+      <icon class="file-drop-area__icon" :name="$icons.fileSelect" />
+      <div class="file-drop-area__content-text">
+        <label class="file-drop-area__label" :for="id"></label>
+        <p class="file-drop-area__text">
           {{ title }}
-        </label>
+        </p>
         <input
           class="file-drop-area__text-title"
           type="file"
@@ -68,8 +65,15 @@ const uploadFile = e => {
 const dragFile = e => {
   active.value = false
   files.value = e.dataTransfer.files
+
   emit('handle-files-upload', files.value)
-  e.dataTransfer.files = []
+}
+
+const setActive = () => {
+  active.value = true
+}
+const setUnactive = () => {
+  active.value = false
 }
 </script>
 
@@ -78,13 +82,13 @@ const dragFile = e => {
   border: toRem(2) dashed var(--border-primary-light);
   text-align: center;
   cursor: pointer;
+  position: relative;
   border-radius: toRem(8);
 }
 
 .file-drop-area__content {
   display: flex;
   text-align: left;
-  padding: toRem(10);
   justify-content: left;
   align-items: center;
 }
@@ -92,6 +96,7 @@ const dragFile = e => {
 .file-drop-area__icon {
   width: toRem(33);
   height: toRem(37);
+  margin: auto toRem(10);
 
   @include respond-to('large') {
     width: toRem(30);
@@ -111,5 +116,13 @@ const dragFile = e => {
 
 input[type='file']::file-selector-button {
   display: none;
+}
+
+.file-drop-area__label {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  left: 0;
 }
 </style>

@@ -12,8 +12,10 @@
           <div class="certificates-modal__header-page-number">
             <p>
               {{
-                $t('certificates-modal.kek', {
-                  lol: certificatesListBuffer.length.toString(),
+                $t('certificates-modal.count', {
+                  start: (pageCount * CERTIFICATES_ON_PAGE).toString(),
+                  end: ((pageCount + 1) * CERTIFICATES_ON_PAGE).toString(),
+                  number: certificatesListBuffer.length.toString(),
                 })
               }}
             </p>

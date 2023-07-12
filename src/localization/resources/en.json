@@ -90,8 +90,7 @@
   },
   "certificates-modal": {
     "title": "Certificates ",
-    "count": "of {number}",
-    "kek": "{{lol}}",
+    "count": "{start} - {end} of {number}",
     "search-placeholder": "Search by name ",
     "close-btn": "Close"
   },
