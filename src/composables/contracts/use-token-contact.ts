@@ -1,9 +1,5 @@
 import { computed, ref } from 'vue'
-import {
-  EthProviderRpcError,
-  EthTransactionResponse,
-  TokenContractV2__factory,
-} from '@/types'
+import { EthProviderRpcError, TokenContractV2__factory } from '@/types'
 import { useWeb3ProvidersStore } from '@/store'
 import { handleEthError } from '@/helpers'
 
