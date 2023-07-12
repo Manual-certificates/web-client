@@ -27,7 +27,7 @@
             />
             <app-button
               icon-left="chevron-right"
-              :disabled="validateCertificatesCount"
+              :disabled="validateCertificatesCount()"
               @click="pageCount++"
             />
           </div>
@@ -148,6 +148,7 @@ const validateCertificatesCount = () => {
 }
 
 .certificates-modal__search {
+  width: toRem(580);
   margin: auto;
 }
 
@@ -179,6 +180,6 @@ const validateCertificatesCount = () => {
 }
 
 .certificates-modal__close-btn {
-  width: toRem(540);
+  width: toRem(580);
 }
 </style>

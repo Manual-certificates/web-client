@@ -91,6 +91,7 @@ const dragFile = (e: DragEvent) => {
   text-align: left;
   justify-content: left;
   align-items: center;
+  padding-top: toRem(5);
 }
 
 .file-drop-area__icon {
@@ -113,7 +114,6 @@ const dragFile = (e: DragEvent) => {
 }
 
 .file-drop-area__text {
-  padding-top: toRem(5);
   font-style: normal;
   margin: auto;
 
