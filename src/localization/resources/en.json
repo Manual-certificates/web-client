@@ -80,7 +80,9 @@
     "loader-modal-description-upload-files": "Uploading files to IPFS",
     "loader-modal-description-mint": "Minting SBTs",
     "loader-modal-description": "Wait until all certificates are created",
-    "address-error-msg": "Not valid address"
+    "address-error-msg": "Not valid address",
+    "error-empty-list": "empty list",
+    "error-empty-file": "empty file"
   },
   "mint-form": {
     "issue-btn": "Issue",
@@ -88,7 +90,8 @@
   },
   "certificates-modal": {
     "title": "Certificates ",
-    "count": "of ",
+    "count": "of {number}",
+    "kek": "{{lol}}",
     "search-placeholder": "Search by name ",
     "close-btn": "Close"
   },
@@ -96,7 +99,7 @@
     "title": "Success",
     "tx-hash": "Transaction hash",
     "description": "Elit dapibus at egestas odio. Elit dolor non ornare magna.",
-    "btn": "Ok"
+    "btn-text": "Ok"
   },
   "app-navbar": {
     "metamask-ico-alt": "Metamask ico",

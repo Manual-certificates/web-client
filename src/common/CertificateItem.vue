@@ -1,7 +1,7 @@
 <template>
   <div class="certificate-item">
     <div class="certificate-item__img-wrp">
-      <icon class="certificate-item__img" name="file-item"></icon>
+      <icon class="certificate-item__img" :name="$icons.fileItem" />
     </div>
     <div class="certificate-item__info">
       <div class="certificate-item__info-title">
@@ -13,16 +13,15 @@
       <div class="certificate-item__info-size"></div>
     </div>
     <app-button
-      :icon-right="ICON_NAMES.x"
+      :icon-right="$icons.x"
       @click="emit('remove-certificate', certificate)"
     />
   </div>
 </template>
 <script setup lang="ts">
 import { FileItemType } from '@/types'
-import { Icon } from '@/common/'
-import AppButton from '@/common/AppButton.vue'
-import { ICON_NAMES } from '@/enums'
+import { Icon, AppButton } from '@/common/'
+import { FILE_SIZE } from '@/enums'
 
 defineProps<{
   certificate: FileItemType
@@ -33,7 +32,7 @@ const emit = defineEmits<{
 }>()
 
 const preparedSize = (size: string) => {
-  return (Number(size) / 1000).toString() + 'KB'
+  return (Number(size) / 1000).toString() + FILE_SIZE.KB
 }
 </script>
 

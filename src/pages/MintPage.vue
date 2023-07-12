@@ -3,7 +3,7 @@
     <certificates-modal
       class="mint-page__certificate-modal"
       v-model:is-shown="isShown"
-      :certificate-list="certificateList.slice(0, 100)"
+      :certificate-list="certificateList.slice(0, MAX_CERTIFICATES_COUNT)"
       @remove-certificate="removeCertificate"
     />
 
@@ -20,7 +20,7 @@
     <success-modal
       v-model:is-shown="isSuccessModalShown"
       :tx="txHash"
-      @success="router.push({ name: $router.main })"
+      @success="router.push({ name: $routes.main })"
     />
 
     <h2 class="mint-page__title">
@@ -70,10 +70,10 @@
             <div class="mint-page__field-images">
               <drag-drop-upload
                 class="mint-page__select"
-                :key="imageKey"
-                :files-type="imageFormat"
+                :key="IMAGE_KEY"
+                :files-type="IMAGE_FORMAT"
                 :icon="$icons.template"
-                :is-disabled="certificateList.length >= 100"
+                :is-disabled="certificateList.length >= MAX_CERTIFICATES_COUNT"
                 :title="$t('mint-page.select-images-title')"
                 :description="$t('mint-page.select-images-description')"
                 @handle-files-upload="handlerUploadFile"
@@ -82,7 +82,10 @@
                 v-if="certificateList.length > 0"
                 class="mint-page__field-images"
               >
-                <div v-for="item in certificateList.slice(0, 3)" :key="item">
+                <div
+                  v-for="item in certificateList.slice(0, 3)"
+                  :key="item.title"
+                >
                   <file-item
                     class="mint-page__select-item"
                     :icon="$icons.fileItem"
@@ -109,7 +112,7 @@
               class="mint-page__field-description-link"
               target="_blank"
               rel="noopener"
-              :href="templateLink"
+              :href="TEMPLATE_LINK"
             >
               {{ $t('mint-page.step-2-description-link') }}
             </a>
@@ -118,8 +121,8 @@
           <drag-drop-upload
             v-if="!tableFile.title"
             class="mint-page__select"
-            :key="tableKey"
-            :files-type="tableFormat"
+            :key="TABLE_KEY"
+            :files-type="TABLE_FORMAT"
             :icon="$icons.fileSelect"
             :title="$t('mint-page.select-table-title')"
             :description="$t('mint-page.select-table-description')"
@@ -157,41 +160,46 @@
 
 <script setup lang="ts">
 import * as XLSX from 'xlsx'
-import DragDropUpload from '@/common/DragDropUpload.vue'
 import { ref } from 'vue'
 import { ErrorHandler } from '@/helpers'
-import { AppButton } from '@/common'
-import CertificatesModal from '@/common/modals/CertificatesModal.vue'
+import { AppButton, DragDropUpload, FileItem } from '@/common'
 import { FileItemType } from '@/types'
-import FileItem from '@/common/FileItem.vue'
 import { useTokenContact } from '@/composables'
-import { IpfsUtils } from '@/utils/ipfs.utils'
-import LoaderModal from '@/common/modals/LoaderModal.vue'
-import ErrorModal from '@/common/modals/ErrorModal.vue'
-import SuccessModal from '@/common/modals/SuccessModal.vue'
+import { IpfsUtil } from '@/utils'
+import {
+  SuccessModal,
+  ErrorModal,
+  LoaderModal,
+  CertificatesModal,
+} from '@/common/modals'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
-import MintForm from '@/forms/MintForm.vue'
+import { MintForm } from '@/forms'
+import { FILE_SIZE } from '@/enums'
+
+const { t } = useI18n()
 
 const isShown = ref(false)
 const isMintLoaderShown = ref(false)
 const isErrorModalShown = ref(false)
 const isSuccessModalShown = ref(false)
+
 const tableData = ref<string[][]>()
 const tableFile = ref<FileItemType>({} as FileItemType)
 const certificateList = ref<FileItemType[]>([])
 const loadState = ref(0)
 const txHash = ref('')
-const tableFormat =
-  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-const imageFormat = 'image/*'
-const imageKey = 'imageKey'
-const tableKey = 'tableKey'
-const { t } = useI18n()
 
 const router = useRouter()
 const errorMsg = ref('')
-const templateLink =
+
+const MAX_CERTIFICATES_COUNT = 100
+const TABLE_FORMAT =
+  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+const IMAGE_FORMAT = 'image/*'
+const IMAGE_KEY = 'imageKey'
+const TABLE_KEY = 'tableKey'
+const TEMPLATE_LINK =
   'https://docs.google.com/spreadsheets/d/1ceqqJimxOKcfsYC9RFrYGLUnVnfet2bgNUBmLOGQR34'
 
 const parseTable = (files: File[]) => {
@@ -238,13 +246,15 @@ const getTableDataRows = (worksheet: XLSX.WorkSheet) => {
 
 const parseImages = (fileList: File[]) => {
   if (!fileList) {
-    ErrorHandler.process('empty list')
+    ErrorHandler.process(t('mint-page.error-empty-list'))
+    return
   }
   for (let i = 0; i < fileList.length; i++) {
     const file = fileList[i]
 
     if (!file) {
-      ErrorHandler.process('empty file')
+      ErrorHandler.process(t('mint-page.error-empty-file'))
+      return
     }
     const reader = new FileReader()
     reader.readAsDataURL(file)
@@ -265,17 +275,14 @@ const parseImages = (fileList: File[]) => {
 }
 
 const handlerUploadFile = (fileList: File[]) => {
-  if (
-    fileList[0].type ===
-    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-  ) {
+  if (fileList[0].type === TABLE_FORMAT) {
     parseTable(fileList)
     return
   }
   parseImages(fileList)
 }
 const preparedSize = (size: string) => {
-  return (Number(size) / 1000).toString() + 'KB'
+  return (Number(size) / 1000).toString() + FILE_SIZE.KB
 }
 const showModal = () => {
   isShown.value = true
@@ -299,7 +306,7 @@ const mintCertificates = async (address: string) => {
       addresses.push(item[1])
       loadState.value++
 
-      URIs.push(await IpfsUtils.storeFile(certificateByFileName.file!))
+      URIs.push(await IpfsUtil.storeFile(certificateByFileName.file!))
       iFilesUpload = true
     }
 
@@ -364,7 +371,7 @@ const filesIsReady = () => {
   height: toRem(72);
   margin-right: toRem(10);
 
-  @include respond-to('large') {
+  @include respond-to(large) {
     width: toRem(260);
   }
 }
@@ -383,7 +390,6 @@ const filesIsReady = () => {
 }
 
 .mint-page__field {
-  display: flow;
   text-align: center;
   row-gap: toRem(8);
   height: toRem(220);
@@ -419,11 +425,6 @@ const filesIsReady = () => {
   justify-content: space-between;
   width: 100%;
   margin-bottom: toRem(20);
-}
-
-.mint-page__field-border-wrp {
-  display: grid;
-  justify-items: center;
 }
 
 .mint-page__field-description-link {

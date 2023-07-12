@@ -29,7 +29,7 @@
         {{ label }}
       </label>
       <div
-        v-if="$slots.nodeRight || isPasswordType || props.errorMessage"
+        v-if="$slots.nodeRight || isPasswordType || errorMessage"
         class="input-field__node-right-wrp"
       >
         <button
@@ -43,7 +43,7 @@
           />
         </button>
         <icon
-          v-else-if="props.errorMessage"
+          v-else-if="errorMessage"
           class="input-field__error-icon"
           :name="$icons.exclamation"
         />
@@ -64,7 +64,6 @@
 
 <script lang="ts" setup>
 import { Icon } from '@/common'
-
 import { BN } from '@/utils'
 import { computed, getCurrentInstance, ref, useAttrs, useSlots } from 'vue'
 

@@ -31,8 +31,7 @@
 </template>
 
 <script lang="ts" setup>
-import MainCertificateBanner from '@/common/MainCertificateBanner.vue'
-import { AppButton } from '@/common'
+import { AppButton, MainCertificateBanner } from '@/common'
 import { useWeb3ProvidersStore } from '@/store'
 
 const { provider } = useWeb3ProvidersStore()
@@ -54,12 +53,12 @@ const connect = async () => {
 }
 
 .main-page__info-title {
-  font-family: 'NT Somic', sans-serif;
+  font-family: var(--app-font-family-nt);
   margin-bottom: toRem(25);
 }
 
 .main-page__info-description {
-  font-family: 'Inter', sans-serif;
+  font-family: var(--app-font-family-inter);
   color: var(--text-primary-light);
 }
 

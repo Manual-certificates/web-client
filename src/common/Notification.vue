@@ -14,7 +14,6 @@
 
 <script lang="ts">
 import { Icon } from '@/common'
-
 import { defineComponent, PropType } from 'vue'
 import { ICON_NAMES } from '@/enums'
 

@@ -1,20 +1,20 @@
 <template>
   <modal
-    :is-shown="props.isShown"
+    :is-shown="isShown"
     @update:is-shown="(value: boolean) => emit('update:is-shown', value)"
   >
     <template #default="{ modal }">
-      <div class="certificates-modal__pane" v-bind="$attrs">
+      <div class="certificates-modal__pane">
         <div class="certificates-modal__header">
           <h2 class="certificates-modal__header-title">
             {{ $t('certificates-modal.title') }}
           </h2>
-          <div class="certificates-modal__header-count">
+          <div class="certificates-modal__header-page-number">
             <p>
-              {{ (pageCount * 5).toString() + '-' + (pageCount + 1) * 5 }}
               {{
-                $t('certificates-modal.count') +
-                certificatesListBuffer.length.toString()
+                $t('certificates-modal.kek', {
+                  lol: certificatesListBuffer.length.toString(),
+                })
               }}
             </p>
 
@@ -25,7 +25,7 @@
             />
             <app-button
               icon-left="chevron-right"
-              :disabled="(pageCount + 1) * 5 > certificatesListBuffer.length"
+              :disabled="validateCertificatesCount"
               @click="pageCount++"
             />
           </div>
@@ -33,8 +33,8 @@
 
         <div class="certificates-modal__search">
           <input-field
+            v-model="searchData"
             class="certificates-modal__search-input"
-            v-model:model-value="searchData"
             :placeholder="$t('certificates-modal.search-placeholder')"
             @input="search"
           />
@@ -60,16 +60,17 @@
 </template>
 
 <script lang="ts" setup>
-import { AppButton, Modal } from '@/common'
+import { AppButton, Modal, CertificatesItemList } from '@/common'
 
 import { ref } from 'vue'
 import { FileItemType } from '@/types'
-import InputField from '@/fields/InputField.vue'
-import CertificatesItemList from '@/common/CertificatesItemList.vue'
+import { InputField } from '@/fields'
 
 const searchData = ref('')
 const pageCount = ref(0)
 const certificatesListBuffer = ref<FileItemType[]>([])
+
+const CERTIFICATES_ON_PAGE = 5
 
 const props = defineProps<{
   isShown: boolean
@@ -84,7 +85,7 @@ const emit = defineEmits<{
 }>()
 
 const search = () => {
-  if (searchData.value === '' && certificatesListBuffer.value) {
+  if (!searchData.value.length && certificatesListBuffer.value) {
     certificatesListBuffer.value = props.certificateList!
     return
   }
@@ -103,10 +104,17 @@ const removeItem = (certificate: FileItemType) => {
 }
 
 const prepareList = () => {
-  if (searchData.value === '' && certificatesListBuffer.value) {
+  if (!searchData.value.length && certificatesListBuffer.value) {
     certificatesListBuffer.value = props.certificateList!
   }
   return certificatesListBuffer.value
+}
+
+const validateCertificatesCount = () => {
+  return (
+    (pageCount.value + 1) * CERTIFICATES_ON_PAGE >
+    certificatesListBuffer.value.length
+  )
 }
 </script>
 
@@ -132,7 +140,6 @@ const prepareList = () => {
 }
 
 .certificates-modal__search {
-  width: 95%;
   margin: auto;
 }
 
@@ -141,7 +148,7 @@ const prepareList = () => {
   text-align: center;
 }
 
-.certificates-modal__header-count {
+.certificates-modal__header-page-number {
   display: flex;
   justify-content: right;
   align-items: center;

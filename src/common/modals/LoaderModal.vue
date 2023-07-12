@@ -1,6 +1,6 @@
 <template>
   <modal
-    :is-shown="props.isShown"
+    :is-shown="isShown"
     @update:is-shown="(value: boolean) => emit('update:is-shown', value)"
   >
     <div class="loader-modal__pane">
@@ -23,13 +23,14 @@
 <script lang="ts" setup>
 import { Modal } from '@/common'
 
-const props = defineProps<{
+defineProps<{
   isShown: boolean
   title: string
   description: string
   loadState: number
   fileCount?: number
 }>()
+//todo  default value
 
 const emit = defineEmits<{
   (e: 'update:is-shown', v: boolean): void

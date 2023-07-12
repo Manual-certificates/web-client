@@ -1,7 +1,7 @@
 <template>
   <div class="file-item">
     <div class="file-item__content">
-      <icon class="file-item__icon" :name="icon" />
+      <icon class="file-item__icon" :name="$icons.fileItem" />
       <div class="file-item__text">
         <p class="file-item__title">
           {{ preparedTitle }}
@@ -13,9 +13,9 @@
     </div>
     <app-button
       class="file-item__btn"
-      :icon-left="ICON_NAMES.x"
-      @click="emit('delete-item', item)"
       size="small"
+      :icon-left="$icons.x"
+      @click="emit('delete-item', item)"
     />
   </div>
 </template>
@@ -25,6 +25,7 @@ import { onBeforeMount, ref } from 'vue'
 import { ICON_NAMES } from '@/enums'
 import { Icon, AppButton } from '@/common'
 import { FileItemType } from '@/types'
+import { abbrCenter } from '@/helpers'
 
 const props = defineProps<{
   icon: ICON_NAMES
@@ -39,22 +40,16 @@ const emit = defineEmits<{
 
 const preparedTitle = ref('')
 
-const prepareFileTitle = () => {
-  if (props.title.length > 10) {
-    preparedTitle.value =
-      props.title.slice(0, 10) + '...' + props.title.slice(-5)
-    return
-  }
-  preparedTitle.value = props.title
-}
-onBeforeMount(prepareFileTitle)
+onBeforeMount(() => {
+  preparedTitle.value = abbrCenter(true, props.title)
+})
 </script>
 
 <style lang="scss" scoped>
 .file-item {
+  display: flex;
   border: toRem(1) solid var(--border-primary-light);
   text-align: center;
-  display: flex;
   justify-content: space-between;
   border-radius: toRem(8);
 }
@@ -63,7 +58,7 @@ onBeforeMount(prepareFileTitle)
   max-height: toRem(40);
   margin: auto 0;
 
-  @include respond-to('large') {
+  @include respond-to(large) {
     max-width: toRem(30);
   }
 }
@@ -80,7 +75,7 @@ onBeforeMount(prepareFileTitle)
   width: toRem(33);
   height: toRem(37);
 
-  @include respond-to('large') {
+  @include respond-to(large) {
     width: toRem(30);
   }
 }
@@ -88,7 +83,7 @@ onBeforeMount(prepareFileTitle)
 .file-item__description {
   font-size: toRem(14);
 
-  @include respond-to('large') {
+  @include respond-to(large) {
     font-size: toRem(12);
   }
 }

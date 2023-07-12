@@ -9,14 +9,6 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
-
-export default defineComponent({
-  name: 'app-logo',
-})
-</script>
-
 <style lang="scss" scoped>
 .app-logo {
   width: toRem(40);

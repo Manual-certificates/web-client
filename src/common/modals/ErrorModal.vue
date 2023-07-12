@@ -1,12 +1,12 @@
 LoaderModal.vue
 <template>
   <modal
-    :is-shown="props.isShown"
+    :is-shown="isShown"
     @update:is-shown="(value: boolean) => emit('update:is-shown', value)"
   >
     <div class="error-modal__pane">
       <div class="error-modal__payload">
-        <icon class="error-modal__icon" :name="ICON_NAMES.certificateError" />
+        <icon class="error-modal__icon" :name="$icons.certificateError" />
         <div class="error-modal__info">
           <h3 class="error-modal__title">
             {{ $t('error-modal.title') }}
@@ -18,9 +18,9 @@ LoaderModal.vue
       </div>
       <app-button
         class="error-modal__btn"
+        color="error"
         :text="$t('error-modal.btn')"
         :size="'large'"
-        color="error"
         @click="tryAgain"
       />
     </div>
@@ -28,11 +28,9 @@ LoaderModal.vue
 </template>
 
 <script lang="ts" setup>
-import { Modal, Icon } from '@/common'
-import { ICON_NAMES } from '@/enums'
-import AppButton from '@/common/AppButton.vue'
+import { Modal, Icon, AppButton } from '@/common'
 
-const props = defineProps<{
+defineProps<{
   isShown: boolean
   errorMsg: string
 }>()
@@ -72,6 +70,6 @@ const tryAgain = () => {
 
 .error-modal__btn {
   margin: toRem(10) auto;
-  width: 40%;
+  width: toRem(260);
 }
 </style>

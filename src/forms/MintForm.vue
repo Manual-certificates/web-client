@@ -4,7 +4,7 @@
       v-model="form.address"
       class="mint-form__field-input"
       :error-message="
-        !form.address.length ? '' : getFieldErrorMessage('address')
+        form.address.length ? getFieldErrorMessage('address') : ''
       "
     />
     <div class="mint-from__btns-wrp">
@@ -13,7 +13,7 @@
         size="large"
         color="info"
         :route="{
-          name: $router.main,
+          name: $routes.main,
         }"
         :text="$t('mint-form.cancel-btn')"
       />
@@ -30,7 +30,7 @@
 </template>
 
 <script setup lang="ts">
-import InputField from '@/fields/InputField.vue'
+import { InputField } from '@/fields'
 import { AppButton } from '@/common'
 import { reactive } from 'vue'
 import { required, address } from '@/validators'

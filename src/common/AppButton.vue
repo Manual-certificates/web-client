@@ -252,8 +252,8 @@ const buttonClasses = computed(() =>
   }
 
   &--info {
-    --app-button-flat-text: var(--background-secondary-light);
-    --app-button-flat-text-hover: var(--background-secondary-light);
+    --app-button-flat-text: var(--text-primary-invert-light);
+    --app-button-flat-text-hover: var(--text-primary-invert-light);
     --app-button-flat-border: #{toRem(2)} solid var(--info-light);
     --app-button-flat-border-hover: #{toRem(2)} solid var(--info-dark);
     --app-button-flat-border-active: #{toRem(2)} solid var(--info-dark);

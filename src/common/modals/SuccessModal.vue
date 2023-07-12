@@ -1,11 +1,11 @@
 <template>
   <modal
-    :is-shown="props.isShown"
+    :is-shown="isShown"
     @update:is-shown="(value: boolean) => emit('update:is-shown', value)"
   >
     <div class="success-modal__pane">
       <div class="success-modal__payload">
-        <icon class="success-modal__icon" :name="ICON_NAMES.certificate" />
+        <icon class="success-modal__icon" :name="$icons.certificate" />
         <div class="success-modal__info">
           <h3 class="success-modal__title">
             {{ $t('success-modal.title') }}
@@ -23,8 +23,8 @@
       </div>
       <app-button
         class="success-modal__btn"
-        :text="$t('success-modal.btn')"
         color="success"
+        :text="$t('success-modal.btn-text')"
         @click="closeModal"
       />
     </div>
@@ -32,11 +32,9 @@
 </template>
 
 <script lang="ts" setup>
-import { Icon, AppButton } from '@/common'
-import { ICON_NAMES } from '@/enums'
-import modal from '@/common/Modal.vue'
+import { Icon, AppButton, Modal } from '@/common'
 
-const props = defineProps<{
+defineProps<{
   isShown: boolean
   tx: string
 }>()

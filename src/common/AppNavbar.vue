@@ -5,7 +5,9 @@
 
       <app-button
         class="app-navbar__btn"
-        :text="prepareAddress() || $t('app-navbar.metamask-connect')"
+        :text="abbrCenter(
+        provider.isConnected, provider.selectedAddress!) ||
+        $t('app-navbar.metamask-connect')"
         :icon-left="$icons.metamask"
         @click="connect"
       />
@@ -14,6 +16,7 @@
 </template>
 
 <script lang="ts" setup>
+import { abbrCenter } from '@/helpers'
 import { AppButton, AppLogo } from '@/common'
 import { useWeb3ProvidersStore } from '@/store'
 
@@ -21,33 +24,15 @@ const { provider } = useWeb3ProvidersStore()
 
 const connect = async () => {
   await provider.connect()
-  prepareAddress()
-}
-
-const prepareAddress = () => {
-  if (provider.isConnected) {
-    return (
-      provider.selectedAddress!.slice(0, 6) +
-      '...' +
-      provider.selectedAddress!.slice(-4)
-    )
-  }
-  return ''
 }
 </script>
 
 <style lang="scss" scoped>
-$box-shadow-r: 0;
-$box-shadow-g: 0;
-$box-shadow-b: 0;
-$box-shadow-a: 0.06;
-
 .app-navbar {
   width: 100%;
   background: var(--background-primary-main);
   border-bottom: var(--border-primary-main);
-  box-shadow: 0 toRem(4) toRem(16)
-    rgba($box-shadow-r, $box-shadow-g, $box-shadow-b, $box-shadow-a);
+  box-shadow: 0 toRem(4) toRem(16) rgba(var(--black-rgb), 0.06);
   margin-bottom: toRem(20);
 }
 
@@ -88,16 +73,6 @@ $box-shadow-a: 0.06;
   }
 }
 
-.app-navbar__configuration {
-  width: 15%;
-  display: flex;
-  justify-content: space-between;
-}
-
-.app-navbar__img {
-  width: toRem(20);
-}
-
 .app-navbar__metamask {
   width: toRem(175);
 
@@ -107,15 +82,6 @@ $box-shadow-a: 0.06;
 
   @include respond-to(medium) {
     width: toRem(125);
-  }
-}
-
-.app-navbar__btn .app-navbar__settings {
-  height: toRem(50);
-  border-radius: toRem(8);
-
-  @include respond-to(xmedium) {
-    height: toRem(40);
   }
 }
 </style>
