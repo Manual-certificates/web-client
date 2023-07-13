@@ -99,7 +99,7 @@ const dragFile = (e: DragEvent) => {
   height: toRem(37);
   margin: auto toRem(10);
 
-  @include respond-to('large') {
+  @include respond-to(large) {
     width: toRem(30);
     height: toRem(30);
   }
@@ -117,7 +117,7 @@ const dragFile = (e: DragEvent) => {
   font-style: normal;
   margin: auto;
 
-  @include respond-to('large') {
+  @include respond-to(large) {
     font-size: toRem(14);
   }
 }

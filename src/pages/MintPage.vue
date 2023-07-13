@@ -2,7 +2,7 @@
   <div class="mint-page">
     <certificates-modal
       class="mint-page__certificate-modal"
-      v-model:is-shown="isShown"
+      v-model:is-shown="isCertificatesModalShown"
       :certificate-list="certificateList.slice(0, MAX_CERTIFICATES_COUNT)"
       @remove-certificate="removeCertificate"
     />
@@ -20,7 +20,7 @@
     <success-modal
       v-model:is-shown="isSuccessModalShown"
       :tx="txHash"
-      @success="router.push({ name: $routes.main })"
+      @success="mintSuccess"
     />
 
     <h2 class="mint-page__title">
@@ -81,11 +81,11 @@
                 @handle-files-upload="handlerUploadFile"
               />
               <div
-                v-if="certificateList.length > 0"
+                v-if="certificateList.length"
                 class="mint-page__field-images"
               >
                 <div
-                  v-for="item in certificateList.slice(0, 3)"
+                  v-for="item in certificateList.slice(0, CERTIFICATES_ON_PAGE)"
                   :key="item.title"
                 >
                   <file-item
@@ -182,12 +182,12 @@ import {
 } from '@/common/modals'
 import { useRouter } from 'vue-router'
 import { MintForm } from '@/forms'
-import { FILE_SIZE } from '@/enums'
+import { DATA_STORAGE_UNITS, ROUTE_NAMES } from '@/enums'
 import { useI18n } from 'vue-i18n'
 import { Log } from '@ethersproject/abstract-provider'
 const { t } = useI18n()
 
-const isShown = ref(false)
+const isCertificatesModalShown = ref(false)
 const isMintLoaderShown = ref(false)
 const isErrorModalShown = ref(false)
 const isSuccessModalShown = ref(false)
@@ -209,6 +209,7 @@ const IMAGE_KEY = 'imageKey'
 const TABLE_KEY = 'tableKey'
 const TEMPLATE_LINK =
   'https://docs.google.com/spreadsheets/d/1ceqqJimxOKcfsYC9RFrYGLUnVnfet2bgNUBmLOGQR34'
+const CERTIFICATES_ON_PAGE = 3
 
 const parseTable = (files: File[]) => {
   const reader = new FileReader()
@@ -290,10 +291,10 @@ const handlerUploadFile = (fileList: File[]) => {
   parseImages(fileList)
 }
 const preparedSize = (size: string) => {
-  return (Number(size) / 1000).toString() + FILE_SIZE.KB
+  return (Number(size) / 1000).toString() + DATA_STORAGE_UNITS.KB
 }
 const showModal = () => {
-  isShown.value = true
+  isCertificatesModalShown.value = true
 }
 
 const mintCertificates = async (address: string) => {
@@ -355,6 +356,11 @@ const removeTableFile = () => {
 
 const filesIsReady = () => {
   return !!certificateList.value && !!tableFile.value
+}
+
+const mintSuccess = () => {
+  isSuccessModalShown.value = false
+  router.push({ name: ROUTE_NAMES.main })
 }
 </script>
 

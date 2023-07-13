@@ -10,7 +10,6 @@
         </h5>
         <p>{{ preparedSize(certificate.size) }}</p>
       </div>
-      <div class="certificate-item__info-size"></div>
     </div>
     <app-button
       :icon-right="$icons.x"
@@ -20,8 +19,8 @@
 </template>
 <script setup lang="ts">
 import { FileItemType } from '@/types'
-import { Icon, AppButton } from '@/common/'
-import { FILE_SIZE } from '@/enums'
+import { Icon, AppButton } from '@/common'
+import { DATA_STORAGE_UNITS } from '@/enums'
 
 defineProps<{
   certificate: FileItemType
@@ -32,7 +31,7 @@ const emit = defineEmits<{
 }>()
 
 const preparedSize = (size: string) => {
-  return (Number(size) / 1000).toString() + FILE_SIZE.KB
+  return (Number(size) / 1000).toString() + DATA_STORAGE_UNITS.KB
 }
 </script>
 

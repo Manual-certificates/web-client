@@ -23,17 +23,6 @@ const isAppInitialized = ref(false)
 const init = async () => {
   try {
     useNotifications()
-    document.title = config.APP_NAME
-  } catch (error) {
-    isAppInitialized.value = false
-    ErrorHandler.process(error)
-  }
-  isAppInitialized.value = true
-}
-
-const initProvider = async () => {
-  try {
-    useNotifications()
     await web3Store.detectProviders()
     const provider = web3Store.providers.find(
       el => el.name === PROVIDERS.metamask,
@@ -48,7 +37,6 @@ const initProvider = async () => {
 }
 
 init()
-initProvider()
 </script>
 
 <style lang="scss" scoped>

@@ -45,7 +45,6 @@ const emit = defineEmits<{
 }>()
 
 const closeModal = () => {
-  emit('update:is-shown', false)
   emit('success')
 }
 </script>

@@ -15,7 +15,7 @@
         class="loader-modal__loader"
         :max="fileCount"
         :value="loadState"
-      ></progress>
+      />
     </div>
   </modal>
 </template>

@@ -8,8 +8,8 @@ import {
 import { ethers } from 'ethers'
 
 import { PROVIDERS } from '@/enums'
-import { EthereumProvider } from '@/types/ethereum.types'
-import { PhantomProvider } from '@/types/solana.types'
+import { EthereumProvider } from '@/types'
+import { PhantomProvider } from '@/types'
 
 /**
  * Non defined provider from browser
@@ -76,4 +76,4 @@ export interface ProviderWrapper {
   disconnect?: () => Promise<void>
 }
 
-export type { UseProvider } from '@/composables/useProvider'
+export type { UseProvider } from '@/composables'

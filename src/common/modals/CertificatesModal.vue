@@ -27,7 +27,7 @@
             />
             <app-button
               icon-left="chevron-right"
-              :disabled="validateCertificatesCount()"
+              :disabled="validateCertificatesCount"
               @click="pageCount++"
             />
           </div>
@@ -64,7 +64,7 @@
 <script lang="ts" setup>
 import { AppButton, Modal, CertificatesItemList } from '@/common'
 
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { FileItemType } from '@/types'
 import { InputField } from '@/fields'
 
@@ -118,12 +118,12 @@ const prepareList = () => {
   return certificatesListBuffer.value
 }
 
-const validateCertificatesCount = () => {
+const validateCertificatesCount = computed(() => {
   return (
-    (pageCount.value + 1) * CERTIFICATES_ON_PAGE >
+    (pageCount.value + 1) * CERTIFICATES_ON_PAGE >=
     certificatesListBuffer.value.length
   )
-}
+})
 </script>
 
 <style lang="scss" scoped>

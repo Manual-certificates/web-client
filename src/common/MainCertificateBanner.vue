@@ -1,11 +1,11 @@
 <template>
   <div class="main-certificate-banner">
-    <div class="main-certificate-border__content">
+    <div class="main-certificate-banner__content">
       <icon class="main-certificate-banner__icon" :name="$icons.certificate" />
-      <h2 class="main-certificate-border__title">
+      <h2 class="main-certificate-banner__title">
         {{ $t('main-certificate-banner.title') }}
       </h2>
-      <p class="main-certificate-border__description">
+      <p class="main-certificate-banner__description">
         {{ $t('main-certificate-banner.description') }}
       </p>
 
@@ -44,18 +44,18 @@ defineProps<{
   border-radius: toRem(16);
 }
 
-.main-certificate-border__content {
+.main-certificate-banner__content {
   display: grid;
   justify-content: center;
   text-align: center;
 }
 
-.main-certificate-border__title {
+.main-certificate-banner__title {
   font-family: var(--app-font-family-nt);
   margin: toRem(10) auto;
 }
 
-.main-certificate-border__description {
+.main-certificate-banner__description {
   font-family: var(--app-font-family-inter);
   color: var(--text-primary-light);
   max-width: 100%;
