@@ -9,45 +9,11 @@ for further information about branching and tagging conventions.
 
 ## [1.0.0-rc.1] - 2022-09-23
 #### Added
-- Eslint
-- Stylelint
-- prettier
-- Vite bundler
-- PiniaJS store
-- Vue-Router
+- Mint SBT
+- Parse table
+- Drag and drop components
 - CI/CD
-  - gitlab-ci
-  - werf.yaml
-- Dockerfile
-- nginx.conf
-- static dir as public dir
-  - branding static files
-  - styles and files for init-loader
-  - noscript files
-- sanity-check
-- ErrorHandler
-- Event Bus by mitt
-- i18n localization
-- MathUtil
-- DateUtil
-- Styles structure
-- Loader
-  - Spinner
-- ErrorMessage
-- AppButton
-- App navbar
-- App logo
-- Icon
-- Fields
-  - InputField
-  - CheckboxField
-- composables
-  - useForm
-  - useFormValidation
-  - useNotifications
-- Collapse
-- Unit tests
-- versioning
+- Upload file to IPFS
 
 ## [1.0.0-rc.0] - 2021-12-23
 #### Under the hood changes
