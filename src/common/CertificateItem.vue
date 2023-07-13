@@ -8,7 +8,7 @@
         <h5>
           {{ certificate.title }}
         </h5>
-        <p>{{ preparedSize(certificate.size) }}</p>
+        <p>{{ prepareSize(certificate.size) }}</p>
       </div>
     </div>
     <app-button
@@ -30,7 +30,7 @@ const emit = defineEmits<{
   (e: 'remove-certificate', certificate: FileItemType): void
 }>()
 
-const preparedSize = (size: string) => {
+const prepareSize = (size: string) => {
   return (Number(size) / 1000).toString() + DATA_STORAGE_UNITS.KB
 }
 </script>

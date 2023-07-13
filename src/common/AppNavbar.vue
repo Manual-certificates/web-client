@@ -6,8 +6,8 @@
       <app-button
         class="app-navbar__btn"
         :text="abbrCenter(
-        provider.isConnected, provider.selectedAddress!) ||
-        $t('app-navbar.metamask-connect')"
+          provider.isConnected, provider.selectedAddress!) ||
+          $t('app-navbar.metamask-connect')"
         :icon-left="$icons.metamask"
         @click="connect"
       />

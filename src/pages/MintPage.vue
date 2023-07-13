@@ -170,7 +170,6 @@
 import * as XLSX from 'xlsx'
 import { ref } from 'vue'
 import { ErrorHandler } from '@/helpers'
-import { AppButton, FileDropArea, FileItem } from '@/common'
 import { FileItemType } from '@/types'
 import { useTokenContact } from '@/composables'
 import { IpfsUtil } from '@/utils'
@@ -179,7 +178,10 @@ import {
   ErrorModal,
   LoaderModal,
   CertificatesModal,
-} from '@/common/modals'
+  AppButton,
+  FileDropArea,
+  FileItem,
+} from '@/common'
 import { useRouter } from 'vue-router'
 import { MintForm } from '@/forms'
 import { DATA_STORAGE_UNITS, ROUTE_NAMES } from '@/enums'

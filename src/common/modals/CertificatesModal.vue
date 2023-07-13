@@ -27,7 +27,7 @@
             />
             <app-button
               icon-left="chevron-right"
-              :disabled="validateCertificatesCount"
+              :disabled="isValidatedCertificatesCount"
               @click="pageCount++"
             />
           </div>
@@ -94,14 +94,13 @@ const emit = defineEmits<{
 
 const search = () => {
   if (!searchData.value.length && certificatesListBuffer.value) {
-    certificatesListBuffer.value = props.certificateList!
+    certificatesListBuffer.value = props.certificateList
     return
   }
   const searchQuery = searchData.value.toLowerCase()
   certificatesListBuffer.value = certificatesListBuffer.value.filter(
     certificate => {
       const title = certificate.title.toLowerCase()
-
       return title.includes(searchQuery)
     },
   )
@@ -113,12 +112,12 @@ const removeItem = (certificate: FileItemType) => {
 
 const prepareList = () => {
   if (!searchData.value.length && certificatesListBuffer.value) {
-    certificatesListBuffer.value = props.certificateList!
+    certificatesListBuffer.value = props.certificateList
   }
   return certificatesListBuffer.value
 }
 
-const validateCertificatesCount = computed(() => {
+const isValidatedCertificatesCount = computed(() => {
   return (
     (pageCount.value + 1) * CERTIFICATES_ON_PAGE >=
     certificatesListBuffer.value.length
