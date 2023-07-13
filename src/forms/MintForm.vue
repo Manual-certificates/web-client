@@ -7,7 +7,7 @@
         form.address.length ? getFieldErrorMessage('address') : ''
       "
     />
-    <div class="mint-from__btns-wrp">
+    <div class="mint-form__btns-wrp">
       <app-button
         class="mint-form__btn"
         size="large"
@@ -54,7 +54,7 @@ const { isFormValid, getFieldErrorMessage } = useFormValidation(form, {
 </script>
 
 <style lang="scss" scoped>
-.mint-from__btns-wrp {
+.mint-form__btns-wrp {
   display: flex;
   margin-top: toRem(50);
 }
