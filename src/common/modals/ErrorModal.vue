@@ -18,8 +18,8 @@
       <app-button
         class="error-modal__btn"
         color="error"
+        size="large"
         :text="$t('error-modal.btn')"
-        :size="'large'"
         @click="tryAgain"
       />
     </div>

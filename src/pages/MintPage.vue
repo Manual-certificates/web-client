@@ -10,7 +10,7 @@
     <loader-modal
       :title="$t('mint-page.loader-modal-title')"
       :description="$t('mint-page.loader-modal-description')"
-      :is-shown="isMintLoaderShown"
+      :is-shown="isLoaderModalShown"
       :load-state="loadState"
       :file-count="certificateList.length"
     />
@@ -188,7 +188,7 @@ import { Log } from '@ethersproject/abstract-provider'
 const { t } = useI18n()
 
 const isCertificatesModalShown = ref(false)
-const isMintLoaderShown = ref(false)
+const isLoaderModalShown = ref(false)
 const isErrorModalShown = ref(false)
 const isSuccessModalShown = ref(false)
 
@@ -302,7 +302,7 @@ const mintCertificates = async (address: string) => {
   const addresses: string[] = []
   const URIs: string[] = []
   try {
-    isMintLoaderShown.value = true
+    isLoaderModalShown.value = true
     let iFilesUpload = false
     for (const item of tableData.value!) {
       const certificateByFileName = certificateList.value.find(
@@ -333,13 +333,13 @@ const mintCertificates = async (address: string) => {
     txHash.value = res.transactionHash
     isSuccessModalShown.value = true
   } catch (error) {
-    isMintLoaderShown.value = false
+    isLoaderModalShown.value = false
     isErrorModalShown.value = true
     loadState.value = 0
     errorMsg.value = t('errors.failed-sent-tx')
     ErrorHandler.process(error)
   } finally {
-    isMintLoaderShown.value = false
+    isLoaderModalShown.value = false
     loadState.value = 0
   }
 }
