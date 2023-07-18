@@ -20,7 +20,7 @@
     <success-modal
       v-model:is-shown="isSuccessModalShown"
       :tx="txHash"
-      @success="mintSuccess"
+      @success="onMintSuccess"
     />
 
     <h2 class="mint-page__title">
@@ -69,7 +69,7 @@
             <p class="mint-page__field-description">
               {{ $t('mint-page.step-1-description') }}
             </p>
-            <div class="mint-page__field-images">
+            <div class="mint-page__field-images-wrp">
               <file-drop-area
                 class="mint-page__select"
                 :key="IMAGE_KEY"
@@ -92,7 +92,7 @@
                     class="mint-page__select-item"
                     :icon="$icons.fileItem"
                     :title="item.title"
-                    :description="preparedSize(item.size)"
+                    :description="fileSizePreparator.format(item.size)"
                     :item="item"
                     @delete-item="removeCertificate"
                   />
@@ -141,9 +141,9 @@
             class="mint-page__select-item"
             :icon="$icons.fileSelect"
             :title="tableFile.title"
-            :description="preparedSize(tableFile.size)"
+            :description="fileSizePreparator.format(tableFile.size)"
             :item="tableFile"
-            @delete-item="removeTableFile"
+            @delete-item="clearTableFile"
           />
         </div>
 
@@ -169,7 +169,7 @@
 <script setup lang="ts">
 import * as XLSX from 'xlsx'
 import { ref } from 'vue'
-import { ErrorHandler } from '@/helpers'
+import { ErrorHandler, fileSizePreparator } from '@/helpers'
 import { FileItemType } from '@/types'
 import { useTokenContact } from '@/composables'
 import { IpfsUtil } from '@/utils'
@@ -184,9 +184,9 @@ import {
 } from '@/common'
 import { useRouter } from 'vue-router'
 import { MintForm } from '@/forms'
-import { DATA_STORAGE_UNITS, ROUTE_NAMES } from '@/enums'
+import { ROUTE_NAMES } from '@/enums'
 import { useI18n } from 'vue-i18n'
-import { Log } from '@ethersproject/abstract-provider'
+
 const { t } = useI18n()
 
 const isCertificatesModalShown = ref(false)
@@ -251,7 +251,6 @@ const getTableDataRows = (worksheet: XLSX.WorkSheet) => {
 
     dataRows.push(row)
   }
-
   return dataRows
 }
 
@@ -292,9 +291,7 @@ const handlerUploadFile = (fileList: File[]) => {
   }
   parseImages(fileList)
 }
-const preparedSize = (size: string) => {
-  return (Number(size) / 1000).toString() + DATA_STORAGE_UNITS.KB
-}
+
 const showModal = () => {
   isCertificatesModalShown.value = true
 }
@@ -305,34 +302,33 @@ const mintCertificates = async (address: string) => {
   const URIs: string[] = []
   try {
     isLoaderModalShown.value = true
-    let iFilesUpload = false
+    let isUploaded = false
     for (const item of tableData.value!) {
       const certificateByFileName = certificateList.value.find(
         certificate => certificate.title === item[2],
       )
+
       if (!certificateByFileName) {
         undefinedNames.push(item)
         continue
       }
+
       addresses.push(item[1])
       loadState.value++
 
       URIs.push(await IpfsUtil.storeFile(certificateByFileName.file!))
-      iFilesUpload = true
+      isUploaded = true
     }
 
-    if (!iFilesUpload) {
+    if (!isUploaded) {
       errorMsg.value = t('errors.files-not-found')
       isErrorModalShown.value = true
       return
     }
 
-    const res = (await useTokenContact(address).mintBatch(
-      addresses,
-      URIs,
-    )) as Log
+    const hash = await useTokenContact(address).useMintBatch(addresses, URIs)
 
-    txHash.value = res.transactionHash
+    txHash.value = hash!
     isSuccessModalShown.value = true
   } catch (error) {
     isLoaderModalShown.value = false
@@ -352,15 +348,15 @@ const removeCertificate = (certificate: FileItemType) => {
   )
 }
 
-const removeTableFile = () => {
+const clearTableFile = () => {
   tableFile.value = {} as FileItemType
 }
 
 const filesIsReady = () => {
-  return !!certificateList.value && !!tableFile.value
+  return Boolean(certificateList.value) && Boolean(tableFile.value)
 }
 
-const mintSuccess = () => {
+const onMintSuccess = () => {
   isSuccessModalShown.value = false
   router.push({ name: ROUTE_NAMES.main })
 }
@@ -368,12 +364,10 @@ const mintSuccess = () => {
 
 <style lang="scss" scoped>
 .mint-page {
-  width: var(--page-large);
+  max-width: var(--page-large);
+  min-width: var(--page-medium);
+  width: 100%;
   margin: 0 auto;
-
-  @include respond-to(large) {
-    width: var(--page-xmedium);
-  }
 }
 
 .mint-page__select {
@@ -390,6 +384,7 @@ const mintSuccess = () => {
   width: toRem(300);
   height: toRem(72);
   margin-right: toRem(10);
+  display: inline-flex;
 
   @include respond-to(large) {
     width: toRem(260);
@@ -421,6 +416,11 @@ const mintSuccess = () => {
   color: var(--text-primary-invert-light);
   border-radius: toRem(20);
   background: var(--info-dark);
+
+  @include respond-to(medium) {
+    width: toRem(25);
+    height: toRem(25);
+  }
 }
 
 .mint-page__field-border {
@@ -463,5 +463,12 @@ const mintSuccess = () => {
 
 .mint-page__field-images {
   display: flex;
+  overflow: hidden;
+}
+
+.mint-page__field-images-wrp {
+  display: flex;
+  list-style: none;
+  white-space: nowrap;
 }
 </style>

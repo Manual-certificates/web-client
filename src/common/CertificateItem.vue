@@ -1,16 +1,19 @@
 <template>
   <div class="certificate-item">
-    <div class="certificate-item__img-wrp">
-      <icon class="certificate-item__img" :name="$icons.fileItem" />
-    </div>
-    <div class="certificate-item__info">
-      <div class="certificate-item__info-title">
-        <h5>
-          {{ certificate.title }}
-        </h5>
-        <p>{{ prepareSize(certificate.size) }}</p>
+    <div class="certificate-item__content">
+      <div class="certificate-item__img-wrp">
+        <icon class="certificate-item__img" :name="$icons.fileItem" />
+      </div>
+      <div class="certificate-item__info">
+        <div class="certificate-item__info-title">
+          <h5>
+            {{ certificate.title }}
+          </h5>
+          <p>{{ fileSizePreparator.format(certificate.size) }}</p>
+        </div>
       </div>
     </div>
+
     <app-button
       :icon-right="$icons.x"
       @click="emit('remove-certificate', certificate)"
@@ -20,7 +23,7 @@
 <script setup lang="ts">
 import { FileItemType } from '@/types'
 import { Icon, AppButton } from '@/common'
-import { DATA_STORAGE_UNITS } from '@/enums'
+import { fileSizePreparator } from '@/helpers'
 
 defineProps<{
   certificate: FileItemType
@@ -29,10 +32,6 @@ defineProps<{
 const emit = defineEmits<{
   (e: 'remove-certificate', certificate: FileItemType): void
 }>()
-
-const prepareSize = (size: string) => {
-  return (Number(size) / 1000).toString() + DATA_STORAGE_UNITS.KB
-}
 </script>
 
 <style scoped lang="scss">
@@ -43,6 +42,10 @@ const prepareSize = (size: string) => {
   justify-content: space-between;
   border-radius: toRem(12);
   margin: toRem(14);
+}
+
+.certificate-item__content {
+  display: flex;
 }
 
 .certificate-item__info {

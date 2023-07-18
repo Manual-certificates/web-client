@@ -19,7 +19,7 @@
         class="error-modal__btn"
         color="error"
         size="large"
-        :text="$t('error-modal.btn')"
+        :text="$t('error-modal.btn-text')"
         @click="tryAgain"
       />
     </div>

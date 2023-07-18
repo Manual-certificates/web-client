@@ -103,5 +103,9 @@
   "app-navbar": {
     "metamask-ico-alt": "Metamask ico",
     "metamask-connect" : "Connect"
+  },
+  "error-modal": {
+    "title": "Error",
+    "btn-text": "Try again"
   }
 }

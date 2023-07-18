@@ -107,10 +107,10 @@ const dragFile = (e: DragEvent) => {
 
 .file-drop-area__label {
   position: absolute;
-  top: 0;
   width: 100%;
   height: 100%;
   left: 0;
+  top: 0;
 }
 
 .file-drop-area__text {

@@ -29,7 +29,6 @@ const connect = async () => {
 
 <style lang="scss" scoped>
 .app-navbar {
-  width: 100%;
   background: var(--background-primary-main);
   border-bottom: var(--border-primary-main);
   box-shadow: 0 toRem(4) toRem(16) rgba(var(--black-rgb), 0.06);
@@ -43,18 +42,7 @@ const connect = async () => {
   justify-content: space-between;
   padding: toRem(12) var(--app-padding-right) toRem(12) var(--app-padding-left);
   max-width: var(--page-large);
-
-  @include respond-to(xmedium) {
-    width: toRem(1280);
-  }
-
-  @include respond-to(medium) {
-    width: toRem(1024);
-  }
-
-  @include respond-to(tablet) {
-    flex-wrap: wrap;
-  }
+  width: 100%;
 }
 
 .app-navbar__container {
@@ -63,7 +51,6 @@ const connect = async () => {
   justify-content: space-between;
   padding: toRem(24) var(--app-padding-right) toRem(24) var(--app-padding-left);
   border-bottom: var(--border-primary-main);
-  width: 100%;
 }
 
 .app-navbar__logo {

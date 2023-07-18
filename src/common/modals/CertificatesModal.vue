@@ -130,29 +130,27 @@ const isValidatedCertificatesCount = computed(() => {
   background: var(--background-primary-main);
   padding: toRem(24);
   border-radius: toRem(8);
-  width: toRem(652);
-  height: toRem(752);
+  min-width: toRem(652); // more adaptive
+  min-height: toRem(752);
 }
 
 .certificates-modal__title {
   text-align: center;
-  width: 100%;
 }
 
 .certificates-modal__header {
-  display: grid;
   justify-content: center;
   align-items: flex-start;
   margin-bottom: toRem(32);
 }
 
 .certificates-modal__search {
-  width: toRem(580);
+  max-width: toRem(580);
   margin: auto;
 }
 
 .certificates-modal__header-title {
-  width: toRem(600);
+  max-width: toRem(600);
   text-align: center;
 }
 
@@ -179,6 +177,7 @@ const isValidatedCertificatesCount = computed(() => {
 }
 
 .certificates-modal__close-btn {
-  width: toRem(580);
+  max-width: toRem(580);
+  width: 100%;
 }
 </style>

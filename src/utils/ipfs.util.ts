@@ -10,7 +10,6 @@ export class IpfsUtil {
     const files: File[] = []
     files.push(file)
     const client = IpfsUtil.makeStorageClient()
-    const cid = await client.put(files)
-    return cid
+    return await client.put(files)
   }
 }

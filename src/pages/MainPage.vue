@@ -49,7 +49,8 @@ const connect = async () => {
 .main-page__info {
   text-align: center;
   margin: 0 auto toRem(25) auto;
-  width: toRem(426);
+  max-width: toRem(426);
+  width: 100%;
 }
 
 .main-page__info-title {
@@ -65,10 +66,12 @@ const connect = async () => {
 .main-page__banner {
   margin: auto;
   min-height: toRem(300);
-  width: toRem(426);
+  max-width: toRem(426);
+  min-width: toRem(350);
+  width: 100%;
 
   &--ready {
-    height: toRem(400);
+    min-height: toRem(400);
   }
 }
 
