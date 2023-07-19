@@ -48,7 +48,7 @@
       </div>
 
       <div class="mint-page__payload">
-        <div class="mint-page__field">
+        <div>
           <first-step
             class="mint-page__field"
             v-model:certificate-list="certificateList"
@@ -56,50 +56,7 @@
             @remove-certificate="removeCertificate"
           />
 
-          <div class="mint-page__field">
-            <div class="mint-page__field-info">
-              <p class="mint-page__field-title">
-                {{ $t('mint-page.step-2-title') }}
-              </p>
-            </div>
-
-            <i18n-t
-              class="mint-page__field-description"
-              keypath="mint-page.step-2-description"
-              tag="p"
-            >
-              <template #link>
-                <a
-                  class="mint-page__field-description-link"
-                  target="_blank"
-                  rel="noopener"
-                  :href="TEMPLATE_LINK"
-                >
-                  {{ $t('mint-page.step-2-description-link') }}
-                </a>
-              </template>
-            </i18n-t>
-
-            <file-drop-area
-              v-if="!tableFile.title"
-              class="mint-page__select"
-              :key="TABLE_KEY"
-              :files-type="TABLE_FORMAT"
-              :icon="$icons.fileSelect"
-              :title="$t('mint-page.select-table-title')"
-              :description="$t('mint-page.select-table-description')"
-              @handle-files-upload="parseTable"
-            />
-            <file-item
-              v-else
-              class="mint-page__select-item"
-              :icon="$icons.fileSelect"
-              :title="tableFile.title"
-              :description="fileSizePreparator.format(tableFile.size)"
-              :item="tableFile"
-              @delete-item="clearTableFile"
-            />
-          </div>
+          <second-step сlass="mint-page__field" @table-data="onTableData" />
 
           <div class="mint-page__field">
             <div class="mint-page__field-info">
@@ -122,9 +79,8 @@
 </template>
 
 <script setup lang="ts">
-import * as XLSX from 'xlsx'
 import { ref } from 'vue'
-import { ErrorHandler, fileSizePreparator } from '@/helpers'
+import { ErrorHandler } from '@/helpers'
 import { FileItemType } from '@/types'
 import { useTokenContact } from '@/composables'
 import { IpfsUtil } from '@/utils'
@@ -133,14 +89,13 @@ import {
   ErrorModal,
   LoaderModal,
   CertificatesModal,
-  FileDropArea,
-  FileItem,
 } from '@/common'
 import { useRouter } from 'vue-router'
 import { MintForm } from '@/forms'
 import { ROUTE_NAMES } from '@/enums'
 import { useI18n } from 'vue-i18n'
 import FirstStep from '@/common/steps/FirstStep.vue'
+import SecondStep from '@/common/steps/SecondStep.vue'
 
 const { t } = useI18n()
 
@@ -151,7 +106,7 @@ const isSuccessModalShown = ref(false)
 
 const tableData = ref<string[][]>([])
 const tableFile = ref<FileItemType>({} as FileItemType)
-const certificateList = ref<FileItemType[]>([]) //todo reactive
+const certificateList = ref<FileItemType[]>([])
 const loadState = ref(0)
 const txHash = ref('')
 
@@ -159,53 +114,7 @@ const router = useRouter()
 const errorMsg = ref('')
 
 const MAX_CERTIFICATES_COUNT = 100
-const TABLE_FORMAT =
-  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
 
-const TABLE_KEY = 'tableKey'
-const TEMPLATE_LINK =
-  'https://docs.google.com/spreadsheets/d/1ceqqJimxOKcfsYC9RFrYGLUnVnfet2bgNUBmLOGQR34'
-
-const parseTable = (files: File[]) => {
-  const reader = new FileReader()
-  const file = files[0]
-  reader.onload = e => {
-    const fileData = new Uint8Array(e.target?.result as ArrayBuffer)
-    const workbook = XLSX.read(fileData, { type: 'array' })
-    const sheetName = workbook.SheetNames[0]
-    const worksheet = workbook.Sheets[sheetName]
-    tableData.value = getTableDataRows(worksheet)
-    tableFile.value = {
-      title: file.name,
-      size: file.size.toString(),
-      file: file,
-      content: '',
-    }
-  }
-  reader.readAsArrayBuffer(file)
-}
-
-const getTableDataRows = (worksheet: XLSX.WorkSheet) => {
-  const dataRows: string[][] = []
-  const range = XLSX.utils.decode_range(worksheet['!ref'] as string)
-  const rowStart = range.s.r + 1
-  const rowEnd = range.e.r
-
-  for (let i = rowStart; i <= rowEnd; i++) {
-    const row: string[] = []
-    const columnStart = range.s.c
-    const columnEnd = range.e.c
-
-    for (let j = columnStart; j <= columnEnd; j++) {
-      const cellAddress = XLSX.utils.encode_cell({ r: i, c: j })
-      const cell = worksheet[cellAddress]
-      row.push(cell ? cell.v.toString() : '')
-    }
-
-    dataRows.push(row)
-  }
-  return dataRows
-}
 const mintCertificates = async (address: string) => {
   try {
     isLoaderModalShown.value = true
@@ -265,10 +174,6 @@ const removeCertificate = (certificate: FileItemType) => {
   )
 }
 
-const clearTableFile = () => {
-  tableFile.value = {} as FileItemType
-}
-
 const filesIsReady = () => {
   return Boolean(certificateList.value) && Boolean(tableFile.value)
 }
@@ -276,6 +181,11 @@ const filesIsReady = () => {
 const onMintSuccess = () => {
   isSuccessModalShown.value = false
   router.push({ name: ROUTE_NAMES.main })
+}
+
+const onTableData = (data: string[][], file: FileItemType) => {
+  tableFile.value = file
+  tableData.value = data
 }
 </script>
 
@@ -288,7 +198,8 @@ const onMintSuccess = () => {
 }
 
 .mint-page__select {
-  width: toRem(300);
+  max-width: toRem(300);
+  width: 100%;
   height: toRem(72);
   margin-right: toRem(15);
 
@@ -298,7 +209,8 @@ const onMintSuccess = () => {
 }
 
 .mint-page__select-item {
-  width: toRem(300);
+  max-width: toRem(300);
+  width: 100%;
   height: toRem(72);
   margin-right: toRem(10);
   display: inline-flex;
@@ -376,16 +288,5 @@ const onMintSuccess = () => {
   color: var(--text-primary-light);
   margin-bottom: toRem(10);
   line-height: 1.5;
-}
-
-.mint-page__field-images {
-  display: flex;
-  overflow: hidden;
-}
-
-.mint-page__field-images-wrp {
-  display: flex;
-  list-style: none;
-  white-space: nowrap;
 }
 </style>

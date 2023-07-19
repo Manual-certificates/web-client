@@ -16,35 +16,33 @@
         @click="emit('show-certificates-modal', true)"
       />
     </div>
-    <div>
-      <p class="first-step__field-description">
-        {{ $t('mint-page.step-1-description') }}
-      </p>
-      <div class="first-step__field-images-wrp">
-        <file-drop-area
-          class="first-step__select"
-          :key="IMAGE_KEY"
-          :files-type="IMAGE_FORMAT"
-          :icon="$icons.template"
-          :is-disabled="certificateList.length >= MAX_CERTIFICATES_COUNT"
-          :title="$t('mint-page.select-images-title')"
-          :description="$t('mint-page.select-images-description')"
-          @handle-files-upload="parseImages"
-        />
-        <div v-if="certificateList.length" class="first-step__field-images">
-          <div
-            v-for="item in certificateList.slice(0, CERTIFICATES_ON_PAGE)"
-            :key="item.title"
-          >
-            <file-item
-              class="first-step__select-item"
-              :icon="$icons.fileItem"
-              :title="item.title"
-              :description="fileSizePreparator.format(item.size)"
-              :item="item"
-              @delete-item="removeCertificate"
-            />
-          </div>
+    <p class="first-step__field-description">
+      {{ $t('mint-page.step-1-description') }}
+    </p>
+    <div class="first-step__field-images-wrp">
+      <file-drop-area
+        class="first-step__select"
+        :key="IMAGE_KEY"
+        :files-type="IMAGE_FORMAT"
+        :icon="$icons.template"
+        :is-disabled="certificateList.length >= MAX_CERTIFICATES_COUNT"
+        :title="$t('mint-page.select-images-title')"
+        :description="$t('mint-page.select-images-description')"
+        @handle-files-upload="parseImages"
+      />
+      <div v-if="certificateList.length" class="first-step__field-images">
+        <div
+          v-for="item in certificateList.slice(0, CERTIFICATES_ON_PAGE)"
+          :key="item.title"
+        >
+          <file-item
+            class="first-step__select-item"
+            :icon="$icons.fileItem"
+            :title="item.title"
+            :description="fileSizePreparator.format(item.size)"
+            :item="item"
+            @delete-item="removeCertificate"
+          />
         </div>
       </div>
     </div>
@@ -122,6 +120,10 @@ watch(
 </script>
 
 <style scoped lang="scss">
+.first-step {
+  display: block;
+}
+
 .first-step__select {
   width: toRem(300);
   height: toRem(72);
@@ -141,12 +143,6 @@ watch(
   @include respond-to(large) {
     width: toRem(260);
   }
-}
-
-.first-step__field {
-  text-align: center;
-  row-gap: toRem(8);
-  height: toRem(220);
 }
 
 .first-step__field-number {
