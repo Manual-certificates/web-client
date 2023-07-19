@@ -15,7 +15,7 @@
                 $t('certificates-modal.count', {
                   start: (pageCount * CERTIFICATES_ON_PAGE).toString(),
                   end: ((pageCount + 1) * CERTIFICATES_ON_PAGE).toString(),
-                  number: certificatesListBuffer.length.toString(),
+                  number: certificateList.length.toString(),
                 })
               }}
             </p>
@@ -69,11 +69,10 @@ import { useSearchInTheList } from '@/helpers/certificate-list.helpers'
 
 const searchData = ref('')
 const pageCount = ref(0)
-const certificatesListBuffer = ref<FileItemType[]>([])
 
 const CERTIFICATES_ON_PAGE = 5
 
-withDefaults(
+const props = withDefaults(
   defineProps<{
     isShown: boolean
     certificateList: FileItemType[]
@@ -97,8 +96,7 @@ const removeItem = (certificate: FileItemType) => {
 
 const isValidatedCertificatesCount = computed(() => {
   return (
-    (pageCount.value + 1) * CERTIFICATES_ON_PAGE >=
-    certificatesListBuffer.value.length
+    (pageCount.value + 1) * CERTIFICATES_ON_PAGE >= props.certificateList.length
   )
 })
 </script>

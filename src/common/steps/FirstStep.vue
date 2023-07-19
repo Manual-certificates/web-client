@@ -1,12 +1,12 @@
 <template>
-  <div>
-    <div class="mint-page__field-info">
-      <p class="mint-page__field-title">
+  <div class="first-step">
+    <div class="first-step__field-info">
+      <p class="irst-step__field-title">
         {{ $t('mint-page.step-1-title') }}
       </p>
 
       <app-button
-        class="mint_page__certificate-count"
+        class="first-step__certificate-count"
         color="info"
         :text="
           $t('mint-page.see-all', {
@@ -17,12 +17,12 @@
       />
     </div>
     <div>
-      <p class="mint-page__field-description">
+      <p class="first-step__field-description">
         {{ $t('mint-page.step-1-description') }}
       </p>
-      <div class="mint-page__field-images-wrp">
+      <div class="first-step__field-images-wrp">
         <file-drop-area
-          class="mint-page__select"
+          class="first-step__select"
           :key="IMAGE_KEY"
           :files-type="IMAGE_FORMAT"
           :icon="$icons.template"
@@ -31,13 +31,13 @@
           :description="$t('mint-page.select-images-description')"
           @handle-files-upload="parseImages"
         />
-        <div v-if="certificateList.length" class="mint-page__field-images">
+        <div v-if="certificateList.length" class="first-step__field-images">
           <div
             v-for="item in certificateList.slice(0, CERTIFICATES_ON_PAGE)"
             :key="item.title"
           >
             <file-item
-              class="mint-page__select-item"
+              class="first-step__select-item"
               :icon="$icons.fileItem"
               :title="item.title"
               :description="fileSizePreparator.format(item.size)"
@@ -57,7 +57,7 @@ import { FileDropArea, FileItem, AppButton } from '@/common'
 import { ErrorHandler, fileSizePreparator } from '@/helpers'
 import { FileItemType } from '@/types'
 import { useI18n } from 'vue-i18n'
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 const { t } = useI18n()
 
 const IMAGE_FORMAT = 'image/*'
@@ -67,13 +67,14 @@ const MAX_CERTIFICATES_COUNT = 100
 
 const certificateList = ref<FileItemType[]>([])
 
-defineProps<{
+const props = defineProps<{
   certificateList: FileItemType[]
 }>()
 
 const emit = defineEmits<{
   (e: 'remove-certificate', v: FileItemType): void
   (e: 'show-certificates-modal', v: boolean): void
+  (e: 'update:certificate-list', v: FileItemType[]): void
 }>()
 
 const removeCertificate = (certificate: FileItemType) => {
@@ -92,6 +93,7 @@ const parseImages = (fileList: File[]) => {
       ErrorHandler.process(t('mint-page.error-empty-file'))
       return
     }
+
     const reader = new FileReader()
     reader.readAsDataURL(file)
     reader.onload = function () {
@@ -108,11 +110,19 @@ const parseImages = (fileList: File[]) => {
       ErrorHandler.process(error)
     }
   }
+  emit('update:certificate-list', certificateList.value)
 }
+
+watch(
+  () => props.certificateList,
+  newValue => {
+    certificateList.value = newValue
+  },
+)
 </script>
 
 <style scoped lang="scss">
-.mint-page__select {
+.first-step__select {
   width: toRem(300);
   height: toRem(72);
   margin-right: toRem(15);
@@ -122,7 +132,7 @@ const parseImages = (fileList: File[]) => {
   }
 }
 
-.mint-page__select-item {
+.first-step__select-item {
   width: toRem(300);
   height: toRem(72);
   margin-right: toRem(10);
@@ -133,26 +143,13 @@ const parseImages = (fileList: File[]) => {
   }
 }
 
-.mint-page__body {
-  display: flex;
-}
-
-.mint-page__title {
-  margin-bottom: toRem(30);
-}
-
-.mint-page__payload {
-  margin-left: toRem(20);
-  width: 100%;
-}
-
-.mint-page__field {
+.first-step__field {
   text-align: center;
   row-gap: toRem(8);
   height: toRem(220);
 }
 
-.mint-page__field-number {
+.first-step__field-number {
   width: toRem(30);
   height: toRem(30);
   color: var(--text-primary-invert-light);
@@ -165,36 +162,19 @@ const parseImages = (fileList: File[]) => {
   }
 }
 
-.mint-page__field-border {
-  width: toRem(1);
-  height: 65%;
-  margin: toRem(30) auto;
-  border: toRem(1) solid var(--info-dark);
-}
-
-.mint-page__field-payload {
-  height: toRem(180);
-  margin: toRem(10) 0;
-}
-
-.mint-page__field-title {
+.first-step__field-title {
   display: flex;
   text-align: left;
 }
 
-.mint-page__field-info {
+.first-step__field-info {
   display: flex;
   justify-content: space-between;
   width: 100%;
   margin-bottom: toRem(20);
 }
 
-.mint-page__field-description-link {
-  color: var(--info-dark);
-  font-size: toRem(14);
-}
-
-.mint-page__field-description {
+.first-step__field-description {
   text-align: left;
   max-width: toRem(350);
   font-size: toRem(14);
@@ -203,12 +183,12 @@ const parseImages = (fileList: File[]) => {
   line-height: 1.5;
 }
 
-.mint-page__field-images {
+.first-step__field-images {
   display: flex;
   overflow: hidden;
 }
 
-.mint-page__field-images-wrp {
+.first-step__field-images-wrp {
   display: flex;
   list-style: none;
   white-space: nowrap;

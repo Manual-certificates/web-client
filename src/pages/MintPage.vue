@@ -51,7 +51,9 @@
         <div class="mint-page__field">
           <first-step
             class="mint-page__field"
+            v-model:certificate-list="certificateList"
             @show-certificates-modal="isCertificatesModalShown = true"
+            @remove-certificate="removeCertificate"
           />
 
           <div class="mint-page__field">
