@@ -276,11 +276,6 @@ const onTableData = (data: string[][], file: FileItemType) => {
   margin-bottom: toRem(20);
 }
 
-.mint-page__field-description-link {
-  color: var(--info-dark);
-  font-size: toRem(14);
-}
-
 .mint-page__field-description {
   text-align: left;
   max-width: toRem(350);

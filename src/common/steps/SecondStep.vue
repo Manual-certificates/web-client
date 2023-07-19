@@ -155,11 +155,6 @@ const clearTableFile = () => {
   }
 }
 
-.second-step__field-payload {
-  height: toRem(180);
-  margin: toRem(10) 0;
-}
-
 .second-step__field-title {
   display: flex;
   text-align: left;
