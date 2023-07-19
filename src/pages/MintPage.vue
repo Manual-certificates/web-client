@@ -62,7 +62,7 @@
                   number: certificateList.length.toString(),
                 })
               "
-              @click="showModal"
+              @click="isCertificatesModalShown = true"
             />
           </div>
           <div>
@@ -78,7 +78,7 @@
                 :is-disabled="certificateList.length >= MAX_CERTIFICATES_COUNT"
                 :title="$t('mint-page.select-images-title')"
                 :description="$t('mint-page.select-images-description')"
-                @handle-files-upload="handlerUploadFile"
+                @handle-files-upload="handleUploadFile"
               />
               <div
                 v-if="certificateList.length"
@@ -134,7 +134,7 @@
             :icon="$icons.fileSelect"
             :title="$t('mint-page.select-table-title')"
             :description="$t('mint-page.select-table-description')"
-            @handle-files-upload="handlerUploadFile"
+            @handle-files-upload="handleUploadFile"
           />
           <file-item
             v-else
@@ -194,7 +194,7 @@ const isLoaderModalShown = ref(false)
 const isErrorModalShown = ref(false)
 const isSuccessModalShown = ref(false)
 
-const tableData = ref<string[][]>()
+const tableData = ref<string[][]>([])
 const tableFile = ref<FileItemType>({} as FileItemType)
 const certificateList = ref<FileItemType[]>([])
 const loadState = ref(0)
@@ -284,7 +284,7 @@ const parseImages = (fileList: File[]) => {
   }
 }
 
-const handlerUploadFile = (fileList: File[]) => {
+const handleUploadFile = (fileList: File[]) => {
   if (fileList[0].type === TABLE_FORMAT) {
     parseTable(fileList)
     return
@@ -292,52 +292,57 @@ const handlerUploadFile = (fileList: File[]) => {
   parseImages(fileList)
 }
 
-const showModal = () => {
-  isCertificatesModalShown.value = true
-}
-
 const mintCertificates = async (address: string) => {
-  const undefinedNames = []
-  const addresses: string[] = []
-  const URIs: string[] = []
   try {
     isLoaderModalShown.value = true
-    let isUploaded = false
-    for (const item of tableData.value!) {
-      const certificateByFileName = certificateList.value.find(
-        certificate => certificate.title === item[2],
-      )
 
-      if (!certificateByFileName) {
-        undefinedNames.push(item)
-        continue
-      }
+    const { addresses, URIs } = await sendToIPFS()
+    const hash = await useTokenContact(address).useMintBatch(addresses, URIs)
 
-      addresses.push(item[1])
-      loadState.value++
-
-      URIs.push(await IpfsUtil.storeFile(certificateByFileName.file!))
-      isUploaded = true
-    }
-
-    if (!isUploaded) {
-      errorMsg.value = t('errors.files-not-found')
-      isErrorModalShown.value = true
+    if (!hash) {
+      ErrorHandler.process(t('errors.failed-sent-tx'))
       return
     }
 
-    const hash = await useTokenContact(address).useMintBatch(addresses, URIs)
-
-    txHash.value = hash!
+    txHash.value = hash
     isSuccessModalShown.value = true
   } catch (error) {
     isErrorModalShown.value = true
     errorMsg.value = t('errors.failed-sent-tx')
-    ErrorHandler.process(error)
   }
 
   isLoaderModalShown.value = false
   loadState.value = 0
+}
+
+const sendToIPFS = async () => {
+  const undefinedNames = []
+  const addresses: string[] = []
+  const URIs: string[] = []
+  for (const item of tableData.value) {
+    const certificateByFileName = certificateList.value.find(
+      certificate => certificate.title === item[2],
+    )
+
+    if (!certificateByFileName) {
+      undefinedNames.push(item)
+      continue
+    }
+
+    addresses.push(item[1])
+    loadState.value++
+    if (!certificateByFileName.file) {
+      continue
+    }
+
+    URIs.push(await IpfsUtil.storeFile(certificateByFileName.file))
+  }
+
+  return {
+    undefinedNames,
+    addresses,
+    URIs,
+  }
 }
 
 const removeCertificate = (certificate: FileItemType) => {
@@ -452,7 +457,7 @@ const onMintSuccess = () => {
 
 .mint-page__field-description {
   text-align: left;
-  max-width: 30%;
+  max-width: toRem(350);
   font-size: toRem(14);
   color: var(--text-primary-light);
   margin-bottom: toRem(10);
