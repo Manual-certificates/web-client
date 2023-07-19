@@ -62,7 +62,6 @@
 
 <script lang="ts" setup>
 import { AppButton, Modal, CertificatesItemList } from '@/common'
-
 import { computed, ref } from 'vue'
 import { FileItemType } from '@/types'
 import { InputField } from '@/fields'

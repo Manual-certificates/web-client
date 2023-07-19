@@ -49,117 +49,70 @@
 
       <div class="mint-page__payload">
         <div class="mint-page__field">
-          <div class="mint-page__field-info">
-            <p class="mint-page__field-title">
-              {{ $t('mint-page.step-1-title') }}
-            </p>
+          <first-step
+            class="mint-page__field"
+            @show-certificates-modal="isCertificatesModalShown = true"
+          />
 
-            <app-button
-              class="mint_page__certificate-count"
-              color="info"
-              :text="
-                $t('mint-page.see-all', {
-                  number: certificateList.length.toString(),
-                })
-              "
-              @click="isCertificatesModalShown = true"
+          <div class="mint-page__field">
+            <div class="mint-page__field-info">
+              <p class="mint-page__field-title">
+                {{ $t('mint-page.step-2-title') }}
+              </p>
+            </div>
+
+            <i18n-t
+              class="mint-page__field-description"
+              keypath="mint-page.step-2-description"
+              tag="p"
+            >
+              <template #link>
+                <a
+                  class="mint-page__field-description-link"
+                  target="_blank"
+                  rel="noopener"
+                  :href="TEMPLATE_LINK"
+                >
+                  {{ $t('mint-page.step-2-description-link') }}
+                </a>
+              </template>
+            </i18n-t>
+
+            <file-drop-area
+              v-if="!tableFile.title"
+              class="mint-page__select"
+              :key="TABLE_KEY"
+              :files-type="TABLE_FORMAT"
+              :icon="$icons.fileSelect"
+              :title="$t('mint-page.select-table-title')"
+              :description="$t('mint-page.select-table-description')"
+              @handle-files-upload="parseTable"
+            />
+            <file-item
+              v-else
+              class="mint-page__select-item"
+              :icon="$icons.fileSelect"
+              :title="tableFile.title"
+              :description="fileSizePreparator.format(tableFile.size)"
+              :item="tableFile"
+              @delete-item="clearTableFile"
             />
           </div>
-          <div>
-            <p class="mint-page__field-description">
-              {{ $t('mint-page.step-1-description') }}
-            </p>
-            <div class="mint-page__field-images-wrp">
-              <file-drop-area
-                class="mint-page__select"
-                :key="IMAGE_KEY"
-                :files-type="IMAGE_FORMAT"
-                :icon="$icons.template"
-                :is-disabled="certificateList.length >= MAX_CERTIFICATES_COUNT"
-                :title="$t('mint-page.select-images-title')"
-                :description="$t('mint-page.select-images-description')"
-                @handle-files-upload="handleUploadFile"
-              />
-              <div
-                v-if="certificateList.length"
-                class="mint-page__field-images"
-              >
-                <div
-                  v-for="item in certificateList.slice(0, CERTIFICATES_ON_PAGE)"
-                  :key="item.title"
-                >
-                  <file-item
-                    class="mint-page__select-item"
-                    :icon="$icons.fileItem"
-                    :title="item.title"
-                    :description="fileSizePreparator.format(item.size)"
-                    :item="item"
-                    @delete-item="removeCertificate"
-                  />
-                </div>
-              </div>
+
+          <div class="mint-page__field">
+            <div class="mint-page__field-info">
+              <p class="mint-page__field-title">
+                {{ $t('mint-page.step-3-title') }}
+              </p>
             </div>
-          </div>
-        </div>
-
-        <div class="mint-page__field">
-          <div class="mint-page__field-info">
-            <p class="mint-page__field-title">
-              {{ $t('mint-page.step-2-title') }}
+            <p class="mint-page__field-description">
+              {{ $t('mint-page.step-3-description') }}
             </p>
+            <mint-form
+              :is-file-uploaded="filesIsReady()"
+              @mint="mintCertificates"
+            />
           </div>
-
-          <i18n-t
-            class="mint-page__field-description"
-            keypath="mint-page.step-2-description"
-            tag="p"
-          >
-            <template #link>
-              <a
-                class="mint-page__field-description-link"
-                target="_blank"
-                rel="noopener"
-                :href="TEMPLATE_LINK"
-              >
-                {{ $t('mint-page.step-2-description-link') }}
-              </a>
-            </template>
-          </i18n-t>
-
-          <file-drop-area
-            v-if="!tableFile.title"
-            class="mint-page__select"
-            :key="TABLE_KEY"
-            :files-type="TABLE_FORMAT"
-            :icon="$icons.fileSelect"
-            :title="$t('mint-page.select-table-title')"
-            :description="$t('mint-page.select-table-description')"
-            @handle-files-upload="handleUploadFile"
-          />
-          <file-item
-            v-else
-            class="mint-page__select-item"
-            :icon="$icons.fileSelect"
-            :title="tableFile.title"
-            :description="fileSizePreparator.format(tableFile.size)"
-            :item="tableFile"
-            @delete-item="clearTableFile"
-          />
-        </div>
-
-        <div class="mint-page__field">
-          <div class="mint-page__field-info">
-            <p class="mint-page__field-title">
-              {{ $t('mint-page.step-3-title') }}
-            </p>
-          </div>
-          <p class="mint-page__field-description">
-            {{ $t('mint-page.step-3-description') }}
-          </p>
-          <mint-form
-            :is-file-uploaded="filesIsReady()"
-            @mint="mintCertificates"
-          />
         </div>
       </div>
     </div>
@@ -178,7 +131,6 @@ import {
   ErrorModal,
   LoaderModal,
   CertificatesModal,
-  AppButton,
   FileDropArea,
   FileItem,
 } from '@/common'
@@ -186,6 +138,7 @@ import { useRouter } from 'vue-router'
 import { MintForm } from '@/forms'
 import { ROUTE_NAMES } from '@/enums'
 import { useI18n } from 'vue-i18n'
+import FirstStep from '@/common/steps/FirstStep.vue'
 
 const { t } = useI18n()
 
@@ -196,7 +149,7 @@ const isSuccessModalShown = ref(false)
 
 const tableData = ref<string[][]>([])
 const tableFile = ref<FileItemType>({} as FileItemType)
-const certificateList = ref<FileItemType[]>([])
+const certificateList = ref<FileItemType[]>([]) //todo reactive
 const loadState = ref(0)
 const txHash = ref('')
 
@@ -206,12 +159,10 @@ const errorMsg = ref('')
 const MAX_CERTIFICATES_COUNT = 100
 const TABLE_FORMAT =
   'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-const IMAGE_FORMAT = 'image/*'
-const IMAGE_KEY = 'imageKey'
+
 const TABLE_KEY = 'tableKey'
 const TEMPLATE_LINK =
   'https://docs.google.com/spreadsheets/d/1ceqqJimxOKcfsYC9RFrYGLUnVnfet2bgNUBmLOGQR34'
-const CERTIFICATES_ON_PAGE = 3
 
 const parseTable = (files: File[]) => {
   const reader = new FileReader()
@@ -253,45 +204,6 @@ const getTableDataRows = (worksheet: XLSX.WorkSheet) => {
   }
   return dataRows
 }
-
-const parseImages = (fileList: File[]) => {
-  if (!fileList) {
-    ErrorHandler.process(t('mint-page.error-empty-list'))
-    return
-  }
-  for (let i = 0; i < fileList.length; i++) {
-    const file = fileList[i]
-
-    if (!file) {
-      ErrorHandler.process(t('mint-page.error-empty-file'))
-      return
-    }
-    const reader = new FileReader()
-    reader.readAsDataURL(file)
-    reader.onload = function () {
-      const certificate: FileItemType = {
-        title: file.name,
-        size: file.size.toString(),
-        file: file,
-        content: reader.result as string,
-      }
-
-      certificateList.value.push(certificate)
-    }
-    reader.onerror = function (error) {
-      ErrorHandler.process(error)
-    }
-  }
-}
-
-const handleUploadFile = (fileList: File[]) => {
-  if (fileList[0].type === TABLE_FORMAT) {
-    parseTable(fileList)
-    return
-  }
-  parseImages(fileList)
-}
-
 const mintCertificates = async (address: string) => {
   try {
     isLoaderModalShown.value = true
