@@ -331,15 +331,13 @@ const mintCertificates = async (address: string) => {
     txHash.value = hash!
     isSuccessModalShown.value = true
   } catch (error) {
-    isLoaderModalShown.value = false
     isErrorModalShown.value = true
-    loadState.value = 0
     errorMsg.value = t('errors.failed-sent-tx')
     ErrorHandler.process(error)
-  } finally {
-    isLoaderModalShown.value = false
-    loadState.value = 0
   }
+
+  isLoaderModalShown.value = false
+  loadState.value = 0
 }
 
 const removeCertificate = (certificate: FileItemType) => {

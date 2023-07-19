@@ -38,13 +38,12 @@
             v-model="searchData"
             class="certificates-modal__search-input"
             :placeholder="$t('certificates-modal.search-placeholder')"
-            @input="search"
           />
         </div>
 
         <certificates-item-list
           v-model:page-count="pageCount"
-          :certificate-list="prepareList()"
+          :certificate-list="useSearchInTheList(certificateList, searchData)"
           @remove-certificate="removeItem"
         />
 
@@ -67,6 +66,7 @@ import { AppButton, Modal, CertificatesItemList } from '@/common'
 import { computed, ref } from 'vue'
 import { FileItemType } from '@/types'
 import { InputField } from '@/fields'
+import { useSearchInTheList } from '@/helpers/certificate-list.helpers'
 
 const searchData = ref('')
 const pageCount = ref(0)
@@ -74,7 +74,7 @@ const certificatesListBuffer = ref<FileItemType[]>([])
 
 const CERTIFICATES_ON_PAGE = 5
 
-const props = withDefaults(
+withDefaults(
   defineProps<{
     isShown: boolean
     certificateList: FileItemType[]
@@ -92,29 +92,8 @@ const emit = defineEmits<{
   (e: 'remove-certificate', v: FileItemType): void
 }>()
 
-const search = () => {
-  if (!searchData.value.length && certificatesListBuffer.value) {
-    certificatesListBuffer.value = props.certificateList
-    return
-  }
-  const searchQuery = searchData.value.toLowerCase()
-  certificatesListBuffer.value = certificatesListBuffer.value.filter(
-    certificate => {
-      const title = certificate.title.toLowerCase()
-      return title.includes(searchQuery)
-    },
-  )
-}
-
 const removeItem = (certificate: FileItemType) => {
   emit('remove-certificate', certificate)
-}
-
-const prepareList = () => {
-  if (!searchData.value.length && certificatesListBuffer.value) {
-    certificatesListBuffer.value = props.certificateList
-  }
-  return certificatesListBuffer.value
 }
 
 const isValidatedCertificatesCount = computed(() => {
