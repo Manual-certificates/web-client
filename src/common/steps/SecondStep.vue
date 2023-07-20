@@ -133,7 +133,7 @@ const clearTableFile = () => {
   width: 100%;
   height: 100%;
   margin-right: toRem(10);
-  display: inline-flex;
+  display: flex;
 
   @include respond-to(large) {
     max-width: toRem(260);

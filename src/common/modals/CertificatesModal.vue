@@ -27,7 +27,7 @@
             />
             <app-button
               icon-left="chevron-right"
-              :disabled="isValidatedCertificatesCount"
+              :disabled="certificatesCountVerifier"
               @click="pageCount++"
             />
           </div>
@@ -98,7 +98,7 @@ const removeItem = (certificate: FileItemType) => {
   emit('remove-certificate', certificate)
 }
 
-const isValidatedCertificatesCount = computed(() => {
+const certificatesCountVerifier = computed(() => {
   return (
     (pageCount.value + 1) * CERTIFICATES_ON_PAGE >= props.certificateList.length
   )

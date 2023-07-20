@@ -3,7 +3,7 @@ import { config } from '@config'
 
 export class IpfsUtil {
   private static makeStorageClient() {
-    return new Web3Storage({ token: config.APP_IPFS_KEY })
+    return new Web3Storage({ token: config.IPFS_KEY })
   }
 
   static async storeFile(file: File) {

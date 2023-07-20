@@ -20,7 +20,7 @@
     <success-modal
       v-model:is-shown="isSuccessModalShown"
       :tx="txHash"
-      @success="onMintSuccess"
+      @success="router.push({ name: ROUTE_NAMES.main })"
     />
 
     <h2 class="mint-page__title">
@@ -58,6 +58,7 @@
         <second-step class="mint-page__field" @table-data="onTableData" />
 
         <third-step
+          v-model:is-loader-modal-shown="isLoaderModalShown"
           :table-data="tableData"
           :certificate-list="certificateList"
           :is-ready="filesIsReady()"
@@ -115,9 +116,9 @@ const filesIsReady = () => {
   return Boolean(certificateList.value) && Boolean(tableFile.value)
 }
 
-const onMintSuccess = () => {
-  isSuccessModalShown.value = false
-  router.push({ name: ROUTE_NAMES.main })
+const onMintSuccess = (hash: string) => {
+  txHash.value = hash
+  isSuccessModalShown.value = true
 }
 
 const onTableData = (data: string[][], file: FileItemType) => {
@@ -126,7 +127,7 @@ const onTableData = (data: string[][], file: FileItemType) => {
 }
 
 const onError = (msg: string) => {
-  isSuccessModalShown.value = false
+  isLoaderModalShown.value = false
   errorMsg.value = msg
   isErrorModalShown.value = true
 }
