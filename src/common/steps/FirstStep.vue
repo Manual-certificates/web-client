@@ -1,15 +1,15 @@
 <template>
   <div class="first-step">
     <div class="first-step__field-info">
-      <p class="irst-step__field-title">
-        {{ $t('mint-page.step-1-title') }}
+      <p class="first-step__field-title">
+        {{ $t('first-step.title') }}
       </p>
 
       <app-button
         class="first-step__certificate-count"
         color="info"
         :text="
-          $t('mint-page.see-all', {
+          $t('first-step.see-all', {
             number: certificateList.length.toString(),
           })
         "
@@ -17,7 +17,7 @@
       />
     </div>
     <p class="first-step__field-description">
-      {{ $t('mint-page.step-1-description') }}
+      {{ $t('first-step.description') }}
     </p>
     <div class="first-step__field-images-wrp">
       <file-drop-area
@@ -26,8 +26,8 @@
         :files-type="IMAGE_FORMAT"
         :icon="$icons.template"
         :is-disabled="certificateList.length >= MAX_CERTIFICATES_COUNT"
-        :title="$t('mint-page.select-images-title')"
-        :description="$t('mint-page.select-images-description')"
+        :title="$t('first-step.select-images-title')"
+        :description="$t('first-step.select-images-description')"
         @handle-files-upload="parseImages"
       />
       <div v-if="certificateList.length" class="first-step__field-images">
@@ -75,20 +75,27 @@ const emit = defineEmits<{
   (e: 'update:certificate-list', v: FileItemType[]): void
 }>()
 
+watch(
+  () => props.certificateList,
+  newValue => {
+    certificateList.value = newValue
+  },
+)
+
 const removeCertificate = (certificate: FileItemType) => {
   emit('remove-certificate', certificate)
 }
 
 const parseImages = (fileList: File[]) => {
   if (!fileList) {
-    ErrorHandler.process(t('mint-page.error-empty-list'))
+    ErrorHandler.process(t('errors.error-empty-list'))
     return
   }
   for (let i = 0; i < fileList.length; i++) {
     const file = fileList[i]
 
     if (!file) {
-      ErrorHandler.process(t('mint-page.error-empty-file'))
+      ErrorHandler.process(t('errors.error-empty-file'))
       return
     }
 
@@ -110,51 +117,33 @@ const parseImages = (fileList: File[]) => {
   }
   emit('update:certificate-list', certificateList.value)
 }
-
-watch(
-  () => props.certificateList,
-  newValue => {
-    certificateList.value = newValue
-  },
-)
 </script>
 
 <style scoped lang="scss">
-.first-step {
-  display: block;
-}
-
 .first-step__select {
-  width: toRem(300);
-  height: toRem(72);
+  max-width: toRem(300);
+  max-height: toRem(72);
+  width: 100%;
+  height: 100%;
   margin-right: toRem(15);
 
   @include respond-to(large) {
-    width: toRem(250);
+    max-width: toRem(250);
   }
 }
 
 .first-step__select-item {
-  width: toRem(300);
-  height: toRem(72);
+  display: flex;
+  max-width: toRem(300);
+  min-width: toRem(250);
+  max-height: toRem(72);
+  min-height: toRem(50);
   margin-right: toRem(10);
-  display: inline-flex;
+  width: auto;
+  height: 100%;
 
   @include respond-to(large) {
-    width: toRem(260);
-  }
-}
-
-.first-step__field-number {
-  width: toRem(30);
-  height: toRem(30);
-  color: var(--text-primary-invert-light);
-  border-radius: toRem(20);
-  background: var(--info-dark);
-
-  @include respond-to(medium) {
-    width: toRem(25);
-    height: toRem(25);
+    max-width: toRem(260);
   }
 }
 
@@ -166,13 +155,13 @@ watch(
 .first-step__field-info {
   display: flex;
   justify-content: space-between;
-  width: 100%;
   margin-bottom: toRem(20);
 }
 
 .first-step__field-description {
   text-align: left;
   max-width: toRem(350);
+  width: 100%;
   font-size: toRem(14);
   color: var(--text-primary-light);
   margin-bottom: toRem(10);

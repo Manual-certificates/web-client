@@ -34,7 +34,9 @@
     "files-not-found": "Files not found",
     "failed-sent-tx": "Failed to  send  tx",
     "failed-init-contract": "Failed to  init contract: empty address",
-    "failed-init-mint": "Failed to call mint: empty provider"
+    "failed-init-mint": "Failed to call mint: empty provider",
+    "error-empty-list": "empty list",
+    "error-empty-file": "empty file"
   },
   "notification": {
     "default-title-success": "Success",
@@ -62,29 +64,15 @@
   },
   "mint-page": {
     "title":"Issue certificates",
-    "step-1-title": "Upload files",
-    "step-2-title": "Upload the table",
-    "step-3-title": "Enter the contract address",
-    "step-1-description": "Upload files with .jpeg certificates",
-    "step-2-description": "Upload the table with relation between certificates and their recipients. {link}",
-    "step-2-description-link": "You can download table template",
-    "step-3-description": "Enter the course contract address where certificates will be issued",
     "step-1-number": "1",
     "step-2-number": "2",
     "step-3-number": "3",
     "step-3-placeholder": "Address",
-    "select-table-title" : "Drag and drop or Browse file",
-    "select-table-description" : "XLS",
-    "select-images-description": "You can upload up to 100 files",
-    "select-images-title": "Drag and drop or Browse file",
-    "see-all": "See all {number}",
     "loader-modal-title": "Process",
     "loader-modal-description-upload-files": "Uploading files to IPFS",
     "loader-modal-description-mint": "Minting SBTs",
     "loader-modal-description": "Wait until all certificates are created",
-    "address-error-msg": "Not valid address",
-    "error-empty-list": "empty list",
-    "error-empty-file": "empty file"
+    "address-error-msg": "Not valid address"
   },
   "mint-form": {
     "issue-btn": "Issue",
@@ -109,5 +97,23 @@
   "error-modal": {
     "title": "Error",
     "btn-text": "Try again"
+  },
+  "first-step": {
+    "title": "Upload files",
+    "description": "Upload files with .jpeg certificates",
+    "select-images-description": "You can upload up to 100 files",
+    "select-images-title": "Drag and drop or Browse file",
+    "see-all": "See all {number}"
+  },
+  "second-step": {
+    "description": "Upload the table with relation between certificates and their recipients. {link}",
+    "title": "Upload the table",
+    "description-link": "You can download table template",
+    "select-table-title" : "Drag and drop or Browse file",
+    "select-table-description" : "XLS"
+  },
+  "third-step": {
+    "title": "Enter the contract address",
+    "description": "Enter the course contract address where certificates will be issued"
   }
 }

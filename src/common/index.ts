@@ -15,5 +15,6 @@ export { default as FileItem } from '@/common/FileItem.vue'
 export { default as CertificatesItemList } from '@/common/CertificatesItemList.vue'
 export { default as CertificateItem } from '@/common/CertificateItem.vue'
 
+export * from './steps/index'
 export * from './modals'
 export * from './loaders'

@@ -1,8 +1,8 @@
 <template>
   <div class="mint-page">
     <certificates-modal
-      class="mint-page__certificate-modal"
       v-model:is-shown="isCertificatesModalShown"
+      class="mint-page__certificate-modal"
       :certificate-list="certificateList.slice(0, MAX_CERTIFICATES_COUNT)"
       @remove-certificate="removeCertificate"
     />
@@ -48,31 +48,23 @@
       </div>
 
       <div class="mint-page__payload">
-        <div>
-          <first-step
-            class="mint-page__field"
-            v-model:certificate-list="certificateList"
-            @show-certificates-modal="isCertificatesModalShown = true"
-            @remove-certificate="removeCertificate"
-          />
+        <first-step
+          v-model:certificate-list="certificateList"
+          class="mint-page__field"
+          @show-certificates-modal="isCertificatesModalShown = true"
+          @remove-certificate="removeCertificate"
+        />
 
-          <second-step сlass="mint-page__field" @table-data="onTableData" />
+        <second-step class="mint-page__field" @table-data="onTableData" />
 
-          <div class="mint-page__field">
-            <div class="mint-page__field-info">
-              <p class="mint-page__field-title">
-                {{ $t('mint-page.step-3-title') }}
-              </p>
-            </div>
-            <p class="mint-page__field-description">
-              {{ $t('mint-page.step-3-description') }}
-            </p>
-            <mint-form
-              :is-file-uploaded="filesIsReady()"
-              @mint="mintCertificates"
-            />
-          </div>
-        </div>
+        <third-step
+          :table-data="tableData"
+          :certificate-list="certificateList"
+          :is-ready="filesIsReady()"
+          @on-success="onMintSuccess"
+          @on-error="onError"
+          @update-load-state="updateLoadState"
+        />
       </div>
     </div>
   </div>
@@ -80,24 +72,18 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { ErrorHandler } from '@/helpers'
 import { FileItemType } from '@/types'
-import { useTokenContact } from '@/composables'
-import { IpfsUtil } from '@/utils'
 import {
   SuccessModal,
   ErrorModal,
   LoaderModal,
   CertificatesModal,
+  FirstStep,
+  SecondStep,
+  ThirdStep,
 } from '@/common'
 import { useRouter } from 'vue-router'
-import { MintForm } from '@/forms'
 import { ROUTE_NAMES } from '@/enums'
-import { useI18n } from 'vue-i18n'
-import FirstStep from '@/common/steps/FirstStep.vue'
-import SecondStep from '@/common/steps/SecondStep.vue'
-
-const { t } = useI18n()
 
 const isCertificatesModalShown = ref(false)
 const isLoaderModalShown = ref(false)
@@ -115,63 +101,14 @@ const errorMsg = ref('')
 
 const MAX_CERTIFICATES_COUNT = 100
 
-const mintCertificates = async (address: string) => {
-  try {
-    isLoaderModalShown.value = true
-
-    const { addresses, URIs } = await sendToIPFS()
-    const hash = await useTokenContact(address).useMintBatch(addresses, URIs)
-
-    if (!hash) {
-      ErrorHandler.process(t('errors.failed-sent-tx'))
-      return
-    }
-
-    txHash.value = hash
-    isSuccessModalShown.value = true
-  } catch (error) {
-    isErrorModalShown.value = true
-    errorMsg.value = t('errors.failed-sent-tx')
-  }
-
-  isLoaderModalShown.value = false
-  loadState.value = 0
-}
-
-const sendToIPFS = async () => {
-  const undefinedNames = []
-  const addresses: string[] = []
-  const URIs: string[] = []
-  for (const item of tableData.value) {
-    const certificateByFileName = certificateList.value.find(
-      certificate => certificate.title === item[2],
-    )
-
-    if (!certificateByFileName) {
-      undefinedNames.push(item)
-      continue
-    }
-
-    addresses.push(item[1])
-    loadState.value++
-    if (!certificateByFileName.file) {
-      continue
-    }
-
-    URIs.push(await IpfsUtil.storeFile(certificateByFileName.file))
-  }
-
-  return {
-    undefinedNames,
-    addresses,
-    URIs,
-  }
-}
-
 const removeCertificate = (certificate: FileItemType) => {
   certificateList.value = certificateList.value.filter(
     obj => obj.title !== certificate.title,
   )
+}
+
+const updateLoadState = (state: number) => {
+  loadState.value = state
 }
 
 const filesIsReady = () => {
@@ -187,37 +124,20 @@ const onTableData = (data: string[][], file: FileItemType) => {
   tableFile.value = file
   tableData.value = data
 }
+
+const onError = (msg: string) => {
+  isSuccessModalShown.value = false
+  errorMsg.value = msg
+  isErrorModalShown.value = true
+}
 </script>
 
 <style lang="scss" scoped>
 .mint-page {
   max-width: var(--page-large);
-  min-width: var(--page-medium);
+  min-width: var(--page-small);
   width: 100%;
   margin: 0 auto;
-}
-
-.mint-page__select {
-  max-width: toRem(300);
-  width: 100%;
-  height: toRem(72);
-  margin-right: toRem(15);
-
-  @include respond-to(large) {
-    width: toRem(250);
-  }
-}
-
-.mint-page__select-item {
-  max-width: toRem(300);
-  width: 100%;
-  height: toRem(72);
-  margin-right: toRem(10);
-  display: inline-flex;
-
-  @include respond-to(large) {
-    width: toRem(260);
-  }
 }
 
 .mint-page__body {
@@ -236,7 +156,8 @@ const onTableData = (data: string[][], file: FileItemType) => {
 .mint-page__field {
   text-align: center;
   row-gap: toRem(8);
-  height: toRem(220);
+  max-height: toRem(220);
+  height: 100%;
 }
 
 .mint-page__field-number {
@@ -257,31 +178,5 @@ const onTableData = (data: string[][], file: FileItemType) => {
   height: 65%;
   margin: toRem(30) auto;
   border: toRem(1) solid var(--info-dark);
-}
-
-.mint-page__field-payload {
-  height: toRem(180);
-  margin: toRem(10) 0;
-}
-
-.mint-page__field-title {
-  display: flex;
-  text-align: left;
-}
-
-.mint-page__field-info {
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
-  margin-bottom: toRem(20);
-}
-
-.mint-page__field-description {
-  text-align: left;
-  max-width: toRem(350);
-  font-size: toRem(14);
-  color: var(--text-primary-light);
-  margin-bottom: toRem(10);
-  line-height: 1.5;
 }
 </style>

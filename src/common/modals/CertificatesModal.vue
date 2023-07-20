@@ -43,7 +43,7 @@
 
         <certificates-item-list
           v-model:page-count="pageCount"
-          :certificate-list="useSearchInTheList(certificateList, searchData)"
+          :certificate-list="certificateFilter"
           @remove-certificate="removeItem"
         />
 
@@ -89,6 +89,10 @@ const emit = defineEmits<{
   (e: 'update:is-shown', v: boolean): void
   (e: 'remove-certificate', v: FileItemType): void
 }>()
+
+const certificateFilter = computed(() =>
+  useSearchInTheList(props.certificateList, searchData.value),
+)
 
 const removeItem = (certificate: FileItemType) => {
   emit('remove-certificate', certificate)

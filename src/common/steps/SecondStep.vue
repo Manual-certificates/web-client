@@ -1,14 +1,14 @@
 <template>
   <div class="second-step">
-    <div class="second-step_field-info">
+    <div class="second-step__field-info">
       <p class="second-step__field-title">
-        {{ $t('mint-page.step-2-title') }}
+        {{ $t('second-step.title') }}
       </p>
     </div>
 
     <i18n-t
       class="second-step__field-description"
-      keypath="mint-page.step-2-description"
+      keypath="second-step.description"
       tag="p"
     >
       <template #link>
@@ -18,7 +18,7 @@
           rel="noopener"
           :href="TEMPLATE_LINK"
         >
-          {{ $t('mint-page.step-2-description-link') }}
+          {{ $t('second-step.description-link') }}
         </a>
       </template>
     </i18n-t>
@@ -29,8 +29,8 @@
       :key="TABLE_KEY"
       :files-type="TABLE_FORMAT"
       :icon="$icons.fileSelect"
-      :title="$t('mint-page.select-table-title')"
-      :description="$t('mint-page.select-table-description')"
+      :title="$t('second-step.select-table-title')"
+      :description="$t('second-step.select-table-description')"
       @handle-files-upload="parseTable"
     />
     <file-item
@@ -55,16 +55,14 @@ import { FileItemType } from '@/types'
 
 const TABLE_FORMAT =
   'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-
-const TABLE_KEY = 'tableKey'
 const TEMPLATE_LINK =
   'https://docs.google.com/spreadsheets/d/1ceqqJimxOKcfsYC9RFrYGLUnVnfet2bgNUBmLOGQR34'
+const TABLE_KEY = 'tableKey'
 
 const tableData = ref<string[][]>([])
 const tableFile = ref<FileItemType>({} as FileItemType)
 
 const emit = defineEmits<{
-  (e: 'remove-certificate', v: FileItemType): void
   (e: 'table-data', data: string[][], file: FileItemType): void
 }>()
 
@@ -117,41 +115,28 @@ const clearTableFile = () => {
 </script>
 
 <style scoped lang="scss">
-.second-step {
-  display: block;
-}
-
 .second-step__select {
-  width: toRem(300);
-  height: toRem(72);
+  max-width: toRem(300);
+  max-height: toRem(72);
+  width: 100%;
+  height: 100%;
   margin-right: toRem(15);
 
   @include respond-to(large) {
-    width: toRem(250);
+    max-width: toRem(250);
   }
 }
 
 .second-step__select-item {
-  width: toRem(300);
-  height: toRem(72);
+  max-width: toRem(300);
+  max-height: toRem(72);
+  width: 100%;
+  height: 100%;
   margin-right: toRem(10);
-  display: flex;
+  display: inline-flex;
 
   @include respond-to(large) {
-    width: toRem(260);
-  }
-}
-
-.second-step__field-number {
-  width: toRem(30);
-  height: toRem(30);
-  color: var(--text-primary-invert-light);
-  border-radius: toRem(20);
-  background: var(--info-dark);
-
-  @include respond-to(medium) {
-    width: toRem(25);
-    height: toRem(25);
+    max-width: toRem(260);
   }
 }
 
