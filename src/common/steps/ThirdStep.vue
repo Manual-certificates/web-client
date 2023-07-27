@@ -18,12 +18,9 @@ import { ErrorHandler } from '@/helpers'
 import { IpfsUtil } from '@/utils'
 import { useI18n } from 'vue-i18n'
 import { MintForm } from '@/forms'
-import { ref, watch } from 'vue'
+import { ref } from 'vue'
 import { FileItemType } from '@/types'
 const { t } = useI18n()
-
-const certificateList = ref<FileItemType[]>([])
-const tableData = ref<string[][]>([])
 
 const props = defineProps<{
   certificateList: FileItemType[]
@@ -37,20 +34,6 @@ const emit = defineEmits<{
   (e: 'on-success', hash: string): void
   (e: 'on-error', msg: string): void
 }>()
-
-watch(
-  () => props.tableData,
-  newValue => {
-    tableData.value = newValue
-  },
-)
-
-watch(
-  () => props.certificateList,
-  newValue => {
-    certificateList.value = newValue
-  },
-)
 
 const mintCertificates = async (address: string) => {
   try {
@@ -75,8 +58,8 @@ const sendToIPFS = async () => {
   const addresses: string[] = []
   const URIs: string[] = []
   const loadState = ref(0)
-  for (const item of tableData.value) {
-    const certificateByFileName = certificateList.value.find(
+  for (const item of props.tableData) {
+    const certificateByFileName = props.certificateList.find(
       certificate => certificate.title === item[2],
     )
 

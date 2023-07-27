@@ -55,7 +55,6 @@ import { FileDropArea, FileItem, AppButton } from '@/common'
 import { ErrorHandler, fileSizePreparator } from '@/helpers'
 import { FileItemType } from '@/types'
 import { useI18n } from 'vue-i18n'
-import { ref, watch } from 'vue'
 const { t } = useI18n()
 
 const IMAGE_FORMAT = 'image/*'
@@ -63,24 +62,15 @@ const IMAGE_KEY = 'imageKey'
 const CERTIFICATES_ON_PAGE = 3
 const MAX_CERTIFICATES_COUNT = 100
 
-const certificateList = ref<FileItemType[]>([])
-
-const props = defineProps<{
+defineProps<{
   certificateList: FileItemType[]
 }>()
 
 const emit = defineEmits<{
   (e: 'remove-certificate', v: FileItemType): void
   (e: 'show-certificates-modal', v: boolean): void
-  (e: 'update:certificate-list', v: FileItemType[]): void
+  (e: 'add-certificate', v: FileItemType): void
 }>()
-
-watch(
-  () => props.certificateList,
-  newValue => {
-    certificateList.value = newValue
-  },
-)
 
 const removeCertificate = (certificate: FileItemType) => {
   emit('remove-certificate', certificate)
@@ -109,13 +99,12 @@ const parseImages = (fileList: File[]) => {
         content: reader.result as string,
       }
 
-      certificateList.value.push(certificate)
+      emit('add-certificate', certificate)
     }
     reader.onerror = function (error) {
       ErrorHandler.process(error)
     }
   }
-  emit('update:certificate-list', certificateList.value)
 }
 </script>
 

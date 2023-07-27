@@ -20,7 +20,7 @@
     <success-modal
       v-model:is-shown="isSuccessModalShown"
       :tx="txHash"
-      @success="router.push({ name: ROUTE_NAMES.main })"
+      @success="router.push({ name: $routes.main })"
     />
 
     <h2 class="mint-page__title">
@@ -49,8 +49,9 @@
 
       <div class="mint-page__payload">
         <first-step
-          v-model:certificate-list="certificateList"
           class="mint-page__field"
+          :certificate-list="certificateList"
+          @add-certificate="addCertificate"
           @show-certificates-modal="isCertificatesModalShown = true"
           @remove-certificate="removeCertificate"
         />
@@ -84,7 +85,6 @@ import {
   ThirdStep,
 } from '@/common'
 import { useRouter } from 'vue-router'
-import { ROUTE_NAMES } from '@/enums'
 
 const isCertificatesModalShown = ref(false)
 const isLoaderModalShown = ref(false)
@@ -106,6 +106,9 @@ const removeCertificate = (certificate: FileItemType) => {
   certificateList.value = certificateList.value.filter(
     obj => obj.title !== certificate.title,
   )
+}
+const addCertificate = (certificate: FileItemType) => {
+  certificateList.value.push(certificate)
 }
 
 const updateLoadState = (state: number) => {
