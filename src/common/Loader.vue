@@ -10,7 +10,6 @@
 </template>
 
 <script lang="ts" setup>
-/* create skeletons */
 import { Spinner, Skeleton } from '@/common/loaders'
 
 withDefaults(

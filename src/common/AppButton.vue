@@ -175,8 +175,8 @@ const buttonClasses = computed(() =>
     --app-button-filled-bg-hover: var(--primary-dark);
     --app-button-filled-bg-active: var(--primary-dark);
 
-    --app-button-filled-text: var(--text-primary-invert-main);
-    --app-button-filled-text-hover: var(--text-primary-invert-main);
+    --app-button-filled-text: var(--text-primary-main);
+    --app-button-filled-text-hover: var(--text-primary-main);
 
     --app-button-bg: var(--app-button-filled-bg);
     --app-button-bg-hover: var(--app-button-filled-bg-hover);
@@ -192,7 +192,7 @@ const buttonClasses = computed(() =>
 
   &--flat {
     --app-button-flat-text: var(--text-primary-main);
-    --app-button-flat-text-hover: var(--text-primary-dark);
+    --app-button-flat-text-hover: var(--app-button-flat-text-hover);
 
     --app-button-flat-border: #{toRem(2)} solid var(--text-primary-light);
     --app-button-flat-border-hover: var(--app-button-flat-border);
@@ -211,15 +211,17 @@ const buttonClasses = computed(() =>
   }
 
   &--success {
-    --app-button-flat-text: var(--success-main);
-    --app-button-flat-text-hover: var(--success-dark);
+    --app-button-flat-text: var(--text-primary-invert-main);
+    --app-button-flat-text-hover: var(--text-primary-invert-main);
     --app-button-flat-border: #{toRem(2)} solid var(--success-main);
     --app-button-flat-border-hover: #{toRem(2)} solid var(--success-dark);
     --app-button-flat-border-active: #{toRem(2)} solid var(--success-dark);
 
-    --app-button-filled-bg: var(--success-main);
-    --app-button-filled-bg-hover: var(--success-dark);
-    --app-button-filled-bg-active: var(--success-dark);
+    --app-button-filled-text: var(--text-primary-invert-main);
+    --app-button-filled-text-hover: var(--text-primary-invert-main);
+    --app-button-filled-bg: var(--success-dark);
+    --app-button-filled-bg-hover: var(--success-main);
+    --app-button-filled-bg-active: var(--success-main);
   }
 
   &--error {
@@ -229,6 +231,8 @@ const buttonClasses = computed(() =>
     --app-button-flat-border-hover: #{toRem(2)} solid var(--error-dark);
     --app-button-flat-border-active: #{toRem(2)} solid var(--error-dark);
 
+    --app-button-filled-text: var(--text-primary-invert-main);
+    --app-button-filled-text-hover: var(--text-primary-invert-main);
     --app-button-filled-bg: var(--error-main);
     --app-button-filled-bg-hover: var(--error-dark);
     --app-button-filled-bg-active: var(--error-dark);
@@ -241,19 +245,22 @@ const buttonClasses = computed(() =>
     --app-button-flat-border-hover: #{toRem(2)} solid var(--warning-dark);
     --app-button-flat-border-active: #{toRem(2)} solid var(--warning-dark);
 
+    --app-button-filled-text: var(--text-primary-invert-main);
     --app-button-filled-bg: var(--warning-main);
     --app-button-filled-bg-hover: var(--warning-dark);
     --app-button-filled-bg-active: var(--warning-dark);
   }
 
   &--info {
-    --app-button-flat-text: var(--info-main);
-    --app-button-flat-text-hover: var(--info-dark);
-    --app-button-flat-border: #{toRem(2)} solid var(--info-main);
+    --app-button-flat-text: var(--text-primary-invert-light);
+    --app-button-flat-text-hover: var(--text-primary-invert-light);
+    --app-button-flat-border: #{toRem(2)} solid var(--info-light);
     --app-button-flat-border-hover: #{toRem(2)} solid var(--info-dark);
     --app-button-flat-border-active: #{toRem(2)} solid var(--info-dark);
 
-    --app-button-filled-bg: var(--info-main);
+    --app-button-filled-text: var(--text-primary-main);
+    --app-button-filled-text-hover: var(--text-primary-invert-light);
+    --app-button-filled-bg: var(--info-light);
     --app-button-filled-bg-hover: var(--info-dark);
     --app-button-filled-bg-active: var(--info-dark);
   }
@@ -305,8 +312,8 @@ const buttonClasses = computed(() =>
 
 .app-button__icon-left,
 .app-button__icon-right {
-  height: 1.2em;
-  width: 1.2em;
+  height: toRem(20);
+  width: toRem(20);
 }
 
 .app-button__text {

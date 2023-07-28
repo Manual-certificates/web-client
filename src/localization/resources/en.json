@@ -1,7 +1,15 @@
 {
   "validations": {
     "field-error_required": "Please fill out this field",
-    "field-error_email": "Field must be a valid email"
+    "field-error_required-all": "Please fill out all fields",
+    "field-error_email": "Field must be a valid email",
+    "field-error_code": "Code is required",
+    "field-error_sendMnemonicPhrase": "Not valid mnemonic",
+    "field-error_address": "Invalid address",
+    "field-error_name": "Empty name",
+    "field-error_settings": "We need fill all fields",
+    "field-error_privateKey": "Invalid private key"
+
   },
   "errors": {
     "default": "Oops... Something went wrong",
@@ -22,7 +30,13 @@
     "provider-method-not-supported": "Method is not implemented non-standard",
     "provider-limit-exceeded": "Request exceeds defined limit non-standard",
     "provider-json-rpc-version-not-supported": "Version of JSON-RPC protocol is not supported non-standard",
-    "provider-wrapper-method-not-found": "provider not exist or hasn't this method"
+    "provider-wrapper-method-not-found": "provider not exist or hasn't this method",
+    "files-not-found": "Files not found",
+    "failed-sent-tx": "Failed to  send  tx",
+    "failed-init-contract": "Failed to  init contract: empty address",
+    "failed-init-mint": "Failed to call mint: empty provider",
+    "error-empty-list": "empty list",
+    "error-empty-file": "empty file"
   },
   "notification": {
     "default-title-success": "Success",
@@ -36,35 +50,70 @@
     "default-message-info": "Something is happening. Just want you to know that",
     "default-message-default": "Just a message"
   },
-  "login-form": {
-    "login-lbl": "Login",
-    "password-lbl": "Password",
-    "login-success-msg": "Access granted",
-    "submit-btn": "Submit"
+  "main-page": {
+    "page-title": "SBT Certificates",
+    "page-description": "An easy way to issue certificates for your course",
+    "metamask-connect-btn": "Connect to MetaMask",
+    "login-message" : "To log in, please connect to your MetaMask wallet"
   },
-  "ui-kit-page": {
-    "button": "Button",
-    "some-placeholder": "placeholder",
-    "some-label": "label",
-    "some-error-message": "error-message",
-    "modal-btn": "Open modal",
-    "accordion-btn": "Toggle Accordion",
-    "collapse-text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-    "loading-error-msg": "Oops, something went wrong",
-    "no-data-msg": "Empty data, please add new"
+  "main-certificate-banner": {
+    "title": "Issue certificates",
+    "issue-certificate-title" :"Issue certificates",
+    "issue-sbt-btn": "Issue",
+    "description": "Upload the certificate image and select the recipient's MetaMask address. The selected user will receive the certificate and will not be able to transfer it to anyone else"
   },
-  "web3-page": {
-    "loading-error-msg": "Oops... Something went wrong"
+  "mint-page": {
+    "title":"Issue certificates",
+    "step-1-number": "1",
+    "step-2-number": "2",
+    "step-3-number": "3",
+    "step-3-placeholder": "Address",
+    "loader-modal-title": "Process",
+    "loader-modal-description-upload-files": "Uploading files to IPFS",
+    "loader-modal-description-mint": "Minting SBTs",
+    "loader-modal-description": "Wait until all certificates are created",
+    "address-error-msg": "Not valid address"
   },
-  "erc20": {
-    "loading-error-msg": "Oops... Something went wrong",
-    "title": "ERC20",
-    "name-lbl": "Name",
-    "symbol-lbl": "Symbol",
-    "decimals-lbl": "Decimals",
-    "total-supply-lbl": "Total supply",
-    "balance-lbl": "Balance",
-    "transfer-lbl": "Transfer",
-    "mint-lbl": "Mint"
+  "mint-form": {
+    "issue-btn": "Issue",
+    "cancel-btn": "Cancel"
+  },
+  "certificates-modal": {
+    "title": "Certificates ",
+    "count": "{start} - {end} of {number}",
+    "search-placeholder": "Search by name ",
+    "close-btn": "Close"
+  },
+  "success-modal": {
+    "title": "Success",
+    "tx-hash": "Transaction hash",
+    "description": "Elit dapibus at egestas odio. Elit dolor non ornare magna.",
+    "btn-text": "Ok"
+  },
+  "app-navbar": {
+    "metamask-ico-alt": "Metamask ico",
+    "metamask-connect" : "Connect"
+  },
+  "error-modal": {
+    "title": "Error",
+    "btn-text": "Try again"
+  },
+  "first-step": {
+    "title": "Upload files",
+    "description": "Upload files with .jpeg certificates",
+    "select-images-description": "You can upload up to 100 files",
+    "select-images-title": "Drag and drop or Browse file",
+    "see-all": "See all {number}"
+  },
+  "second-step": {
+    "description": "Upload the table with relation between certificates and their recipients. {link}",
+    "title": "Upload the table",
+    "description-link": "You can download table template",
+    "select-table-title" : "Drag and drop or Browse file",
+    "select-table-description" : "XLS"
+  },
+  "third-step": {
+    "title": "Enter the contract address",
+    "description": "Enter the course contract address where certificates will be issued"
   }
 }

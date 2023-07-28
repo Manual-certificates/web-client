@@ -1,6 +1,6 @@
 <template>
   <div v-if="isAppInitialized" class="app__container">
-    <app-navbar class="app__navbar" />
+    <app-navbar />
     <router-view v-slot="{ Component, route }">
       <transition :name="route.meta.transition || 'fade'" mode="out-in">
         <component class="app__main" :is="Component" />
@@ -10,19 +10,27 @@
 </template>
 
 <script lang="ts" setup>
-import { AppNavbar } from '@/common'
-
-import { ErrorHandler } from '@/helpers/error-handler'
+import { ErrorHandler } from '@/helpers'
 import { ref } from 'vue'
 import { useNotifications } from '@/composables'
 import { config } from '@config'
+import { PROVIDERS } from '@/enums'
+import { useWeb3ProvidersStore } from '@/store'
+import { AppNavbar } from '@/common'
 
+const web3Store = useWeb3ProvidersStore()
 const isAppInitialized = ref(false)
 const init = async () => {
   try {
     useNotifications()
+    await web3Store.detectProviders()
+    const provider = web3Store.providers.find(
+      el => el.name === PROVIDERS.metamask,
+    )
+    await web3Store.provider.init(provider!)
     document.title = config.APP_NAME
   } catch (error) {
+    isAppInitialized.value = false
     ErrorHandler.process(error)
   }
   isAppInitialized.value = true

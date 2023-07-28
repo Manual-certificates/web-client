@@ -77,8 +77,10 @@ $z-index-local: 1;
   align-items: center;
   justify-content: center;
   position: relative;
-  width: auto;
-  height: auto;
+  max-width: toRem(652);
+  max-height: toRem(752);
+  width: 100%;
+  height: 100%;
 }
 
 .modal-enter-active,

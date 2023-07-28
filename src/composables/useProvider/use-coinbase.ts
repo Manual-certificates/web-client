@@ -108,7 +108,9 @@ export const useCoinbase = (provider: ProviderInstance): ProviderWrapper => {
       const transactionResponse = await currentSigner.value.sendTransaction(
         txRequestBody as Deferrable<TransactionRequest>,
       )
-      return transactionResponse.wait()
+      await transactionResponse.wait()
+
+      return transactionResponse
     } catch (error) {
       handleEthError(error as EthProviderRpcError)
     }
@@ -117,7 +119,7 @@ export const useCoinbase = (provider: ProviderInstance): ProviderWrapper => {
   const getHashFromTxResponse = (txResponse: TransactionResponse) => {
     const transactionResponse = txResponse as EthTransactionResponse
 
-    return transactionResponse.transactionHash
+    return transactionResponse.hash
   }
 
   const getTxUrl = (explorerUrl: string, txHash: string) => {
@@ -128,15 +130,6 @@ export const useCoinbase = (provider: ProviderInstance): ProviderWrapper => {
     return getEthExplorerAddressUrl(explorerUrl, address)
   }
 
-  const signMessage = async (message: string) => {
-    try {
-      const signer = currentProvider.value.getSigner()
-      const msg = await signer.signMessage(message)
-      return msg
-    } catch (error) {
-      handleEthError(error as EthProviderRpcError)
-    }
-  }
   return {
     currentProvider,
     currentSigner,
@@ -153,6 +146,5 @@ export const useCoinbase = (provider: ProviderInstance): ProviderWrapper => {
     getHashFromTxResponse,
     getTxUrl,
     getAddressUrl,
-    signMessage,
   }
 }

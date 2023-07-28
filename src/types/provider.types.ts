@@ -8,8 +8,8 @@ import {
 import { ethers } from 'ethers'
 
 import { PROVIDERS } from '@/enums'
-import { EthereumProvider } from '@/types/ethereum.types'
-import { PhantomProvider } from '@/types/solana.types'
+import { EthereumProvider } from '@/types'
+import { PhantomProvider } from '@/types'
 
 /**
  * Non defined provider from browser
@@ -38,7 +38,7 @@ export type TxRequestBody =
   | string
   | unknown
 
-export type EthTransactionResponse = ethers.providers.TransactionReceipt
+export type EthTransactionResponse = ethers.providers.TransactionResponse
 
 export type SolanaTransactionResponse = TransactionSignature
 
@@ -74,7 +74,6 @@ export interface ProviderWrapper {
   getTxUrl: (explorerUrl: string, txHash: string) => string
   getAddressUrl: (explorerUrl: string, address: string) => string
   disconnect?: () => Promise<void>
-  signMessage?: (message: string) => Promise<string | undefined>
 }
 
 export type { UseProvider } from '@/composables'

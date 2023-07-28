@@ -4,11 +4,6 @@ export enum EIP1193 {
   unsupportedMethod = 4200,
   disconnected = 4900,
   chainDisconnected = 4901,
-  unrecognizedChain = 4902,
-}
-
-export enum EIP1193String {
-  userRejectedRequest = 'ACTION_REJECTED',
 }
 
 export enum EIP1474 {

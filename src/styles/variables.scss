@@ -1,5 +1,7 @@
 @import '../../static/branding/app-colors';
 
+@import '../../src/styles/functions';
+
 :root,
 :before,
 :after {
@@ -74,6 +76,8 @@
   /* App variables */
   --app-txt: #{$text-primary-main};
   --app-font-family: 'Roboto', 'Arial', sans-serif;
+  --app-font-family-inter: 'Inter', sans-serif;
+  --app-font-family-nt: 'NT Somic', sans-serif;
   --app-padding-right: #{toRem(92)};
   --app-padding-left: #{toRem(92)};
 
@@ -83,6 +87,12 @@
   }
 
   /* --------------------------------------- */
+
+  /* Page sizes */
+  --page-large: #{toRem(1450)};
+  --page-medium: #{toRem(1024)};
+  --page-small: #{toRem(720)};
+  --page-xmedium: #{toRem(1280)};
 
   /* Field variables */
 
