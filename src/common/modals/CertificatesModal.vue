@@ -5,57 +5,53 @@
   >
     <template #default="{ modal }">
       <div class="certificates-modal__pane">
-        <div class="certificates-modal__content">
-          <div class="certificates-modal__header">
-            <h2 class="certificates-modal__header-title">
-              {{ $t('certificates-modal.title') }}
-            </h2>
-            <div class="certificates-modal__header-page-number">
-              <p>
-                {{
-                  $t('certificates-modal.count', {
-                    start: (pageCount * CERTIFICATES_ON_PAGE).toString(),
-                    end: ((pageCount + 1) * CERTIFICATES_ON_PAGE).toString(),
-                    number: certificateList.length.toString(),
-                  })
-                }}
-              </p>
+        <div class="certificates-modal__header">
+          <h2 class="certificates-modal__header-title">
+            {{ $t('certificates-modal.title') }}
+          </h2>
+          <div class="certificates-modal__header-page-number">
+            <p>
+              {{
+                $t('certificates-modal.count', {
+                  start: (pageCount * CERTIFICATES_ON_PAGE).toString(),
+                  end: ((pageCount + 1) * CERTIFICATES_ON_PAGE).toString(),
+                  number: certificateList.length.toString(),
+                })
+              }}
+            </p>
 
-              <app-button
-                icon-left="chevron-left"
-                :disabled="pageCount === 0"
-                @click="pageCount--"
-              />
-              <app-button
-                icon-left="chevron-right"
-                :disabled="hasMoreCertificates"
-                @click="pageCount++"
-              />
-            </div>
-          </div>
-
-          <div class="certificates-modal__search">
-            <input-field
-              v-model="searchData"
-              class="certificates-modal__search-input"
-              :placeholder="$t('certificates-modal.search-placeholder')"
-            />
-          </div>
-
-          <certificates-item-list
-            v-model:page-count="pageCount"
-            :certificate-list="certificateFilter"
-            @remove-certificate="removeItem"
-          />
-
-          <div class="certificates-modal__close-btn-wrp">
             <app-button
-              size="large"
-              class="certificates-modal__close-btn"
-              :text="$t('certificates-modal.close-btn')"
-              @click="modal.close"
+              icon-left="chevron-left"
+              :disabled="pageCount === 0"
+              @click="pageCount--"
+            />
+            <app-button
+              icon-left="chevron-right"
+              :disabled="hasMoreCertificates"
+              @click="pageCount++"
             />
           </div>
+        </div>
+
+        <input-field
+          v-model="searchData"
+          class="certificates-modal__search"
+          :placeholder="$t('certificates-modal.search-placeholder')"
+        />
+
+        <certificates-item-list
+          v-model:page-count="pageCount"
+          :certificate-list="certificateFilter"
+          @remove-certificate="removeItem"
+        />
+
+        <div class="certificates-modal__close-btn-wrp">
+          <app-button
+            size="large"
+            class="certificates-modal__close-btn"
+            :text="$t('certificates-modal.close-btn')"
+            @click="modal.close"
+          />
         </div>
       </div>
     </template>
@@ -110,10 +106,10 @@ const hasMoreCertificates = computed(() => {
 <style lang="scss" scoped>
 .certificates-modal__pane {
   background: var(--background-primary-main);
-  padding: toRem(24);
+  padding: 3%;
   border-radius: toRem(8);
-  min-width: toRem(652);
-  min-height: toRem(752);
+  max-width: toRem(652);
+  max-height: toRem(752);
   width: 100%;
   height: 100%;
 }
@@ -129,12 +125,12 @@ const hasMoreCertificates = computed(() => {
 }
 
 .certificates-modal__search {
-  max-width: toRem(580);
+  padding: 3%;
   margin: auto;
 }
 
 .certificates-modal__header-title {
-  max-width: toRem(600);
+  width: 100%;
   text-align: center;
 }
 
@@ -153,7 +149,7 @@ const hasMoreCertificates = computed(() => {
 .certificates-modal__close-btn-wrp {
   display: flex;
   justify-content: center;
-  bottom: toRem(30);
+  bottom: 3%;
   position: absolute;
   left: 0;
   right: 0;
@@ -161,7 +157,6 @@ const hasMoreCertificates = computed(() => {
 }
 
 .certificates-modal__close-btn {
-  max-width: toRem(580);
   width: 100%;
 }
 </style>

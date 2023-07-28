@@ -86,6 +86,8 @@ import {
 } from '@/common'
 import { useRouter } from 'vue-router'
 
+const router = useRouter()
+
 const isCertificatesModalShown = ref(false)
 const isLoaderModalShown = ref(false)
 const isErrorModalShown = ref(false)
@@ -96,8 +98,6 @@ const tableFile = ref<FileItemType>({} as FileItemType)
 const certificateList = ref<FileItemType[]>([])
 const loadState = ref(0)
 const txHash = ref('')
-
-const router = useRouter()
 const errorMsg = ref('')
 
 const MAX_CERTIFICATES_COUNT = 100
