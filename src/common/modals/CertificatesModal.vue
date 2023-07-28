@@ -41,7 +41,7 @@
 
         <certificates-item-list
           v-model:page-count="pageCount"
-          :certificate-list="certificateFilter"
+          :certificate-list="filteredCertificateList"
           @remove-certificate="removeItem"
         />
 
@@ -88,7 +88,7 @@ const emit = defineEmits<{
   (e: 'remove-certificate', v: FileItemType): void
 }>()
 
-const certificateFilter = computed(() =>
+const filteredCertificateList = computed(() =>
   useSearchInTheList(props.certificateList, searchData.value),
 )
 
@@ -106,12 +106,16 @@ const hasMoreCertificates = computed(() => {
 <style lang="scss" scoped>
 .certificates-modal__pane {
   background: var(--background-primary-main);
-  padding: 3%;
+  padding: toRem(24);
   border-radius: toRem(8);
   max-width: toRem(652);
   max-height: toRem(752);
   width: 100%;
   height: 100%;
+
+  @include respond-to(x-small) {
+    padding: 3%;
+  }
 }
 
 .certificates-modal__title {
@@ -149,11 +153,15 @@ const hasMoreCertificates = computed(() => {
 .certificates-modal__close-btn-wrp {
   display: flex;
   justify-content: center;
-  bottom: 3%;
+  padding: toRem(24);
   position: absolute;
   left: 0;
   right: 0;
   margin: 0 auto;
+
+  @include respond-to(x-small) {
+    padding: 3%;
+  }
 }
 
 .certificates-modal__close-btn {
