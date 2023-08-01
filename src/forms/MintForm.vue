@@ -21,7 +21,7 @@
         class="mint-form__btn"
         size="large"
         color="info"
-        :disabled="!isFormValid() || !isFileUploaded"
+        :disabled="!props.isFileUploaded"
         :text="$t('mint-form.issue-btn')"
         @click="emit('mint', form.address)"
       />
@@ -36,9 +36,14 @@ import { reactive } from 'vue'
 import { required, address } from '@/validators'
 import { useFormValidation } from '@/composables'
 
-defineProps<{
-  isFileUploaded: boolean
-}>()
+const props = withDefaults(
+  defineProps<{
+    isFileUploaded: boolean
+  }>(),
+  {
+    isFileUploaded: false,
+  },
+)
 
 const emit = defineEmits<{
   (e: 'mint', address: string): void
@@ -48,7 +53,7 @@ const form = reactive({
   address: '',
 })
 
-const { isFormValid, getFieldErrorMessage } = useFormValidation(form, {
+const { getFieldErrorMessage } = useFormValidation(form, {
   address: { required, address },
 })
 </script>

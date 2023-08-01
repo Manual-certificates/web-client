@@ -15,6 +15,17 @@
       :file-count="certificateList.length"
     />
 
+    <having-contract-confirmation-modal
+      v-model:is-shown="isHavingContractConfirmationModalShown"
+      @update:is-deployment-modal-shown="updateContractDeploymentModalShown"
+    />
+
+    <contract-deployment-modal
+      v-model:is-shown="isContractDeploymentModalShown"
+      @update:error-msg="onError"
+      @update:is-error-modal-shown="updateErrorModalShown"
+    />
+
     <error-modal v-model:is-shown="isErrorModalShown" :error-msg="errorMsg" />
 
     <success-modal
@@ -66,6 +77,7 @@
           @on-success="onMintSuccess"
           @on-error="onError"
           @update-load-state="updateLoadState"
+          @deploy-contract="updateConfirmationModalShown"
         />
       </div>
     </div>
@@ -83,6 +95,8 @@ import {
   FirstStep,
   SecondStep,
   ThirdStep,
+  HavingContractConfirmationModal,
+  ContractDeploymentModal,
 } from '@/common'
 import { useRouter } from 'vue-router'
 
@@ -92,6 +106,8 @@ const isCertificatesModalShown = ref(false)
 const isLoaderModalShown = ref(false)
 const isErrorModalShown = ref(false)
 const isSuccessModalShown = ref(false)
+const isHavingContractConfirmationModalShown = ref(false)
+const isContractDeploymentModalShown = ref(false)
 
 const tableData = ref<string[][]>([])
 const tableFile = ref<FileItemType>({} as FileItemType)
@@ -133,6 +149,19 @@ const onError = (msg: string) => {
   isLoaderModalShown.value = false
   errorMsg.value = msg
   isErrorModalShown.value = true
+}
+
+const updateErrorModalShown = (val: boolean) => {
+  isErrorModalShown.value = val
+}
+
+const updateContractDeploymentModalShown = (val: boolean) => {
+  isContractDeploymentModalShown.value = val
+}
+
+const updateConfirmationModalShown = () => {
+  const val = isHavingContractConfirmationModalShown.value
+  isHavingContractConfirmationModalShown.value = !val
 }
 </script>
 
