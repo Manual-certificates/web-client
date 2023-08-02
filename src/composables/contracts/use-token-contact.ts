@@ -1,5 +1,5 @@
 import { computed, ref } from 'vue'
-import { EthProviderRpcError, TokenContractV2__factory } from '@/types'
+import { EthProviderRpcError, TokenContract__factory } from '@/types'
 import { useWeb3ProvidersStore } from '@/store'
 import { handleEthError } from '@/helpers'
 import { useI18n } from 'vue-i18n'
@@ -11,7 +11,7 @@ export const useTokenContact = (address: string) => {
 
   const contractAddress = ref(address || '')
 
-  const contractInterface = TokenContractV2__factory.createInterface()
+  const contractInterface = TokenContract__factory.createInterface()
 
   const init = (address: string) => {
     if (!address) {
