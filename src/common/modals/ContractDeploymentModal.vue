@@ -85,17 +85,9 @@ const emit = defineEmits<{
   (e: 'update:error-msg', v: string): void
 }>()
 
-function setDeployingStep() {
-  step.value = DEPLOYMENT_STEP.deploying
-}
-
-function setDeployedStep() {
-  step.value = DEPLOYMENT_STEP.deployed
-}
-
 async function deployTokenContract(name: string) {
   try {
-    setDeployingStep()
+    step.value = DEPLOYMENT_STEP.deploying
 
     const res = await useTokenContactDeployer(
       config.TOKEN_CONTRACT_ADDR,
@@ -106,11 +98,11 @@ async function deployTokenContract(name: string) {
     }
 
     deployedContractAddress.value = res
-    setDeployedStep()
+    step.value = DEPLOYMENT_STEP.deployed
   } catch (error) {
     ErrorHandler.process(error)
-    emit('update:is-shown', false)
     emit('update:error-msg', t('errors.failed-sent-tx'))
+    // step.value = DEPLOYMENT_STEP.deploy
   }
 }
 </script>

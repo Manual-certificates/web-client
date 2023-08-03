@@ -16,8 +16,8 @@
     />
 
     <deployment-confirmation-modal
-      v-model:is-shown="isHavingContractConfirmationModalShown"
-      @update:is-deployment-modal-shown="updateContractDeploymentModalShown"
+      v-model:is-shown="isDeploymentConfirmationModalShown"
+      @open-contract-deployment="updateContractDeploymentModalShown"
     />
 
     <contract-deployment-modal
@@ -105,7 +105,7 @@ const isCertificatesModalShown = ref(false)
 const isLoaderModalShown = ref(false)
 const isErrorModalShown = ref(false)
 const isSuccessModalShown = ref(false)
-const isHavingContractConfirmationModalShown = ref(false)
+const isDeploymentConfirmationModalShown = ref(false)
 const isContractDeploymentModalShown = ref(false)
 
 const tableData = ref<string[][]>([])
@@ -146,17 +146,19 @@ const onTableData = (data: string[][], file: FileItemType) => {
 
 const onError = (msg: string) => {
   isLoaderModalShown.value = false
+  isContractDeploymentModalShown.value = false
   errorMsg.value = msg
   isErrorModalShown.value = true
 }
 
-const updateContractDeploymentModalShown = (val: boolean) => {
-  isContractDeploymentModalShown.value = val
+const updateContractDeploymentModalShown = () => {
+  updateConfirmationModalShown()
+  isContractDeploymentModalShown.value = true
 }
 
 const updateConfirmationModalShown = () => {
-  const val = isHavingContractConfirmationModalShown.value
-  isHavingContractConfirmationModalShown.value = !val
+  const val = isDeploymentConfirmationModalShown.value
+  isDeploymentConfirmationModalShown.value = !val
 }
 </script>
 

@@ -67,13 +67,12 @@ const props = withDefaults(
 )
 
 function openContractDeployment() {
-  emit('update:is-deployment-modal-shown', true)
-  emit('update:is-shown', false)
+  emit('open-contract-deployment')
 }
 
 const emit = defineEmits<{
   (e: 'update:is-shown', v: boolean): void
-  (e: 'update:is-deployment-modal-shown', v: boolean): void
+  (e: 'open-contract-deployment'): void
 }>()
 </script>
 <style lang="scss" scoped>
