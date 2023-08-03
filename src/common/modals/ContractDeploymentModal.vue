@@ -106,12 +106,11 @@ async function deployTokenContract(name: string) {
     }
 
     deployedContractAddress.value = res
+    setDeployedStep()
   } catch (error) {
     ErrorHandler.process(error)
     emit('update:is-shown', false)
     emit('update:error-msg', t('errors.failed-sent-tx'))
-  } finally {
-    setDeployedStep()
   }
 }
 </script>
