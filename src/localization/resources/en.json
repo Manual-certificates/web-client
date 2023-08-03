@@ -123,12 +123,18 @@
     "deploy-btn" : "Deploy"
   },
   "contract-deployment-modal" : {
-    "title" : "Contract deployment",
+    "title" : "Contract deployment"
+  },
+  "deploy-step" : {
     "subtitle" : "In order to deploy a contract, you need to select a contract name. Then click the \"Deploy\" button, confirm the transaction in MetaMask and pay network fee",
-    "deploy-btn" : "Deploy",
     "contract-name" : "Contract name",
-    "subtitle-processing" : "The transaction is being processed",
-    "subtitle-deployed" : "This is the contract address that you will need later in order to issue certificates for your course. Please copy and save this address.",
+    "deploy-btn" : "Deploy"
+  },
+  "deploying-step" : {
+    "subtitle" : "The transaction is being processed"
+  },
+  "deployed-step" : {
+    "subtitle" : "This is the contract address that you will need later in order to issue certificates for your course. Please copy and save this address.",
     "ok-btn" : "Ok"
   }
 }

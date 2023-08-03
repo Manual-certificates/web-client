@@ -1,3 +1,3 @@
-export { default as DeployStepModal } from '@/common/modals/deployment_steps/DeployStepModal.vue'
-export { default as DeployingStepModal } from '@/common/modals/deployment_steps/DeployingStepModal.vue'
-export { default as DeployedStepModal } from '@/common/modals/deployment_steps/DeployedStepModal.vue'
+export { default as DeployStep } from '@/common/modals/deployment_steps/DeployStep.vue'
+export { default as DeployingStep } from '@/common/modals/deployment_steps/DeployingStep.vue'
+export { default as DeployedStep } from '@/common/modals/deployment_steps/DeployedStep.vue'

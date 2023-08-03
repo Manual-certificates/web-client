@@ -15,7 +15,7 @@
       :file-count="certificateList.length"
     />
 
-    <having-contract-confirmation-modal
+    <deployment-confirmation-modal
       v-model:is-shown="isHavingContractConfirmationModalShown"
       @update:is-deployment-modal-shown="updateContractDeploymentModalShown"
     />
@@ -23,7 +23,6 @@
     <contract-deployment-modal
       v-model:is-shown="isContractDeploymentModalShown"
       @update:error-msg="onError"
-      @update:is-error-modal-shown="updateErrorModalShown"
     />
 
     <error-modal v-model:is-shown="isErrorModalShown" :error-msg="errorMsg" />
@@ -95,7 +94,7 @@ import {
   FirstStep,
   SecondStep,
   ThirdStep,
-  HavingContractConfirmationModal,
+  DeploymentConfirmationModal,
   ContractDeploymentModal,
 } from '@/common'
 import { useRouter } from 'vue-router'
@@ -149,10 +148,6 @@ const onError = (msg: string) => {
   isLoaderModalShown.value = false
   errorMsg.value = msg
   isErrorModalShown.value = true
-}
-
-const updateErrorModalShown = (val: boolean) => {
-  isErrorModalShown.value = val
 }
 
 const updateContractDeploymentModalShown = (val: boolean) => {

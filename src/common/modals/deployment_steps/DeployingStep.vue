@@ -1,10 +1,10 @@
 <template>
-  <div class="contract-deployment-modal__body">
-    <span class="contract-deployment-modal__subtitle">
-      {{ $t('contract-deployment-modal.subtitle-processing') }}
+  <div class="deploying-step__body">
+    <span class="deploying-step__subtitle">
+      {{ $t('deploying-step.subtitle') }}
     </span>
   </div>
-  <div class="contract-deployment-modal__loader">
+  <div class="deploying-step__loader">
     <spinner />
   </div>
 </template>
@@ -13,18 +13,18 @@ import { Spinner } from '@/common'
 </script>
 
 <style lang="scss" scoped>
-.contract-deployment-modal__body {
+.deploying-step__body {
   margin-bottom: toRem(15);
 }
 
-.contract-deployment-modal__subtitle {
+.deploying-step__subtitle {
   font-size: toRem(16);
   font-weight: 400;
   line-height: 1.45;
   color: var(--text-secondary-light);
 }
 
-.contract-deployment-modal__loader {
+.deploying-step__loader {
   display: flex;
   align-items: center;
   justify-content: center;

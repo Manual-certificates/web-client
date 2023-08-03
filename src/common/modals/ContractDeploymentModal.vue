@@ -8,10 +8,10 @@
       <div class="contract-deployment-modal__pane">
         <div class="contract-deployment-modal__header">
           <div class="contract-deployment-modal__icon-title">
-            <div class="contract-deployment-modal__icon">
+            <div class="contract-deployment-modal__icon-wrp">
               <icon :name="$icons.deploy" />
             </div>
-            <div class="contract-deployment-modal__header-titles">
+            <div class="contract-deployment-modal__title-wrp">
               <h5 class="contract-deployment-modal__title">
                 {{ $t('contract-deployment-modal.title') }}
               </h5>
@@ -27,13 +27,13 @@
         </div>
 
         <div class="contract-deployment-modal__body">
-          <deploy-step-modal
+          <deploy-step
             v-if="isStepDeploy"
             @deploy-contract="(name: string) => deployTokenContract(name)"
           />
-          <deploying-step-modal v-if="isStepDeploying" />
-          <deployed-step-modal
-            v-if="isStepDeployed"
+          <deploying-step v-else-if="isStepDeploying" />
+          <deployed-step
+            v-else-if="isStepDeployed"
             :address="deployedContractAddress"
             @close="modal.close"
           />
@@ -44,28 +44,27 @@
 </template>
 <script lang="ts" setup>
 import { ErrorHandler } from '@/helpers'
-import { Icon, AppButton, Modal } from '@/common'
 import {
-  DeployStepModal,
-  DeployingStepModal,
-  DeployedStepModal,
+  DeployStep,
+  DeployingStep,
+  DeployedStep,
+  Icon,
+  AppButton,
+  Modal,
 } from '@/common'
 import { ref, computed } from 'vue'
 import { useTokenContactDeployer } from '@/composables'
 import { config } from '@config'
 import { useI18n } from 'vue-i18n'
+import { DEPLOYMENT_STEP } from '@/enums'
 const { t } = useI18n()
-
-const deployStep = 'deploy'
-const deployingStep = 'deploying'
-const deployedStep = 'deployed'
 
 const deployedContractAddress = ref('')
 
-const step = ref(deployStep)
-const isStepDeploy = computed(() => step.value === deployStep)
-const isStepDeploying = computed(() => step.value === deployingStep)
-const isStepDeployed = computed(() => step.value === deployedStep)
+const step = ref(DEPLOYMENT_STEP.deploy)
+const isStepDeploy = computed(() => step.value === DEPLOYMENT_STEP.deploy)
+const isStepDeploying = computed(() => step.value === DEPLOYMENT_STEP.deploying)
+const isStepDeployed = computed(() => step.value === DEPLOYMENT_STEP.deployed)
 
 const props = withDefaults(
   defineProps<{
@@ -83,16 +82,15 @@ const props = withDefaults(
 
 const emit = defineEmits<{
   (e: 'update:is-shown', v: boolean): void
-  (e: 'update:is-error-modal-shown', v: boolean): void
   (e: 'update:error-msg', v: string): void
 }>()
 
 function setDeployingStep() {
-  step.value = deployingStep
+  step.value = DEPLOYMENT_STEP.deploying
 }
 
 function setDeployedStep() {
-  step.value = deployedStep
+  step.value = DEPLOYMENT_STEP.deployed
 }
 
 async function deployTokenContract(name: string) {
@@ -100,7 +98,7 @@ async function deployTokenContract(name: string) {
     setDeployingStep()
 
     const res = await useTokenContactDeployer(
-      config.CONTRACT_ADDR,
+      config.TOKEN_CONTRACT_ADDR,
     ).deployTokenContract(name, name, '')
 
     if (!res) {
@@ -112,7 +110,6 @@ async function deployTokenContract(name: string) {
     ErrorHandler.process(error)
     emit('update:is-shown', false)
     emit('update:error-msg', t('errors.failed-sent-tx'))
-    emit('update:is-error-modal-shown', true)
   } finally {
     setDeployedStep()
   }
@@ -144,7 +141,7 @@ async function deployTokenContract(name: string) {
   align-items: center;
 }
 
-.contract-deployment-modal__icon {
+.contract-deployment-modal__icon-wrp {
   display: flex;
   flex-direction: column;
   position: relative;
@@ -152,7 +149,7 @@ async function deployTokenContract(name: string) {
   height: toRem(32);
 }
 
-.contract-deployment-modal__header-titles {
+.contract-deployment-modal__title-wrp {
   margin-left: toRem(10);
   display: flex;
   flex-direction: column;

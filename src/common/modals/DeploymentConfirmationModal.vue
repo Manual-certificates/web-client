@@ -11,7 +11,7 @@
             <div class="confirmation-modal__icon-wrp">
               <icon :name="$icons.deploy" />
             </div>
-            <div class="confirmation-modal__header-titles">
+            <div class="confirmation-modal__title-wrp">
               <h5 class="confirmation-modal__title">
                 {{ $t('confirmation-modal.title') }}
               </h5>
@@ -25,9 +25,9 @@
           />
         </div>
         <div class="confirmation-modal__body">
-          <span class="confirmation-modal__subtitle">
+          <p class="confirmation-modal__subtitle">
             {{ $t('confirmation-modal.subtitle') }}
-          </span>
+          </p>
         </div>
         <div class="confirmation-modal__btns-wrp">
           <app-button
@@ -92,7 +92,7 @@ const emit = defineEmits<{
   margin-bottom: toRem(10);
 }
 
-.confirmation-modal__header-titles {
+.confirmation-modal__title-wrp {
   margin-left: toRem(10);
   display: flex;
   flex-direction: column;
