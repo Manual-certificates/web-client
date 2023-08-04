@@ -1,4 +1,4 @@
-import { computed, ref } from 'vue'
+import { ref } from 'vue'
 import { EthProviderRpcError, TokenContractDeployer__factory } from '@/types'
 import { useWeb3ProvidersStore } from '@/store'
 import { handleEthError } from '@/helpers'
@@ -7,7 +7,6 @@ import { TokenContract__factory } from '@/types/contracts/factories/contracts'
 
 export const useTokenContactDeployer = (address: string) => {
   const web3ProvidersStore = useWeb3ProvidersStore()
-  const provider = computed(() => web3ProvidersStore.provider)
 
   const contractAddress = ref(address || '')
 
@@ -18,7 +17,8 @@ export const useTokenContactDeployer = (address: string) => {
     tokenContract: string,
     baseUri: string,
   ) => {
-    if (!provider.value) return
+    if (!web3ProvidersStore.provider) return
+
     const signer = web3ProvidersStore.provider.currentSigner
     if (signer === undefined) {
       return
@@ -58,7 +58,7 @@ export const useTokenContactDeployer = (address: string) => {
         salt,
       ])
 
-      await provider.value.signAndSendTx({
+      await web3ProvidersStore.provider.signAndSendTx({
         to: contractAddress.value,
         data,
       })

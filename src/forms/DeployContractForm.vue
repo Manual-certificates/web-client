@@ -1,10 +1,10 @@
 <template>
   <div>
-    <div class="deploy-step__labels-wrp">
-      <span class="deploy-step__label">
-        {{ $t('deploy-step.contract-name') }}
+    <div class="deploy-contract-form__labels-wrp">
+      <span class="deploy-contract-form__label">
+        {{ $t('deploy-contract-form.contract-name') }}
       </span>
-      <span class="deploy-step__label">
+      <span class="deploy-contract-form__label">
         {{ nameLength }}
       </span>
     </div>
@@ -15,12 +15,12 @@
       "
     />
   </div>
-  <div class="deploy-step__btns-wrp">
+  <div class="deploy-contract-form__btns-wrp">
     <app-button
-      class="deploy-step__deploy-btn"
+      class="deploy-contract-form__deploy-btn"
       size="large"
       color="info"
-      :text="$t('deploy-step.deploy-btn')"
+      :text="$t('deploy-contract-form.deploy-btn')"
       :disabled="!isFormValid()"
       @click="emit('deploy-contract', form.contractName)"
     />
@@ -52,7 +52,7 @@ const { isFormValid, getFieldErrorMessage } = useFormValidation(form, {
 </script>
 
 <style lang="scss" scoped>
-.deploy-step__labels-wrp {
+.deploy-contract-form__labels-wrp {
   display: flex;
   justify-content: space-between;
   color: var(--text-primary-main);
@@ -61,16 +61,16 @@ const { isFormValid, getFieldErrorMessage } = useFormValidation(form, {
   margin-bottom: toRem(10);
 }
 
-.deploy-step__label {
+.deploy-contract-form__label {
   font-size: toRem(12);
 }
 
-.deploy-step__btns-wrp {
+.deploy-contract-form__btns-wrp {
   display: flex;
   margin-top: toRem(15);
 }
 
-.deploy-step__deploy-btn {
+.deploy-contract-form__deploy-btn {
   width: 100%;
   border-radius: toRem(8);
   margin-right: toRem(10);

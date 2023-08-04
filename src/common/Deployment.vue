@@ -1,5 +1,5 @@
 <template>
-  <div class="contract-deployment-modal__body">
+  <div class="deployment">
     <deploy-step
       v-if="isStepDeploy"
       @deploy-contract="(name: string) => deployTokenContract(name)"
@@ -56,49 +56,7 @@ async function deployTokenContract(name: string) {
 </script>
 
 <style lang="scss" scoped>
-.contract-deployment-modal__pane {
-  background: var(--background-primary-main);
-  padding: toRem(24);
-  border-radius: toRem(8);
-  width: 100%;
-  max-width: toRem(552);
-}
-
-.contract-deployment-modal__header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: toRem(10);
-}
-
-.contract-deployment-modal__body {
+.deployment {
   margin-bottom: toRem(15);
-}
-
-.contract-deployment-modal__icon-title {
-  display: flex;
-  align-items: center;
-}
-
-.contract-deployment-modal__icon-wrp {
-  display: flex;
-  flex-direction: column;
-  position: relative;
-  width: toRem(32);
-  height: toRem(32);
-}
-
-.contract-deployment-modal__title-wrp {
-  margin-left: toRem(10);
-  display: flex;
-  flex-direction: column;
-  gap: toRem(8);
-}
-
-.contract-deployment-modal__title {
-  font-size: toRem(20);
-  font-weight: 600;
-  line-height: 1.3;
-  color: var(--text-primary-main);
 }
 </style>

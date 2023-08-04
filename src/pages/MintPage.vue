@@ -17,7 +17,7 @@
 
     <deployment-confirmation-modal
       v-model:is-shown="isDeploymentConfirmationModalShown"
-      @open-contract-deployment="updateContractDeploymentModalShown"
+      @open-contract-deployment="openContractDeploymentModal"
     />
 
     <contract-deployment-modal
@@ -76,7 +76,6 @@
           @on-success="onMintSuccess"
           @on-error="onError"
           @update-load-state="updateLoadState"
-          @deploy-contract="updateConfirmationModalShown"
         />
       </div>
     </div>
@@ -153,14 +152,14 @@ const onError = (msg: string) => {
   isErrorModalShown.value = true
 }
 
-const updateContractDeploymentModalShown = () => {
+const openContractDeploymentModal = () => {
   updateConfirmationModalShown()
   isContractDeploymentModalShown.value = true
 }
 
 const updateConfirmationModalShown = () => {
-  const val = isDeploymentConfirmationModalShown.value
-  isDeploymentConfirmationModalShown.value = !val
+  isDeploymentConfirmationModalShown.value =
+    !isDeploymentConfirmationModalShown.value
 }
 </script>
 

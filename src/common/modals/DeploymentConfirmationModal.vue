@@ -1,47 +1,48 @@
 <template>
   <modal
-    :is-shown="props.isShown"
+    :is-shown="isShown"
     :is-close-by-click-outside="isCloseByClickOutside"
     @update:is-shown="(value: boolean) => emit('update:is-shown', value)"
   >
     <template #default="{ modal }">
-      <div class="confirmation-modal__pane">
-        <div class="confirmation-modal__header">
-          <div class="confirmation-modal__icon-title">
-            <div class="confirmation-modal__icon-wrp">
+      <div class="deployment-confirmation-modal__pane">
+        <div class="deployment-confirmation-modal__header">
+          <div class="deployment-confirmation-modal__icon-title-wrp">
+            <div class="deployment-confirmation-modal__icon-wrp">
               <icon :name="$icons.deploy" />
             </div>
-            <div class="confirmation-modal__title-wrp">
-              <h5 class="confirmation-modal__title">
-                {{ $t('confirmation-modal.title') }}
+            <div class="deployment-confirmation-modal__title-wrp">
+              <h5 class="deployment-confirmation-modal__title">
+                {{ $t('deployment-confirmation-modal.title') }}
               </h5>
             </div>
           </div>
           <app-button
-            class="confirmation-modal__close-btn"
+            class="deployment-confirmation-modal__close-btn"
             scheme="default"
             :icon-right="$icons.x"
             @click="modal.close"
           />
         </div>
-        <div class="confirmation-modal__body">
-          <p class="confirmation-modal__subtitle">
-            {{ $t('confirmation-modal.subtitle') }}
+        <div class="deployment-confirmation-modal__body">
+          <p class="deployment-confirmation-modal__subtitle">
+            {{ $t('deployment-confirmation-modal.subtitle') }}
           </p>
         </div>
-        <div class="confirmation-modal__btns-wrp">
+        <div class="deployment-confirmation-modal__btns-wrp">
           <app-button
-            class="confirmation-modal__btn confirmation-modal__have-btn"
+            class="deployment-confirmation-modal__btn"
+            :class="'deployment-confirmation-modal__have-btn'"
             size="large"
             scheme="default"
-            :text="$t('confirmation-modal.have-btn')"
+            :text="$t('deployment-confirmation-modal.have-btn')"
             @click="modal.close"
           />
           <app-button
-            class="confirmation-modal__btn"
+            class="deployment-confirmation-modal__btn"
             size="large"
             color="success"
-            :text="$t('confirmation-modal.deploy-btn')"
+            :text="$t('deployment-confirmation-modal.deploy-btn')"
             @click="openContractDeployment"
           />
         </div>
@@ -52,16 +53,12 @@
 <script lang="ts" setup>
 import { Icon, AppButton, Modal } from '@/common'
 
-const props = withDefaults(
+withDefaults(
   defineProps<{
     isShown: boolean
     isCloseByClickOutside?: boolean
-    title?: string
-    subtitle?: string
   }>(),
   {
-    title: '',
-    subtitle: '',
     isCloseByClickOutside: true,
   },
 )
@@ -76,7 +73,7 @@ const emit = defineEmits<{
 }>()
 </script>
 <style lang="scss" scoped>
-.confirmation-modal__pane {
+.deployment-confirmation-modal__pane {
   background: var(--background-primary-main);
   padding: toRem(24);
   border-radius: toRem(8);
@@ -84,57 +81,57 @@ const emit = defineEmits<{
   max-width: toRem(652);
 }
 
-.confirmation-modal__header {
+.deployment-confirmation-modal__header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: toRem(10);
 }
 
-.confirmation-modal__title-wrp {
+.deployment-confirmation-modal__title-wrp {
   margin-left: toRem(10);
   display: flex;
   flex-direction: column;
   gap: toRem(8);
 }
 
-.confirmation-modal__title {
+.deployment-confirmation-modal__title {
   font-size: toRem(20);
   font-weight: 600;
   line-height: 1.3;
   color: var(--text-primary-main);
 }
 
-.confirmation-modal__icon-title {
+.deployment-confirmation-modal__icon-title-wrp {
   display: flex;
   align-items: center;
 }
 
-.confirmation-modal__icon-wrp {
+.deployment-confirmation-modal__icon-wrp {
   width: toRem(32);
   height: toRem(32);
 }
 
-.confirmation-modal__subtitle {
+.deployment-confirmation-modal__subtitle {
   font-size: toRem(16);
   font-weight: 400;
   line-height: 1.45;
   color: var(--text-secondary-light);
 }
 
-.confirmation-modal__btns-wrp {
+.deployment-confirmation-modal__btns-wrp {
   display: flex;
   justify-content: center;
   margin-top: toRem(15);
 }
 
-.confirmation-modal__btn {
+.deployment-confirmation-modal__btn {
   width: 100%;
   border-radius: toRem(8);
   margin-right: toRem(10);
 }
 
-.confirmation-modal__have-btn {
+.deployment-confirmation-modal__have-btn {
   color: var(--info-main);
 }
 </style>

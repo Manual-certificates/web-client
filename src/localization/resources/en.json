@@ -116,7 +116,7 @@
     "title": "Enter the contract address",
     "description": "Enter the course contract address where certificates will be issued"
   },
-  "confirmation-modal" : {
+  "deployment-confirmation-modal" : {
     "title" : "Do you have a smart contract to deploy SBT Certificates?",
     "subtitle" : "In order to issue SBT certificates for your course, you must have a deployed smart contract on the Polygon network. If you already have such a contract, then click the \"Yes, I have\" button. If you do not have a smart contract that you want to use or you need another one - click on the \"Deploy\" button and follow the prompts that appear next",
     "have-btn" : "Yes, I have",
@@ -126,7 +126,9 @@
     "title" : "Contract deployment"
   },
   "deploy-step" : {
-    "subtitle" : "In order to deploy a contract, you need to select a contract name. Then click the \"Deploy\" button, confirm the transaction in MetaMask and pay network fee",
+    "subtitle" : "In order to deploy a contract, you need to select a contract name. Then click the \"Deploy\" button, confirm the transaction in MetaMask and pay network fee"
+  },
+  "deploy-contract-form" : {
     "contract-name" : "Contract name",
     "deploy-btn" : "Deploy"
   },

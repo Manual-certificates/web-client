@@ -1,31 +1,33 @@
 <template>
-  <div class="deployed-step__body">
-    <span class="deployed-step__subtitle">
-      {{ $t('deployed-step.subtitle') }}
-    </span>
-  </div>
-  <div class="deployed-step__verified-wrp">
-    <div class="deployed-step__field-input">
-      <input-field
-        v-model="deployedContractAddress"
-        :readonly="deployedContractAddress"
+  <div class="deployed-step">
+    <div class="deployed-step__title-wrp">
+      <span class="deployed-step__title">
+        {{ $t('deployed-step.subtitle') }}
+      </span>
+    </div>
+    <div class="deployed-step__verified-wrp">
+      <div class="deployed-step__input-wrp">
+        <input-field
+          v-model="deployedContractAddress"
+          :readonly="deployedContractAddress"
+        />
+      </div>
+      <app-button
+        size="small"
+        color="info"
+        :icon-right="$icons.copy"
+        @click="copyToClipboard(props.address)"
       />
     </div>
-    <app-button
-      size="small"
-      color="info"
-      :icon-right="$icons.copy"
-      @click="copyToClipboard(props.address)"
-    />
-  </div>
-  <div class="deployed-step__btns-wrp">
-    <app-button
-      class="deployed-step__ok-btn"
-      size="large"
-      color="info"
-      :text="$t('deployed-step.ok-btn')"
-      @click="emit('close')"
-    />
+    <div class="deployed-step__btns-wrp">
+      <app-button
+        class="deployed-step__ok-btn"
+        size="large"
+        color="info"
+        :text="$t('deployed-step.ok-btn')"
+        @click="emit('close')"
+      />
+    </div>
   </div>
 </template>
 <script lang="ts" setup>
@@ -45,7 +47,7 @@ const emit = defineEmits<{
 }>()
 </script>
 <style lang="scss" scoped>
-.deployed-step__body {
+.deployed-step__title-wrp {
   margin-bottom: toRem(15);
 }
 
@@ -66,12 +68,12 @@ const emit = defineEmits<{
   justify-content: space-between;
 }
 
-.deployed-step__field-input {
+.deployed-step__input-wrp {
   width: 100%;
   padding-right: toRem(15);
 }
 
-.deployed-step__subtitle {
+.deployed-step__title {
   font-size: toRem(16);
   font-weight: 400;
   line-height: 1.45;

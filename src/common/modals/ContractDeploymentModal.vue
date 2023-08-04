@@ -1,13 +1,13 @@
 <template>
   <modal
-    :is-shown="props.isShown"
+    :is-shown="isShown"
     :is-close-by-click-outside="isCloseByClickOutside"
     @update:is-shown="(value: boolean) => emit('update:is-shown', value)"
   >
     <template #default="{ modal }">
       <div class="contract-deployment-modal__pane">
         <div class="contract-deployment-modal__header">
-          <div class="contract-deployment-modal__icon-title">
+          <div class="contract-deployment-modal__icon-title-wrp">
             <div class="contract-deployment-modal__icon-wrp">
               <icon :name="$icons.deploy" />
             </div>
@@ -26,27 +26,25 @@
           />
         </div>
 
-        <deployment-steps
-          @close="modal.close"
-          @update:error-msg="(msg:string) => emit('update:error-msg', msg)"
-        />
+        <div class="contract-deployment-modal__body">
+          <deployment
+            @close="modal.close"
+            @update:error-msg="(msg:string) => emit('update:error-msg', msg)"
+          />
+        </div>
       </div>
     </template>
   </modal>
 </template>
 <script lang="ts" setup>
-import { DeploymentSteps, Icon, AppButton, Modal } from '@/common'
+import { Deployment, Icon, AppButton, Modal } from '@/common'
 
-const props = withDefaults(
+withDefaults(
   defineProps<{
     isShown: boolean
     isCloseByClickOutside?: boolean
-    title?: string
-    subtitle?: string
   }>(),
   {
-    title: '',
-    subtitle: '',
     isCloseByClickOutside: true,
   },
 )
@@ -73,11 +71,7 @@ const emit = defineEmits<{
   margin-bottom: toRem(10);
 }
 
-.contract-deployment-modal__body {
-  margin-bottom: toRem(15);
-}
-
-.contract-deployment-modal__icon-title {
+.contract-deployment-modal__icon-title-wrp {
   display: flex;
   align-items: center;
 }
