@@ -21,7 +21,7 @@
         class="mint-form__btn"
         size="large"
         color="info"
-        :disabled="isMintButtonDisabled"
+        :disabled="!isFormValid() || !props.isFileUploaded"
         :text="$t('mint-form.issue-btn')"
         @click="emit('mint', form.address)"
       />
@@ -32,7 +32,7 @@
 <script setup lang="ts">
 import { InputField } from '@/fields'
 import { AppButton } from '@/common'
-import { computed, reactive } from 'vue'
+import { reactive } from 'vue'
 import { address } from '@/validators'
 import { useFormValidation } from '@/composables'
 
@@ -50,14 +50,6 @@ const form = reactive({
 
 const { isFormValid, getFieldErrorMessage } = useFormValidation(form, {
   address: { address },
-})
-
-const isMintButtonDisabled = computed((): boolean => {
-  if (!form.address.length) {
-    return false
-  }
-
-  return !isFormValid() || !props.isFileUploaded
 })
 </script>
 

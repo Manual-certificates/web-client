@@ -33,16 +33,10 @@ const emit = defineEmits<{
   (e: 'update-load-state', v: number): void
   (e: 'on-success', hash: string): void
   (e: 'on-error', msg: string): void
-  (e: 'deploy-contract'): void
 }>()
 
 const mintCertificates = async (address: string) => {
   try {
-    if (!address.length) {
-      emit('deploy-contract')
-      return
-    }
-
     emit('update:is-loader-modal-shown', true)
     const { addresses, URIs } = await sendToIPFS()
     const hash = await useTokenContact(address).useMintBatch(addresses, URIs)

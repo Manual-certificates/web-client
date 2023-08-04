@@ -84,7 +84,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { FileItemType } from '@/types'
 import {
   SuccessModal,
@@ -116,6 +116,8 @@ const txHash = ref('')
 const errorMsg = ref('')
 
 const MAX_CERTIFICATES_COUNT = 100
+
+onMounted(() => updateConfirmationModalShown())
 
 const removeCertificate = (certificate: FileItemType) => {
   certificateList.value = certificateList.value.filter(

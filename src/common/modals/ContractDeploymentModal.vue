@@ -26,45 +26,16 @@
           />
         </div>
 
-        <div class="contract-deployment-modal__body">
-          <deploy-step
-            v-if="isStepDeploy"
-            @deploy-contract="(name: string) => deployTokenContract(name)"
-          />
-          <deploying-step v-else-if="isStepDeploying" />
-          <deployed-step
-            v-else-if="isStepDeployed"
-            :address="deployedContractAddress"
-            @close="modal.close"
-          />
-        </div>
+        <deployment-steps
+          @close="modal.close"
+          @update:error-msg="(msg:string) => emit('update:error-msg', msg)"
+        />
       </div>
     </template>
   </modal>
 </template>
 <script lang="ts" setup>
-import { ErrorHandler } from '@/helpers'
-import {
-  DeployStep,
-  DeployingStep,
-  DeployedStep,
-  Icon,
-  AppButton,
-  Modal,
-} from '@/common'
-import { ref, computed } from 'vue'
-import { useTokenContactDeployer } from '@/composables'
-import { config } from '@config'
-import { useI18n } from 'vue-i18n'
-import { DEPLOYMENT_STEP } from '@/enums'
-const { t } = useI18n()
-
-const deployedContractAddress = ref('')
-
-const step = ref(DEPLOYMENT_STEP.deploy)
-const isStepDeploy = computed(() => step.value === DEPLOYMENT_STEP.deploy)
-const isStepDeploying = computed(() => step.value === DEPLOYMENT_STEP.deploying)
-const isStepDeployed = computed(() => step.value === DEPLOYMENT_STEP.deployed)
+import { DeploymentSteps, Icon, AppButton, Modal } from '@/common'
 
 const props = withDefaults(
   defineProps<{
@@ -84,27 +55,6 @@ const emit = defineEmits<{
   (e: 'update:is-shown', v: boolean): void
   (e: 'update:error-msg', v: string): void
 }>()
-
-async function deployTokenContract(name: string) {
-  try {
-    step.value = DEPLOYMENT_STEP.deploying
-
-    const res = await useTokenContactDeployer(
-      config.TOKEN_CONTRACT_ADDR,
-    ).deployTokenContract(name, name, '')
-
-    if (!res) {
-      throw new Error('empty deployed address')
-    }
-
-    deployedContractAddress.value = res
-    step.value = DEPLOYMENT_STEP.deployed
-  } catch (error) {
-    ErrorHandler.process(error)
-    emit('update:error-msg', t('errors.failed-sent-tx'))
-    // step.value = DEPLOYMENT_STEP.deploy
-  }
-}
 </script>
 
 <style lang="scss" scoped>
