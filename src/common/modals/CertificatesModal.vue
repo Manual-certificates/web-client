@@ -41,6 +41,7 @@
 
         <certificates-item-list
           v-model:page-count="pageCount"
+          class="certificates-modal__certificate_list"
           :certificate-list="filteredCertificateList"
           @remove-certificate="removeItem"
         />
@@ -129,8 +130,8 @@ const hasMoreCertificates = computed(() => {
 }
 
 .certificates-modal__search {
-  padding: 3%;
-  margin: auto;
+  padding: 0 toRem(15);
+  margin: 0 auto;
 }
 
 .certificates-modal__header-title {
@@ -151,12 +152,11 @@ const hasMoreCertificates = computed(() => {
 }
 
 .certificates-modal__close-btn-wrp {
-  display: flex;
-  justify-content: center;
   padding: toRem(24);
   position: absolute;
   left: 0;
   right: 0;
+  bottom: 0;
   margin: 0 auto;
 
   @include respond-to(x-small) {
