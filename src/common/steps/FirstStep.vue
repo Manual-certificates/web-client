@@ -124,11 +124,8 @@ const parseImages = (fileList: File[]) => {
 .first-step__select-item {
   display: flex;
   max-width: toRem(300);
-  min-width: toRem(250);
   max-height: toRem(72);
-  min-height: toRem(50);
   margin-right: toRem(10);
-  width: auto;
   height: 100%;
 
   @include respond-to(large) {

@@ -65,7 +65,7 @@ import { AppButton, Modal, CertificatesItemList } from '@/common'
 import { computed, ref } from 'vue'
 import { FileItemType } from '@/types'
 import { InputField } from '@/fields'
-import { useSearchInTheList } from '@/helpers/certificate-list.helpers'
+import { searchInTheList } from '@/helpers/certificate-list.helpers'
 
 const searchData = ref('')
 const pageCount = ref(0)
@@ -92,7 +92,7 @@ const emit = defineEmits<{
 }>()
 
 const filteredCertificateList = computed(() =>
-  useSearchInTheList(props.certificateList, searchData.value),
+  searchInTheList(props.certificateList, searchData.value),
 )
 
 const removeItem = (certificate: FileItemType) => {

@@ -1,6 +1,6 @@
 import { FileItemType } from '@/types'
 
-export const useSearchInTheList = (
+export const searchInTheList = (
   certificatesList: FileItemType[],
   data: string,
 ) => {
