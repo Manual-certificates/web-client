@@ -11,11 +11,9 @@
             <div class="deployment-confirmation-modal__icon-wrp">
               <icon :name="$icons.deploy" />
             </div>
-            <div class="deployment-confirmation-modal__title-wrp">
-              <h5 class="deployment-confirmation-modal__title">
-                {{ $t('deployment-confirmation-modal.title') }}
-              </h5>
-            </div>
+            <h5 class="deployment-confirmation-modal__title">
+              {{ $t('deployment-confirmation-modal.title') }}
+            </h5>
           </div>
           <app-button
             class="deployment-confirmation-modal__close-btn"
@@ -24,11 +22,9 @@
             @click="modal.close"
           />
         </div>
-        <div class="deployment-confirmation-modal__body">
-          <p class="deployment-confirmation-modal__subtitle">
-            {{ $t('deployment-confirmation-modal.subtitle') }}
-          </p>
-        </div>
+        <p class="deployment-confirmation-modal__subtitle">
+          {{ $t('deployment-confirmation-modal.subtitle') }}
+        </p>
         <div class="deployment-confirmation-modal__btns-wrp">
           <app-button
             class="deployment-confirmation-modal__btn"
@@ -88,18 +84,15 @@ const emit = defineEmits<{
   margin-bottom: toRem(10);
 }
 
-.deployment-confirmation-modal__title-wrp {
-  margin-left: toRem(10);
-  display: flex;
-  flex-direction: column;
-  gap: toRem(8);
-}
-
 .deployment-confirmation-modal__title {
   font-size: toRem(20);
   font-weight: 600;
   line-height: 1.3;
   color: var(--text-primary-main);
+  margin-left: toRem(10);
+  display: flex;
+  flex-direction: column;
+  gap: toRem(8);
 }
 
 .deployment-confirmation-modal__icon-title-wrp {

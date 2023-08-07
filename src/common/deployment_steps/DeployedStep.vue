@@ -8,15 +8,18 @@
     <div class="deployed-step__verified-wrp">
       <div class="deployed-step__input-wrp">
         <input-field
-          v-model="deployedContractAddress"
-          :readonly="deployedContractAddress"
+          :readonly="true"
+          :model-value="address"
+          :error-message="
+            !address.length ? t('errors.empty-deployed-address') : ''
+          "
         />
       </div>
       <app-button
         size="small"
         color="info"
         :icon-right="$icons.copy"
-        @click="copyToClipboard(props.address)"
+        @click="copyToClipboard(address)"
       />
     </div>
     <div class="deployed-step__btns-wrp">
@@ -34,13 +37,12 @@
 import { copyToClipboard } from '@/helpers'
 import { InputField } from '@/fields'
 import { AppButton } from '@/common'
-import { ref } from 'vue'
+import { useI18n } from 'vue-i18n'
+const { t } = useI18n()
 
-const props = defineProps<{
+defineProps<{
   address: string
 }>()
-
-const deployedContractAddress = ref(props.address)
 
 const emit = defineEmits<{
   (e: 'close'): void

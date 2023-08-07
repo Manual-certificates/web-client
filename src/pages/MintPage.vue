@@ -83,7 +83,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { ref } from 'vue'
 import { FileItemType } from '@/types'
 import {
   SuccessModal,
@@ -104,7 +104,7 @@ const isCertificatesModalShown = ref(false)
 const isLoaderModalShown = ref(false)
 const isErrorModalShown = ref(false)
 const isSuccessModalShown = ref(false)
-const isDeploymentConfirmationModalShown = ref(false)
+const isDeploymentConfirmationModalShown = ref(true)
 const isContractDeploymentModalShown = ref(false)
 
 const tableData = ref<string[][]>([])
@@ -115,8 +115,6 @@ const txHash = ref('')
 const errorMsg = ref('')
 
 const MAX_CERTIFICATES_COUNT = 100
-
-onMounted(() => updateConfirmationModalShown())
 
 const removeCertificate = (certificate: FileItemType) => {
   certificateList.value = certificateList.value.filter(
@@ -153,13 +151,8 @@ const onError = (msg: string) => {
 }
 
 const openContractDeploymentModal = () => {
-  updateConfirmationModalShown()
+  isDeploymentConfirmationModalShown.value = false
   isContractDeploymentModalShown.value = true
-}
-
-const updateConfirmationModalShown = () => {
-  isDeploymentConfirmationModalShown.value =
-    !isDeploymentConfirmationModalShown.value
 }
 </script>
 

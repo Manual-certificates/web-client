@@ -10,9 +10,7 @@
     </div>
     <input-field
       v-model="form.contractName"
-      :error-message="
-        form.contractName.length ? getFieldErrorMessage('contractName') : ''
-      "
+      :error-message="getFieldErrorMessage('contractName')"
     />
   </div>
   <div class="deploy-contract-form__btns-wrp">
