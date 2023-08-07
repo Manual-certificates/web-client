@@ -15,7 +15,7 @@
                 $t('certificates-modal.count', {
                   start: (pageCount * CERTIFICATES_ON_PAGE).toString(),
                   end: ((pageCount + 1) * CERTIFICATES_ON_PAGE).toString(),
-                  number: certificateList.length.toString(),
+                  number: filteredCertificateList.length.toString(),
                 })
               }}
             </p>
@@ -37,6 +37,7 @@
           v-model="searchData"
           class="certificates-modal__search"
           :placeholder="$t('certificates-modal.search-placeholder')"
+          @input="moveToStart"
         />
 
         <certificates-item-list
@@ -68,6 +69,7 @@ import { useSearchInTheList } from '@/helpers/certificate-list.helpers'
 
 const searchData = ref('')
 const pageCount = ref(0)
+const pageCountBuffer = ref(0)
 
 const CERTIFICATES_ON_PAGE = 5
 
@@ -99,9 +101,22 @@ const removeItem = (certificate: FileItemType) => {
 
 const hasMoreCertificates = computed(() => {
   return (
-    (pageCount.value + 1) * CERTIFICATES_ON_PAGE >= props.certificateList.length
+    (pageCount.value + 1) * CERTIFICATES_ON_PAGE >=
+    filteredCertificateList.value.length
   )
 })
+
+const moveToStart = () => {
+  if (!searchData.value && Boolean(pageCountBuffer)) {
+    pageCount.value = pageCountBuffer.value
+    return
+  }
+  if (!pageCount.value) {
+    return
+  }
+  pageCountBuffer.value = pageCount.value
+  pageCount.value = 0
+}
 </script>
 
 <style lang="scss" scoped>
