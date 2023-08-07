@@ -21,6 +21,7 @@
     "generate-ether-types": "typechain --target=ethers-v5 'src/abi/**/*.json' --out-dir src/types/contracts"
   },
   "dependencies": {
+    "@distributedlab/w3p": "^1.0.0-rc.6",
     "@esbuild-plugins/node-globals-polyfill": "^0.2.3",
     "@esbuild-plugins/node-modules-polyfill": "^0.2.2",
     "@solana/web3.js": "1.52.0",

@@ -52,6 +52,8 @@ onBeforeMount(() => {
   text-align: center;
   justify-content: space-between;
   border-radius: toRem(8);
+  height: 100%;
+  width: 100%;
 }
 
 .file-item__btn {
@@ -63,11 +65,20 @@ onBeforeMount(() => {
   }
 }
 
+.file-item__text {
+  @include respond-to(xmedium) {
+    margin: 0 toRem(20);
+  }
+}
+
 .file-item__content {
   display: flex;
   text-align: left;
   padding: toRem(2);
   align-items: center;
+  max-width: toRem(200);
+  width: 100%;
+  height: 100%;
 }
 
 .file-item__icon {
@@ -77,6 +88,10 @@ onBeforeMount(() => {
 
   @include respond-to(large) {
     width: toRem(30);
+  }
+
+  @include respond-to(xmedium) {
+    display: none;
   }
 }
 

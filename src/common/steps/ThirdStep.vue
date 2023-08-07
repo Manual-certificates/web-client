@@ -8,19 +8,26 @@
     <p class="third-page__field-description">
       {{ $t('third-step.description') }}
     </p>
-    <mint-form :is-file-uploaded="isReady" @mint="mintCertificates" />
+    <mint-form
+      :is-file-uploaded="isReady"
+      :disabled="!isReady"
+      @mint="mintCertificates"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
 import { useTokenContact } from '@/composables'
-import { ErrorHandler } from '@/helpers'
 import { IpfsUtil } from '@/utils'
 import { useI18n } from 'vue-i18n'
 import { MintForm } from '@/forms'
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { FileItemType } from '@/types'
+import { useWeb3ProvidersStore } from '@/store'
+import { config } from '@/config'
+
 const { t } = useI18n()
+const web3Store = useWeb3ProvidersStore()
 
 const props = defineProps<{
   certificateList: FileItemType[]
@@ -35,20 +42,37 @@ const emit = defineEmits<{
   (e: 'on-error', msg: string): void
 }>()
 
+const isValidChain = computed(
+  () =>
+    String(web3Store.provider.chainId).toLowerCase() ===
+    config.SUPPORTED_CHAIN_ID.toLowerCase(),
+)
+
 const mintCertificates = async (address: string) => {
   try {
     emit('update:is-loader-modal-shown', true)
+    if (!isValidChain.value) {
+      emit('on-error', t('errors.unsupported-chain'))
+      return
+    }
     const { addresses, URIs } = await sendToIPFS()
-    const hash = await useTokenContact(address).useMintBatch(addresses, URIs)
+    if (!addresses.length) {
+      emit('on-error', t('errors.failed-sent-to-ipfs'))
+      return
+    }
 
+    const tokenContact = useTokenContact(address)
+
+    const hash = await tokenContact.useMintBatch(addresses, URIs)
     if (!hash) {
-      ErrorHandler.process(t('errors.failed-sent-tx'))
+      emit('on-error', t('errors.failed-sent-tx'))
+
       return
     }
 
     emit('on-success', hash)
   } catch (error) {
-    emit('on-error', t('errors.failed-sent-tx'))
+    emit('on-error', t('errors.default'))
   }
   emit('update-load-state', 0)
 }

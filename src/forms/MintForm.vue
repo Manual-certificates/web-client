@@ -60,7 +60,8 @@ const { isFormValid, getFieldErrorMessage } = useFormValidation(form, {
 }
 
 .mint-form__btn {
-  width: toRem(200);
+  max-width: toRem(200);
+  width: 100%;
   border-radius: toRem(8);
   margin-right: toRem(10);
 }

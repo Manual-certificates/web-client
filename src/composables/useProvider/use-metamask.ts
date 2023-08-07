@@ -31,6 +31,7 @@ export const useMetamask = (provider: ProviderInstance): ProviderWrapper => {
         'any',
       ),
   )
+
   const currentSigner = computed(() => currentProvider.value.getSigner())
 
   const isConnected = computed(() =>
@@ -133,11 +134,9 @@ export const useMetamask = (provider: ProviderInstance): ProviderWrapper => {
   return {
     currentProvider,
     currentSigner,
-
     chainId,
     selectedAddress,
     isConnected,
-
     init,
     connect,
     switchChain,

@@ -30,7 +30,7 @@
         :description="$t('first-step.select-images-description')"
         @handle-files-upload="parseImages"
       />
-      <div v-if="certificateList.length" class="first-step__field-images">
+      <div v-if="certificateList.length" class="first-step__field-files-list">
         <div
           v-for="item in certificateList.slice(0, CERTIFICATES_ON_PAGE)"
           :key="item.title"
@@ -115,18 +115,14 @@ const parseImages = (fileList: File[]) => {
   width: 100%;
   height: 100%;
   margin-right: toRem(15);
-
-  @include respond-to(large) {
-    max-width: toRem(250);
-  }
 }
 
 .first-step__select-item {
   display: flex;
   max-width: toRem(300);
   max-height: toRem(72);
-  margin-right: toRem(10);
-  height: 100%;
+  margin-right: toRem(15);
+  width: 100%;
 
   @include respond-to(large) {
     max-width: toRem(260);
@@ -154,8 +150,10 @@ const parseImages = (fileList: File[]) => {
   line-height: 1.5;
 }
 
-.first-step__field-images {
+.first-step__field-files-list {
   display: flex;
+  justify-content: space-evenly;
+  width: 100%;
   overflow: hidden;
 }
 

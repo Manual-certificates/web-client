@@ -54,7 +54,8 @@ const emit = defineEmits<{
 }
 
 .certificate-item__img-wrp {
-  margin: auto 0;
+  display: flex;
+  margin: auto;
   width: toRem(33);
   height: toRem(26);
 }
