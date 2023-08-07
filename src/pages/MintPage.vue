@@ -37,6 +37,7 @@
 
         <third-step
           v-model:is-loader-modal-shown="isLoaderModalShown"
+          class="mint-page__third-step"
           :table-data="tableData"
           :certificate-list="certificateList"
           :is-ready="filesIsReady()"
@@ -140,7 +141,6 @@ const onError = (msg: string) => {
 <style lang="scss" scoped>
 .mint-page {
   max-width: var(--page-large);
-  min-width: var(--page-small);
   width: 100%;
   margin: 0 auto;
 }
