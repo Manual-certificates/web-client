@@ -8,7 +8,7 @@
     <div class="deployed-step__verified-wrp">
       <div class="deployed-step__input-wrp">
         <input-field
-          :readonly="true"
+          readonly
           :model-value="address"
           :error-message="
             !address.length ? t('errors.empty-deployed-address') : ''

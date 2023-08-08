@@ -11,20 +11,23 @@ export const useTokenContactDeployer = (address: string) => {
 
   const contractInterface = TokenContractDeployer__factory.createInterface()
 
-  if (!web3ProvidersStore.provider) return
-
   const signer = web3ProvidersStore.provider.currentSigner
-  if (signer === undefined) return
 
-  const contractInstance = computed(() =>
-    TokenContractDeployer__factory.connect(address, signer),
+  const contractInstance = computed(
+    () =>
+      (!!address &&
+        !!signer &&
+        TokenContractDeployer__factory.connect(address, signer)) ||
+      undefined,
   )
 
-  const deployTokenContract = async (
+  const createFunctionsParams = async (
     tokenName: string,
     tokenContract: string,
     baseUri: string,
-  ): Promise<string> => {
+  ) => {
+    if (!signer) return { inputs: '', salt: '' }
+
     const params = ethers.utils.defaultAbiCoder
       .encode(
         ['string', 'string', 'string'],
@@ -40,6 +43,7 @@ export const useTokenContactDeployer = (address: string) => {
       ethers.BigNumber.from(ethers.utils.randomBytes(32)).toHexString(),
       32,
     )
+
     const userAddr = await signer.getAddress()
 
     const salt = ethers.utils.keccak256(
@@ -50,20 +54,35 @@ export const useTokenContactDeployer = (address: string) => {
       ]),
     )
 
+    return {
+      inputs,
+      salt,
+    }
+  }
+
+  const deployTokenContract = async (inputs: string, salt: string) => {
     const data = contractInterface.encodeFunctionData('deployTokenContract', [
       inputs,
       salt,
     ])
 
-    await web3ProvidersStore.provider.signAndSendTx({
+    const receipt = await web3ProvidersStore.provider.signAndSendTx({
       to: contractAddress.value,
       data,
     })
+
+    return receipt
+  }
+
+  const predictTokenAddress = async (inputs: string, salt: string) => {
+    if (!contractInstance.value) return ''
 
     return contractInstance.value.predictTokenAddress(inputs, salt)
   }
 
   return {
+    createFunctionsParams,
     deployTokenContract,
+    predictTokenAddress,
   }
 }

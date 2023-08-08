@@ -38,14 +38,16 @@ async function deployTokenContract(name: string) {
   try {
     step.value = DEPLOYMENT_STEP.deploying
 
-    const deployerContract = useTokenContactDeployer(config.TOKEN_CONTRACT_ADDR)
-    if (!deployerContract) {
-      throw new Error(t('errors.invalid-contract-deployer'))
-    }
+    const { createFunctionsParams, deployTokenContract, predictTokenAddress } =
+      useTokenContactDeployer(config.TOKEN_CONTRACT_ADDR)
 
-    const res = await deployerContract.deployTokenContract(name, name, '')
+    const funcParams = await createFunctionsParams(name, name, '')
+    await deployTokenContract(funcParams.inputs, funcParams.salt)
+    deployedContractAddress.value = await predictTokenAddress(
+      funcParams.inputs,
+      funcParams.salt,
+    )
 
-    deployedContractAddress.value = res
     step.value = DEPLOYMENT_STEP.deployed
   } catch (error) {
     ErrorHandler.process(error)
