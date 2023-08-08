@@ -36,7 +36,7 @@ const props = defineProps<{
   isReady: boolean
 }>()
 
-//todo think about cleaning
+//TODO think about cleaning
 const emit = defineEmits<{
   (e: 'update:is-loader-modal-shown', v: boolean): void
   (e: 'update-load-state', v: number): void
