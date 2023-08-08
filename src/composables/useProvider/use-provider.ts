@@ -20,7 +20,6 @@ import { useWeb3ProvidersStore } from '@/store'
 export interface UseProvider {
   currentProvider: ComputedRef<ethers.providers.Web3Provider | undefined>
   currentSigner: ComputedRef<ethers.providers.JsonRpcSigner | undefined>
-
   selectedProvider: Ref<PROVIDERS | undefined>
   chainId: ComputedRef<ChainId | undefined>
   selectedAddress: ComputedRef<string | undefined>
@@ -49,6 +48,7 @@ export const useProvider = (): UseProvider => {
       providerWrp.value
         ?.currentProvider as unknown as ethers.providers.Web3Provider,
   )
+
   const currentSigner = computed(
     () =>
       providerWrp.value
@@ -174,7 +174,6 @@ export const useProvider = (): UseProvider => {
   return {
     currentProvider,
     currentSigner,
-
     selectedProvider,
     chainId,
     selectedAddress,

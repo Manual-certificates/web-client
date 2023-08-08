@@ -1,28 +1,5 @@
 <template>
   <div class="mint-page">
-    <certificates-modal
-      v-model:is-shown="isCertificatesModalShown"
-      class="mint-page__certificate-modal"
-      :certificate-list="certificateList.slice(0, MAX_CERTIFICATES_COUNT)"
-      @remove-certificate="removeCertificate"
-    />
-
-    <loader-modal
-      :title="$t('mint-page.loader-modal-title')"
-      :description="$t('mint-page.loader-modal-description')"
-      :is-shown="isLoaderModalShown"
-      :load-state="loadState"
-      :file-count="certificateList.length"
-    />
-
-    <error-modal v-model:is-shown="isErrorModalShown" :error-msg="errorMsg" />
-
-    <success-modal
-      v-model:is-shown="isSuccessModalShown"
-      :tx="txHash"
-      @success="router.push({ name: $routes.main })"
-    />
-
     <h2 class="mint-page__title">
       {{ $t('mint-page.title') }}
     </h2>
@@ -60,6 +37,7 @@
 
         <third-step
           v-model:is-loader-modal-shown="isLoaderModalShown"
+          class="mint-page__third-step"
           :table-data="tableData"
           :certificate-list="certificateList"
           :is-ready="filesIsReady()"
@@ -69,6 +47,29 @@
         />
       </div>
     </div>
+
+    <certificates-modal
+      v-model:is-shown="isCertificatesModalShown"
+      class="mint-page__certificate-modal"
+      :certificate-list="certificateList.slice(0, MAX_CERTIFICATES_COUNT)"
+      @remove-certificate="removeCertificate"
+    />
+
+    <loader-modal
+      :title="$t('mint-page.loader-modal-title')"
+      :description="$t('mint-page.loader-modal-description')"
+      :is-shown="isLoaderModalShown"
+      :load-state="loadState"
+      :file-count="certificateList.length"
+    />
+
+    <error-modal v-model:is-shown="isErrorModalShown" :error-msg="errorMsg" />
+
+    <success-modal
+      v-model:is-shown="isSuccessModalShown"
+      :tx="txHash"
+      @success="router.push({ name: $routes.main })"
+    />
   </div>
 </template>
 
@@ -107,6 +108,7 @@ const removeCertificate = (certificate: FileItemType) => {
     obj => obj.title !== certificate.title,
   )
 }
+
 const addCertificate = (certificate: FileItemType) => {
   certificateList.value.push(certificate)
 }
@@ -130,7 +132,6 @@ const onTableData = (data: string[][], file: FileItemType) => {
 }
 
 const onError = (msg: string) => {
-  isLoaderModalShown.value = false
   errorMsg.value = msg
   isErrorModalShown.value = true
 }
@@ -139,7 +140,6 @@ const onError = (msg: string) => {
 <style lang="scss" scoped>
 .mint-page {
   max-width: var(--page-large);
-  min-width: var(--page-small);
   width: 100%;
   margin: 0 auto;
 }

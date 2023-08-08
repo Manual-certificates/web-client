@@ -41,7 +41,6 @@ init()
 
 <style lang="scss" scoped>
 .app__container {
-  overflow: hidden;
   display: grid;
   grid-template-rows: toRem(85) 1fr max-content;
   flex: 1;
