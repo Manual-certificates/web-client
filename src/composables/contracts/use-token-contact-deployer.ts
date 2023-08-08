@@ -1,8 +1,7 @@
 import { computed, ref } from 'vue'
-import { TokenContractDeployer__factory } from '@/types'
+import { TokenContractDeployer__factory, TokenContract__factory } from '@/types'
 import { useWeb3ProvidersStore } from '@/store'
 import { ethers } from 'ethers'
-import { TokenContract__factory } from '@/types/contracts/factories/contracts'
 
 export const useTokenContactDeployer = (address: string) => {
   const web3ProvidersStore = useWeb3ProvidersStore()

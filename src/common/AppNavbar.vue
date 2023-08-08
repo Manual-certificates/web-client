@@ -6,7 +6,7 @@
       <app-button
         class="app-navbar__btn"
         :text="abbrCenter(
-          provider.isConnected, provider.selectedAddress!) ||
+         web3Store.provider.isConnected, web3Store.provider.selectedAddress!) ||
           $t('app-navbar.metamask-connect')"
         :icon-left="$icons.metamask"
         @click="connect"
@@ -20,10 +20,10 @@ import { abbrCenter } from '@/helpers'
 import { AppButton, AppLogo } from '@/common'
 import { useWeb3ProvidersStore } from '@/store'
 
-const { provider } = useWeb3ProvidersStore()
+const web3Store = useWeb3ProvidersStore()
 
 const connect = async () => {
-  await provider.connect()
+  await web3Store.provider.connect()
 }
 </script>
 

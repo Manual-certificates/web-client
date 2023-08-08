@@ -3,6 +3,16 @@ import { errors } from '@/errors'
 import { ethers } from 'ethers'
 import { EIP1193, EIP1474 } from '@/enums'
 
+export const validateAddresses = (addresses: string[]): boolean => {
+  for (const address of addresses) {
+    if (!ethers.utils.isAddress(address)) {
+      return false
+    }
+  }
+
+  return true
+}
+
 export const connectEthAccounts = async (
   provider: ethers.providers.Web3Provider,
 ) => {

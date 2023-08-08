@@ -81,7 +81,7 @@ const _abi = [
     name: "tokenContract",
     outputs: [
       {
-        internalType: "contract ProxyBeacon",
+        internalType: "address",
         name: "",
         type: "address",
       },

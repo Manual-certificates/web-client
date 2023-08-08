@@ -33,6 +33,7 @@
     "provider-wrapper-method-not-found": "provider not exist or hasn't this method",
     "provider-not-found": "Provider does not exist",
     "files-not-found": "Files not found",
+    "failed-sent-to-ipfs": "Failed to sent  files to IPFS",
     "failed-sent-tx": "Failed to  send  tx",
     "failed-init-contract": "Failed to  init contract: empty address",
     "failed-init-mint": "Failed to call mint: empty provider",
@@ -40,7 +41,10 @@
     "error-empty-file": "empty file",
     "empty-deployed-address" : "Address of deployed contract is empty",
     "invalid-signer" : "Failed to initialize signer",
-    "invalid-contract-deployer" : "Contract deployer contract is invalid" 
+    "invalid-contract-deployer" : "Contract deployer contract is invalid",
+    "unsupported-chain": "Unsupported chain",
+    "invalid-address-in-table": "Invalid address in table"
+
   },
   "notification": {
     "default-title-success": "Success",

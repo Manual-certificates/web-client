@@ -268,8 +268,10 @@ export interface TokenContractInterface extends utils.Interface {
     "AdminChanged(address,address)": EventFragment;
     "Approval(address,address,uint256)": EventFragment;
     "ApprovalForAll(address,address,bool)": EventFragment;
+    "BatchMetadataUpdate(uint256,uint256)": EventFragment;
     "BeaconUpgraded(address)": EventFragment;
     "Initialized(uint8)": EventFragment;
+    "MetadataUpdate(uint256)": EventFragment;
     "OwnershipTransferred(address,address)": EventFragment;
     "Transfer(address,address,uint256)": EventFragment;
     "Upgraded(address)": EventFragment;
@@ -278,8 +280,10 @@ export interface TokenContractInterface extends utils.Interface {
   getEvent(nameOrSignatureOrTopic: "AdminChanged"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Approval"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "ApprovalForAll"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "BatchMetadataUpdate"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "BeaconUpgraded"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Initialized"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "MetadataUpdate"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "OwnershipTransferred"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Transfer"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Upgraded"): EventFragment;
@@ -320,6 +324,18 @@ export type ApprovalForAllEvent = TypedEvent<
 
 export type ApprovalForAllEventFilter = TypedEventFilter<ApprovalForAllEvent>;
 
+export interface BatchMetadataUpdateEventObject {
+  _fromTokenId: BigNumber;
+  _toTokenId: BigNumber;
+}
+export type BatchMetadataUpdateEvent = TypedEvent<
+  [BigNumber, BigNumber],
+  BatchMetadataUpdateEventObject
+>;
+
+export type BatchMetadataUpdateEventFilter =
+  TypedEventFilter<BatchMetadataUpdateEvent>;
+
 export interface BeaconUpgradedEventObject {
   beacon: string;
 }
@@ -336,6 +352,16 @@ export interface InitializedEventObject {
 export type InitializedEvent = TypedEvent<[number], InitializedEventObject>;
 
 export type InitializedEventFilter = TypedEventFilter<InitializedEvent>;
+
+export interface MetadataUpdateEventObject {
+  _tokenId: BigNumber;
+}
+export type MetadataUpdateEvent = TypedEvent<
+  [BigNumber],
+  MetadataUpdateEventObject
+>;
+
+export type MetadataUpdateEventFilter = TypedEventFilter<MetadataUpdateEvent>;
 
 export interface OwnershipTransferredEventObject {
   previousOwner: string;
@@ -806,6 +832,15 @@ export interface TokenContract extends BaseContract {
       approved?: null
     ): ApprovalForAllEventFilter;
 
+    "BatchMetadataUpdate(uint256,uint256)"(
+      _fromTokenId?: null,
+      _toTokenId?: null
+    ): BatchMetadataUpdateEventFilter;
+    BatchMetadataUpdate(
+      _fromTokenId?: null,
+      _toTokenId?: null
+    ): BatchMetadataUpdateEventFilter;
+
     "BeaconUpgraded(address)"(
       beacon?: PromiseOrValue<string> | null
     ): BeaconUpgradedEventFilter;
@@ -815,6 +850,9 @@ export interface TokenContract extends BaseContract {
 
     "Initialized(uint8)"(version?: null): InitializedEventFilter;
     Initialized(version?: null): InitializedEventFilter;
+
+    "MetadataUpdate(uint256)"(_tokenId?: null): MetadataUpdateEventFilter;
+    MetadataUpdate(_tokenId?: null): MetadataUpdateEventFilter;
 
     "OwnershipTransferred(address,address)"(
       previousOwner?: PromiseOrValue<string> | null,

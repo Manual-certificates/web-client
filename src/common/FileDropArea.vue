@@ -97,7 +97,7 @@ const dragFile = (e: DragEvent) => {
 .file-drop-area__icon {
   width: toRem(33);
   height: toRem(37);
-  margin: auto toRem(10);
+  margin: 3%;
 
   @include respond-to(large) {
     width: toRem(30);

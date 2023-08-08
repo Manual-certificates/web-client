@@ -7,6 +7,7 @@ export const config = {
   APP_NAME: import.meta.env.VITE_APP_NAME,
   IPFS_KEY: import.meta.env.VITE_APP_IPFS_KEY,
   TOKEN_CONTRACT_ADDR: import.meta.env.VITE_APP_TOKEN_CONTRACT_ADDR,
+  SUPPORTED_CHAIN_ID: import.meta.env.VITE_APP_SUPPORTED_CHAIN_ID,
   LOG_LEVEL: 'trace' as LogLevelDesc,
   BUILD_VERSION: packageJson.version || import.meta.env.VITE_APP_BUILD_VERSION,
 } as const
