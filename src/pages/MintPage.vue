@@ -132,7 +132,6 @@ const onTableData = (data: string[][], file: FileItemType) => {
 }
 
 const onError = (msg: string) => {
-  isLoaderModalShown.value = false
   errorMsg.value = msg
   isErrorModalShown.value = true
 }

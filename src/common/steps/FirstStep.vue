@@ -30,7 +30,7 @@
         :description="$t('first-step.select-images-description')"
         @handle-files-upload="parseImages"
       />
-      <div v-if="certificateList.length" class="first-step__field-files-list">
+      <div v-if="certificateList.length" class="first-step__field-images">
         <div
           class="test"
           v-for="item in certificateList.slice(0, CERTIFICATES_ON_PAGE)"
@@ -153,7 +153,7 @@ const parseImages = (fileList: File[]) => {
   line-height: 1.5;
 }
 
-.first-step__field-files-list {
+.first-step__field-images {
   display: flex;
   width: 100%;
   overflow: hidden;

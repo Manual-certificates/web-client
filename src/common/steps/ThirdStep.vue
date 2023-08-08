@@ -63,7 +63,7 @@ const mintCertificates = async (address: string) => {
     }
 
     if (!validateAddresses(addresses)) {
-      emit('on-error', t('errors.invalid-address-on-table'))
+      emit('on-error', t('errors.invalid-address-in-table'))
       return
     }
 
@@ -75,6 +75,7 @@ const mintCertificates = async (address: string) => {
       return
     }
 
+    emit('update:is-loader-modal-shown', false)
     emit('on-success', hash)
   } catch (error) {
     emit('on-error', t('errors.default'))
