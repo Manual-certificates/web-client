@@ -37,7 +37,8 @@
     "failed-init-contract": "Failed to  init contract: empty address",
     "failed-init-mint": "Failed to call mint: empty provider",
     "error-empty-list": "empty list",
-    "unsupported-chain": "Unsupported chain"
+    "unsupported-chain": "Unsupported chain",
+    "invalid-address-on-table": "Invalid address on table"
 
   },
   "notification": {

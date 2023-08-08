@@ -25,6 +25,7 @@ import { ref, computed } from 'vue'
 import { FileItemType } from '@/types'
 import { useWeb3ProvidersStore } from '@/store'
 import { config } from '@/config'
+import { validateAddresses } from '@/helpers'
 
 const { t } = useI18n()
 const web3Store = useWeb3ProvidersStore()
@@ -56,8 +57,13 @@ const mintCertificates = async (address: string) => {
       return
     }
     const { addresses, URIs } = await sendToIPFS()
-    if (!addresses.length) {
+    if (!URIs.length) {
       emit('on-error', t('errors.failed-sent-to-ipfs'))
+      return
+    }
+
+    if (!validateAddresses(addresses)) {
+      emit('on-error', t('errors.invalid-address-on-table'))
       return
     }
 
@@ -66,7 +72,6 @@ const mintCertificates = async (address: string) => {
     const hash = await tokenContact.useMintBatch(addresses, URIs)
     if (!hash) {
       emit('on-error', t('errors.failed-sent-tx'))
-
       return
     }
 
@@ -94,7 +99,6 @@ const sendToIPFS = async () => {
 
     addresses.push(item[1])
     loadState.value++
-
     emit('update-load-state', loadState.value)
 
     if (!certificateByFileName.file) {

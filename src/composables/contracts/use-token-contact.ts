@@ -22,22 +22,21 @@ export const useTokenContact = (address: string) => {
       throw new Error()
     }
 
-    if (web3ProvidersStore.provider.currentProvider)
-      try {
-        const data = contractInterface.encodeFunctionData('mintBatch', [
-          addresses,
-          URIs,
-        ])
+    try {
+      const data = contractInterface.encodeFunctionData('mintBatch', [
+        addresses,
+        URIs,
+      ])
 
-        return provider.value.getHashFromTxResponse(
-          await provider.value.signAndSendTx({
-            to: contractAddress.value,
-            data,
-          }),
-        )
-      } catch (error) {
-        handleEthError(error as EthProviderRpcError)
-      }
+      return provider.value.getHashFromTxResponse(
+        await provider.value.signAndSendTx({
+          to: contractAddress.value,
+          data,
+        }),
+      )
+    } catch (error) {
+      handleEthError(error as EthProviderRpcError)
+    }
   }
 
   return {

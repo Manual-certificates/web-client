@@ -32,6 +32,7 @@
       />
       <div v-if="certificateList.length" class="first-step__field-files-list">
         <div
+          class="test"
           v-for="item in certificateList.slice(0, CERTIFICATES_ON_PAGE)"
           :key="item.title"
         >
@@ -109,6 +110,11 @@ const parseImages = (fileList: File[]) => {
 </script>
 
 <style scoped lang="scss">
+.test {
+  max-width: toRem(300);
+  flex-grow: 1;
+}
+
 .first-step__select {
   max-width: toRem(300);
   max-height: toRem(72);
@@ -119,10 +125,7 @@ const parseImages = (fileList: File[]) => {
 
 .first-step__select-item {
   display: flex;
-  max-width: toRem(300);
-  max-height: toRem(72);
   margin-right: toRem(15);
-  width: 100%;
 
   @include respond-to(large) {
     max-width: toRem(260);
@@ -152,9 +155,9 @@ const parseImages = (fileList: File[]) => {
 
 .first-step__field-files-list {
   display: flex;
-  justify-content: space-evenly;
   width: 100%;
   overflow: hidden;
+  gap: toRem(8);
 }
 
 .first-step__field-images-wrp {
