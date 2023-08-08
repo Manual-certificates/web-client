@@ -208,6 +208,11 @@ const _abi = [
         name: "baseURI_",
         type: "string",
       },
+      {
+        internalType: "address",
+        name: "newOwner_",
+        type: "address",
+      },
     ],
     name: "__TokenContract_init",
     outputs: [],

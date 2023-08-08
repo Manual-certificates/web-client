@@ -1,5 +1,9 @@
 import { computed, ref } from 'vue'
-import { TokenContractDeployer__factory, TokenContract__factory } from '@/types'
+import {
+  TokenContractDeployer__factory,
+  TokenContract__factory,
+  TransactionResponse,
+} from '@/types'
 import { useWeb3ProvidersStore } from '@/store'
 import { ethers } from 'ethers'
 
@@ -24,13 +28,18 @@ export const useTokenContactDeployer = (address: string) => {
     tokenName: string,
     tokenContract: string,
     baseUri: string,
-  ) => {
+  ): Promise<{
+    inputs: string
+    salt: string
+  }> => {
     if (!signer) return { inputs: '', salt: '' }
+
+    const userAddr = await signer.getAddress()
 
     const params = ethers.utils.defaultAbiCoder
       .encode(
-        ['string', 'string', 'string'],
-        [tokenName, tokenContract, baseUri],
+        ['string', 'string', 'string', 'address'],
+        [tokenName, tokenContract, baseUri, userAddr],
       )
       .substring(2)
 
@@ -42,8 +51,6 @@ export const useTokenContactDeployer = (address: string) => {
       ethers.BigNumber.from(ethers.utils.randomBytes(32)).toHexString(),
       32,
     )
-
-    const userAddr = await signer.getAddress()
 
     const salt = ethers.utils.keccak256(
       ethers.utils.hexConcat([
@@ -59,7 +66,10 @@ export const useTokenContactDeployer = (address: string) => {
     }
   }
 
-  const deployTokenContract = async (inputs: string, salt: string) => {
+  const deployTokenContract = async (
+    inputs: string,
+    salt: string,
+  ): Promise<TransactionResponse> => {
     const data = contractInterface.encodeFunctionData('deployTokenContract', [
       inputs,
       salt,
@@ -73,7 +83,10 @@ export const useTokenContactDeployer = (address: string) => {
     return receipt
   }
 
-  const predictTokenAddress = async (inputs: string, salt: string) => {
+  const predictTokenAddress = async (
+    inputs: string,
+    salt: string,
+  ): Promise<string> => {
     if (!contractInstance.value) return ''
 
     return contractInstance.value.predictTokenAddress(inputs, salt)

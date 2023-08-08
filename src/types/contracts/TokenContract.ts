@@ -30,7 +30,7 @@ import type {
 
 export interface TokenContractInterface extends utils.Interface {
   functions: {
-    "__TokenContract_init(string,string,string)": FunctionFragment;
+    "__TokenContract_init(string,string,string,address)": FunctionFragment;
     "approve(address,uint256)": FunctionFragment;
     "balanceOf(address)": FunctionFragment;
     "baseURI()": FunctionFragment;
@@ -91,6 +91,7 @@ export interface TokenContractInterface extends utils.Interface {
   encodeFunctionData(
     functionFragment: "__TokenContract_init",
     values: [
+      PromiseOrValue<string>,
       PromiseOrValue<string>,
       PromiseOrValue<string>,
       PromiseOrValue<string>
@@ -425,6 +426,7 @@ export interface TokenContract extends BaseContract {
       tokenName_: PromiseOrValue<string>,
       tokenSymbol_: PromiseOrValue<string>,
       baseURI_: PromiseOrValue<string>,
+      newOwner_: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -552,6 +554,7 @@ export interface TokenContract extends BaseContract {
     tokenName_: PromiseOrValue<string>,
     tokenSymbol_: PromiseOrValue<string>,
     baseURI_: PromiseOrValue<string>,
+    newOwner_: PromiseOrValue<string>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -679,6 +682,7 @@ export interface TokenContract extends BaseContract {
       tokenName_: PromiseOrValue<string>,
       tokenSymbol_: PromiseOrValue<string>,
       baseURI_: PromiseOrValue<string>,
+      newOwner_: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -887,6 +891,7 @@ export interface TokenContract extends BaseContract {
       tokenName_: PromiseOrValue<string>,
       tokenSymbol_: PromiseOrValue<string>,
       baseURI_: PromiseOrValue<string>,
+      newOwner_: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -1015,6 +1020,7 @@ export interface TokenContract extends BaseContract {
       tokenName_: PromiseOrValue<string>,
       tokenSymbol_: PromiseOrValue<string>,
       baseURI_: PromiseOrValue<string>,
+      newOwner_: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
