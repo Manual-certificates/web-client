@@ -36,33 +36,28 @@ export const useTokenContactDeployer = (address: string) => {
 
     const userAddr = await signer.getAddress()
 
-    const params = ethers.utils.defaultAbiCoder
-      .encode(
-        ['string', 'string', 'string', 'address'],
-        [tokenName, tokenContract, baseUri, userAddr],
-      )
-      .substring(2)
-
-    const inputs = TokenContract__factory.createInterface()
-      .getSighash('__TokenContract_init')
-      .concat(params)
-
-    const randomNumber = ethers.utils.hexZeroPad(
-      ethers.BigNumber.from(ethers.utils.randomBytes(32)).toHexString(),
-      32,
-    )
-
-    const salt = ethers.utils.keccak256(
-      ethers.utils.hexConcat([
-        userAddr,
-        ethers.utils.hexlify(Date.now()),
-        randomNumber,
-      ]),
-    )
-
     return {
-      inputs,
-      salt,
+      inputs: TokenContract__factory.createInterface()
+        .getSighash('__TokenContract_init')
+        .concat(
+          ethers.utils.defaultAbiCoder
+            .encode(
+              ['string', 'string', 'string', 'address'],
+              [tokenName, tokenContract, baseUri, userAddr],
+            )
+            .substring(2),
+        ),
+
+      salt: ethers.utils.keccak256(
+        ethers.utils.hexConcat([
+          userAddr,
+          ethers.utils.hexlify(Date.now()),
+          ethers.utils.hexZeroPad(
+            ethers.BigNumber.from(ethers.utils.randomBytes(32)).toHexString(),
+            32,
+          ),
+        ]),
+      ),
     }
   }
 
@@ -70,17 +65,13 @@ export const useTokenContactDeployer = (address: string) => {
     inputs: string,
     salt: string,
   ): Promise<TransactionResponse> => {
-    const data = contractInterface.encodeFunctionData('deployTokenContract', [
-      inputs,
-      salt,
-    ])
-
-    const receipt = await web3ProvidersStore.provider.signAndSendTx({
+    return web3ProvidersStore.provider.signAndSendTx({
       to: contractAddress.value,
-      data,
+      data: contractInterface.encodeFunctionData('deployTokenContract', [
+        inputs,
+        salt,
+      ]),
     })
-
-    return receipt
   }
 
   const predictTokenAddress = async (
