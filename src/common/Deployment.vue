@@ -20,9 +20,12 @@ import { useTokenContactDeployer } from '@/composables'
 import { config } from '@config'
 import { useI18n } from 'vue-i18n'
 import { DEPLOYMENT_STEP } from '@/enums'
+import { useWeb3ProvidersStore } from '@/store'
 const { t } = useI18n()
 
 const deployedContractAddress = ref('')
+
+const web3Store = useWeb3ProvidersStore()
 
 const step = ref(DEPLOYMENT_STEP.deploy)
 const isStepDeploy = computed(() => step.value === DEPLOYMENT_STEP.deploy)
@@ -34,8 +37,19 @@ const emit = defineEmits<{
   (e: 'update:error-msg', v: string): void
 }>()
 
+const isValidChain = computed(
+  () =>
+    String(web3Store.provider.chainId).toLowerCase() ===
+    config.SUPPORTED_CHAIN_ID.toLowerCase(),
+)
+
 async function deployTokenContract(name: string) {
   try {
+    if (!isValidChain.value) {
+      emit('update:error-msg', t('errors.unsupported-chain'))
+      return
+    }
+
     step.value = DEPLOYMENT_STEP.deploying
 
     const { createFunctionsParams, deployTokenContract, predictTokenAddress } =

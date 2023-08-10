@@ -19,7 +19,7 @@
         size="small"
         color="info"
         :icon-right="$icons.copy"
-        @click="copyToClipboard(address)"
+        @click="copyToClipboard(address), $event.target.blur()"
       />
     </div>
     <div class="deployed-step__btns-wrp">

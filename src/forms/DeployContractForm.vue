@@ -10,7 +10,9 @@
     </div>
     <input-field
       v-model="form.contractName"
-      :error-message="getFieldErrorMessage('contractName')"
+      :error-message="
+        form.contractName.length ? getFieldErrorMessage('contractName') : ''
+      "
     />
   </div>
   <div class="deploy-contract-form__btns-wrp">
@@ -19,7 +21,7 @@
       size="large"
       color="info"
       :text="$t('deploy-contract-form.deploy-btn')"
-      :disabled="!isFormValid()"
+      :disabled="!form.contractName.length || !isFormValid()"
       @click="emit('deploy-contract', form.contractName)"
     />
   </div>
@@ -29,7 +31,7 @@ import { InputField } from '@/fields'
 import { AppButton } from '@/common'
 import { computed, reactive } from 'vue'
 import { useFormValidation } from '@/composables'
-import { required, maxLength } from '@/validators'
+import { maxLength } from '@/validators'
 import { MAX_LENGTH } from '@/enums'
 
 const form = reactive({
@@ -45,7 +47,7 @@ const emit = defineEmits<{
 }>()
 
 const { isFormValid, getFieldErrorMessage } = useFormValidation(form, {
-  contractName: { required, maxLength: maxLength(MAX_LENGTH.contractName) },
+  contractName: { maxLength: maxLength(MAX_LENGTH.contractName) },
 })
 </script>
 
