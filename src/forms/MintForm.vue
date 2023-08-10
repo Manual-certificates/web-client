@@ -33,7 +33,7 @@
 import { InputField } from '@/fields'
 import { AppButton } from '@/common'
 import { reactive } from 'vue'
-import { required, address } from '@/validators'
+import { address } from '@/validators'
 import { useFormValidation } from '@/composables'
 
 defineProps<{
@@ -49,7 +49,7 @@ const form = reactive({
 })
 
 const { isFormValid, getFieldErrorMessage } = useFormValidation(form, {
-  address: { required, address },
+  address: { address },
 })
 </script>
 

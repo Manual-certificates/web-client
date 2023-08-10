@@ -70,6 +70,16 @@
       :tx="txHash"
       @success="router.push({ name: $routes.main })"
     />
+
+    <deployment-confirmation-modal
+      v-model:is-shown="isDeploymentConfirmationModalShown"
+      @open-contract-deployment="openContractDeploymentModal"
+    />
+
+    <contract-deployment-modal
+      v-model:is-shown="isContractDeploymentModalShown"
+      @update:error-msg="onError"
+    />
   </div>
 </template>
 
@@ -84,6 +94,8 @@ import {
   FirstStep,
   SecondStep,
   ThirdStep,
+  DeploymentConfirmationModal,
+  ContractDeploymentModal,
 } from '@/common'
 import { useRouter } from 'vue-router'
 
@@ -93,6 +105,8 @@ const isCertificatesModalShown = ref(false)
 const isLoaderModalShown = ref(false)
 const isErrorModalShown = ref(false)
 const isSuccessModalShown = ref(false)
+const isDeploymentConfirmationModalShown = ref(true)
+const isContractDeploymentModalShown = ref(false)
 
 const tableData = ref<string[][]>([])
 const tableFile = ref<FileItemType>({} as FileItemType)
@@ -132,8 +146,15 @@ const onTableData = (data: string[][], file: FileItemType) => {
 }
 
 const onError = (msg: string) => {
+  isLoaderModalShown.value = false
+  isContractDeploymentModalShown.value = false
   errorMsg.value = msg
   isErrorModalShown.value = true
+}
+
+const openContractDeploymentModal = () => {
+  isDeploymentConfirmationModalShown.value = false
+  isContractDeploymentModalShown.value = true
 }
 </script>
 

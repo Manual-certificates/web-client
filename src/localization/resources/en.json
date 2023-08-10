@@ -8,8 +8,8 @@
     "field-error_address": "Invalid address",
     "field-error_name": "Empty name",
     "field-error_settings": "We need fill all fields",
-    "field-error_privateKey": "Invalid private key"
-
+    "field-error_privateKey": "Invalid private key",
+    "field-error_maxLength" : "Input is too long"
   },
   "errors": {
     "default": "Oops... Something went wrong",
@@ -24,19 +24,24 @@
     "provider-invalid-params": "Invalid method parameters standard",
     "provider-internal-error": "Internal JSON-RPC error standard",
     "provider-invalid-input": "Missing or invalid parameters non-standard",
-    "provider-resource-not-found": "equested resource not found non-standard",
+    "provider-resource-not-found": "Requested resource not found non-standard",
     "provider-resource-unavailable": "Requested resource not available non-standard",
     "provider-transaction-rejected": "Transaction creation failed non-standard",
     "provider-method-not-supported": "Method is not implemented non-standard",
     "provider-limit-exceeded": "Request exceeds defined limit non-standard",
     "provider-json-rpc-version-not-supported": "Version of JSON-RPC protocol is not supported non-standard",
     "provider-wrapper-method-not-found": "provider not exist or hasn't this method",
+    "provider-not-found": "Provider does not exist",
     "files-not-found": "Files not found",
     "failed-sent-to-ipfs": "Failed to sent  files to IPFS",
     "failed-sent-tx": "Failed to  send  tx",
     "failed-init-contract": "Failed to  init contract: empty address",
     "failed-init-mint": "Failed to call mint: empty provider",
     "error-empty-list": "empty list",
+    "error-empty-file": "empty file",
+    "empty-deployed-address" : "Address of deployed contract is empty",
+    "invalid-signer" : "Failed to initialize signer",
+    "invalid-contract-deployer" : "Contract deployer contract is invalid",
     "unsupported-chain": "Unsupported chain",
     "invalid-address-in-table": "Invalid address in table"
 
@@ -118,5 +123,28 @@
   "third-step": {
     "title": "Enter the contract address",
     "description": "Enter the course contract address where certificates will be issued"
+  },
+  "deployment-confirmation-modal" : {
+    "title" : "Do you have a smart contract to deploy SBT Certificates?",
+    "subtitle" : "In order to issue SBT certificates for your course, you must have a deployed smart contract on the Polygon network. If you already have such a contract, then click the \"Yes, I have\" button. If you do not have a smart contract that you want to use or you need another one - click on the \"Deploy\" button and follow the prompts that appear next",
+    "have-btn" : "Yes, I have",
+    "deploy-btn" : "Deploy"
+  },
+  "contract-deployment-modal" : {
+    "title" : "Contract deployment"
+  },
+  "deploy-step" : {
+    "subtitle" : "In order to deploy a contract, you need to select a contract name. Then click the \"Deploy\" button, confirm the transaction in MetaMask and pay network fee"
+  },
+  "deploy-contract-form" : {
+    "contract-name" : "Contract name",
+    "deploy-btn" : "Deploy"
+  },
+  "deploying-step" : {
+    "subtitle" : "The transaction is being processed"
+  },
+  "deployed-step" : {
+    "subtitle" : "This is the contract address that you will need later in order to issue certificates for your course. Please copy and save this address.",
+    "ok-btn" : "Ok"
   }
 }
