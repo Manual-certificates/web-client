@@ -95,7 +95,7 @@
   "success-modal": {
     "title": "Success",
     "tx-hash": "Transaction hash",
-    "description": "Elit dapibus at egestas odio. Elit dolor non ornare magna.",
+    "description": "Transaction hash",
     "btn-text": "Ok"
   },
   "app-navbar": {
