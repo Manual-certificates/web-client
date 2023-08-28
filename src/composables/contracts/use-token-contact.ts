@@ -8,6 +8,15 @@ export const useTokenContact = (address: string) => {
   const provider = computed(() => web3ProvidersStore.provider)
   const contractAddress = ref(address || '')
   const contractInterface = TokenContract__factory.createInterface()
+  const signer = web3ProvidersStore.provider.currentSigner
+
+  const contractInstance = computed(
+    () =>
+      (!!address &&
+        !!signer &&
+        TokenContract__factory.connect(address, signer)) ||
+      undefined,
+  )
 
   const init = (address: string) => {
     if (!address) {
@@ -15,6 +24,14 @@ export const useTokenContact = (address: string) => {
     }
 
     contractAddress.value = address
+  }
+
+  const getName = async () => {
+    if (!contractInstance.value) {
+      throw new Error()
+    }
+
+    return await contractInstance.value.name()
   }
 
   const useMintBatch = async (addresses: string[], URIs: string[]) => {
@@ -42,5 +59,6 @@ export const useTokenContact = (address: string) => {
   return {
     init,
     useMintBatch,
+    getName,
   }
 }

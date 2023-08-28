@@ -10,6 +10,7 @@ export const config = {
   SUPPORTED_CHAIN_ID: import.meta.env.VITE_APP_SUPPORTED_CHAIN_ID,
   LOG_LEVEL: 'trace' as LogLevelDesc,
   BUILD_VERSION: packageJson.version || import.meta.env.VITE_APP_BUILD_VERSION,
+  METADATA_FILE_NAME: 'metadata.json',
 } as const
 
 Object.assign(config, _mapEnvCfg(import.meta.env))
