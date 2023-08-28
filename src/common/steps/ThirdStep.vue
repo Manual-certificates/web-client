@@ -29,6 +29,7 @@ import { validateAddresses, createMetadataFile } from '@/helpers'
 
 const { t } = useI18n()
 const web3Store = useWeb3ProvidersStore()
+const tokenContact = useTokenContact()
 
 const props = defineProps<{
   certificateList: FileItemType[]
@@ -58,7 +59,7 @@ const mintCertificates = async (address: string) => {
       return
     }
 
-    const tokenContact = useTokenContact(address)
+    tokenContact.init(address)
 
     const contractName = await tokenContact.getName()
 
