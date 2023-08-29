@@ -11,7 +11,7 @@ export const useTokenContact = (address?: string) => {
   const contractInstance = ref<TokenContract | undefined>()
   const contractInterface = TokenContract__factory.createInterface()
 
-  const createContractInstance = () => {
+  const getContractInstance = () => {
     if (!provider.value.currentProvider || !contractAddress.value) return
 
     return TokenContract__factory.connect(
@@ -20,7 +20,7 @@ export const useTokenContact = (address?: string) => {
     )
   }
 
-  contractInstance.value = createContractInstance()
+  contractInstance.value = getContractInstance()
 
   const init = (address: string) => {
     if (!address) {
@@ -28,7 +28,7 @@ export const useTokenContact = (address?: string) => {
     }
 
     contractAddress.value = address
-    contractInstance.value = createContractInstance()
+    contractInstance.value = getContractInstance()
   }
 
   const getName = () => {

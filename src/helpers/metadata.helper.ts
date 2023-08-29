@@ -1,5 +1,9 @@
 import { config } from '@/config'
 
+const ipfsUri = 'ipfs://'
+const baseDescription =
+  'This is a certificate that confirms that its owner has completed the course'
+
 export function createMetadataFile(
   certificateFileName: string,
   ipfsImageCid: string,
@@ -22,15 +26,12 @@ export function prepareMetadataStructure(
   ipfsImageCid: string,
   contractName: string,
 ) {
-  const certificateName = certificateFileName.slice(
-    0,
-    certificateFileName.indexOf('.'),
-  )
+  const [certificateName] = certificateFileName.split('.')
 
   return {
     name: certificateName,
-    description: `This is a certificate that confirms that its owner has completed the course ${contractName}`,
-    image: 'ipfs://' + ipfsImageCid + '/' + certificateFileName,
+    description: `${baseDescription}' '${contractName}`,
+    image: ipfsUri + ipfsImageCid + '/' + certificateFileName,
     external_url: '',
   }
 }
