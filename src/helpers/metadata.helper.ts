@@ -1,7 +1,7 @@
 import { config } from '@/config'
 
-const ipfsUri = 'ipfs://'
-const baseDescription =
+const IPFS_URI = 'ipfs://'
+const BASE_DESCRIPTION =
   'This is a certificate that confirms that its owner has completed the course'
 
 export function createMetadataFile(
@@ -30,8 +30,8 @@ export function prepareMetadataStructure(
 
   return {
     name: certificateName,
-    description: `${baseDescription}' '${contractName}`,
-    image: ipfsUri + ipfsImageCid + '/' + certificateFileName,
+    description: `${BASE_DESCRIPTION}' '${contractName}`,
+    image: IPFS_URI + ipfsImageCid + '/' + certificateFileName,
     external_url: '',
   }
 }
