@@ -25,10 +25,11 @@ import { ref, computed } from 'vue'
 import { FileItemType } from '@/types'
 import { useWeb3ProvidersStore } from '@/store'
 import { config } from '@/config'
-import { validateAddresses } from '@/helpers'
+import { validateAddresses, createMetadataFile } from '@/helpers'
 
 const { t } = useI18n()
 const web3Store = useWeb3ProvidersStore()
+const tokenContact = useTokenContact()
 
 const props = defineProps<{
   certificateList: FileItemType[]
@@ -57,7 +58,12 @@ const mintCertificates = async (address: string) => {
       emit('on-error', t('errors.unsupported-chain'))
       return
     }
-    const { addresses, URIs } = await sendToIPFS()
+
+    tokenContact.init(address)
+
+    const contractName = await tokenContact.getName()
+
+    const { addresses, URIs } = await sendToIPFS(contractName)
     if (!URIs.length) {
       emit('on-error', t('errors.failed-sent-to-ipfs'))
       return
@@ -68,9 +74,11 @@ const mintCertificates = async (address: string) => {
       return
     }
 
-    const tokenContact = useTokenContact(address)
+    const urisWithCorrectPath = URIs.map(
+      el => el + '/' + config.METADATA_FILE_NAME,
+    )
 
-    const hash = await tokenContact.useMintBatch(addresses, URIs)
+    const hash = await tokenContact.useMintBatch(addresses, urisWithCorrectPath)
     if (!hash) {
       emit('on-error', t('errors.failed-sent-tx'))
       return
@@ -84,7 +92,7 @@ const mintCertificates = async (address: string) => {
   emit('update-load-state', 0)
 }
 
-const sendToIPFS = async () => {
+const sendToIPFS = async (contractName: string) => {
   const undefinedNames = []
   const addresses: string[] = []
   const URIs: string[] = []
@@ -107,7 +115,14 @@ const sendToIPFS = async () => {
       continue
     }
 
-    URIs.push(await IpfsUtil.storeFile(certificateByFileName.file))
+    const ipfsImageCid = await IpfsUtil.storeFile(certificateByFileName.file)
+
+    const file = createMetadataFile(
+      certificateByFileName.file.name,
+      ipfsImageCid,
+      contractName,
+    )
+    URIs.push(await IpfsUtil.storeFile(file))
   }
 
   return {

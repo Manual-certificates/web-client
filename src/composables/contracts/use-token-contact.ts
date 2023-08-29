@@ -3,11 +3,20 @@ import { EthProviderRpcError, TokenContract__factory } from '@/types'
 import { useWeb3ProvidersStore } from '@/store'
 import { handleEthError } from '@/helpers'
 
-export const useTokenContact = (address: string) => {
+export const useTokenContact = (address?: string) => {
   const web3ProvidersStore = useWeb3ProvidersStore()
   const provider = computed(() => web3ProvidersStore.provider)
   const contractAddress = ref(address || '')
   const contractInterface = TokenContract__factory.createInterface()
+
+  const contractInstance = computed(() =>
+    provider.value.currentProvider && contractAddress.value
+      ? TokenContract__factory.connect(
+          contractAddress.value,
+          provider.value.currentProvider,
+        )
+      : undefined,
+  )
 
   const init = (address: string) => {
     if (!address) {
@@ -17,8 +26,16 @@ export const useTokenContact = (address: string) => {
     contractAddress.value = address
   }
 
+  const getName = () => {
+    if (!contractInstance.value) {
+      throw new Error()
+    }
+
+    return contractInstance.value.name()
+  }
+
   const useMintBatch = async (addresses: string[], URIs: string[]) => {
-    if (!provider.value) {
+    if (!provider.value || !contractAddress.value) {
       throw new Error()
     }
 
@@ -42,5 +59,6 @@ export const useTokenContact = (address: string) => {
   return {
     init,
     useMintBatch,
+    getName,
   }
 }

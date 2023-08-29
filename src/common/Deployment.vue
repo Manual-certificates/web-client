@@ -21,6 +21,9 @@ import { config } from '@config'
 import { useI18n } from 'vue-i18n'
 import { DEPLOYMENT_STEP } from '@/enums'
 import { useWeb3ProvidersStore } from '@/store'
+
+const TOKEN_CONTRACT_BASE_URI = 'https://ipfs.io/ipfs/'
+
 const { t } = useI18n()
 
 const deployedContractAddress = ref('')
@@ -55,7 +58,11 @@ async function deployTokenContract(name: string) {
     const { createFunctionsParams, deployTokenContract, predictTokenAddress } =
       useTokenContactDeployer(config.TOKEN_CONTRACT_ADDR)
 
-    const funcParams = await createFunctionsParams(name, name, '')
+    const funcParams = await createFunctionsParams(
+      name,
+      name,
+      TOKEN_CONTRACT_BASE_URI,
+    )
     await deployTokenContract(funcParams.inputs, funcParams.salt)
     deployedContractAddress.value = await predictTokenAddress(
       funcParams.inputs,
