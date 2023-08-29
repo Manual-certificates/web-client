@@ -27,7 +27,7 @@ export const useTokenContact = (address?: string) => {
   }
 
   const getName = () => {
-    if (!contractInstance.value || !contractAddress.value) {
+    if (!contractInstance.value) {
       throw new Error()
     }
 
@@ -35,7 +35,7 @@ export const useTokenContact = (address?: string) => {
   }
 
   const useMintBatch = async (addresses: string[], URIs: string[]) => {
-    if (!provider.value) {
+    if (!provider.value || !contractAddress.value) {
       throw new Error()
     }
 
